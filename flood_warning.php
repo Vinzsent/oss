@@ -5,9 +5,41 @@ session_start();
 // Database connection
 include('config.php');
 
-// Check if a barangay and purok are selected
-$selectedBarangay = isset($_POST['barangay']) ? $_POST['barangay'] : 'lizada';
-$selectedPurok = isset($_POST['purok']) ? $_POST['purok'] : '';
+// Check if user is logged in and get their role
+$user_role = '';
+if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true && isset($_SESSION['id'])) {
+    $user_id = $_SESSION['id'];
+    $user_query = "SELECT role FROM users WHERE id = ?";
+    $user_stmt = $conn->prepare($user_query);
+    $user_stmt->bind_param("i", $user_id);
+    if ($user_stmt->execute()) {
+        $user_result = $user_stmt->get_result();
+        if ($user_result && $user_result->num_rows > 0) {
+            $user = $user_result->fetch_assoc();
+            $user_role = $user['role'];
+            // Debug: Show the role in the input field
+            $debug_role = htmlspecialchars($user_role);
+        }
+    }
+    $user_stmt->close();
+}
+
+// Handle form submission with redirect to prevent resubmit dialog
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $barangay = isset($_POST['barangay']) ? $_POST['barangay'] : 'lizada';
+    $purok = isset($_POST['purok']) ? $_POST['purok'] : '';
+    
+    // Store in session and redirect
+    $_SESSION['selected_barangay'] = $barangay;
+    $_SESSION['selected_purok'] = $purok;
+    
+    header('Location: ' . $_SERVER['PHP_SELF']);
+    exit();
+}
+
+// Check if a barangay and purok are selected from session or use defaults
+$selectedBarangay = isset($_SESSION['selected_barangay']) ? $_SESSION['selected_barangay'] : 'lizada';
+$selectedPurok = isset($_SESSION['selected_purok']) ? $_SESSION['selected_purok'] : '';
 
 // Query to fetch puroks for the selected barangay
 $purokQuery = "SELECT DISTINCT sitio_purok FROM socio_data WHERE barangay = ?";
@@ -35,8 +67,15 @@ $result = $stmt->get_result();
 // Initialize totals
 $total_families = 0;
 $total_persons = 0;
-?>
 
+$user_query = "SELECT role FROM users WHERE id = ?";
+$user_stmt = $conn->prepare($user_query);
+$user_stmt->bind_param("i", $_SESSION['id']);
+$user_stmt->execute();
+$user_result = $user_stmt->get_result();
+$user = $user_result->fetch_assoc();
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -44,7 +83,17 @@ $total_persons = 0;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Micro OSS App</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
     <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .main-content {
+            flex: 1;
+        }
         table {
             width: 100%;
             margin-bottom: 1rem;
@@ -53,16 +102,20 @@ $total_persons = 0;
         thead th {
             background-color: #f8f9fa;
         }
+        footer {
+            margin-top: auto;
+        }
     </style>
 </head>
 <body>
     <!-- Navigation Bar -->
     <?php include('includes/nav.php'); ?>
 
-    <div class="container mt-5">
+    <div class="container mt-5 main-content">
         <div class="row">
             <div class="col-md-8">
-                <h2>Flood Warning Data</h2>
+                
+                <h2>Flood Warning Data</h2> 
                 <h4>Barangay: <?php echo ucfirst($selectedBarangay); ?></h4>
 
                 <!-- Flood Warning Table -->
@@ -122,9 +175,11 @@ $total_persons = 0;
             <div class="col-md-4">
                 <h2>Search Filters</h2>
                 <form method="post">
-                    <div class="form-group">
-                        <label for="barangay"><strong>Barangay</strong></label>
-                        <select class="form-control" name="barangay" onchange="this.form.submit()">
+                    <?php if (isset($user_role) && !empty($user_role)): ?>
+                        <?php endif; ?>
+                        <div class="form-group">
+                            <label for="barangay"><strong>Barangay</strong></label>
+                            <select class="form-control" name="barangay" onchange="this.form.submit()">
                             <option value="lizada" <?php if ($selectedBarangay == 'lizada') echo 'selected'; ?>>Lizada</option>
                             <option value="daliao" <?php if ($selectedBarangay == 'daliao') echo 'selected'; ?>>Daliao</option>
                         </select>
@@ -143,7 +198,15 @@ $total_persons = 0;
                             ?>
                         </select>
                     </div>
+                    <?php if (isset($debug_role)): ?>
+                    <input type="hidden" name="role" value="<?php echo $debug_role; ?>" class="form-control mb-3" readonly>
+                    <?php endif; ?>
                 </form>
+                <?php 
+                // Check if user is admin before showing the button
+                if (isset($user_role) && $user_role === 'admin'): ?>
+                    <a href="add_flood_warning.php" class="btn btn-primary"><i class="fas fa-plus"></i> Add Barangay and Sitio</a>
+                <?php endif; ?>
             </div>
         </div>
     </div>
