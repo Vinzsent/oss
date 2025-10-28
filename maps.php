@@ -10,8 +10,22 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <style>
         .map-container {
-            height: 100vh;
-            /* Full viewport height */
+            height: 400px;
+            /* Responsive height for mobile */
+        }
+        
+        /* Tablet and larger screens */
+        @media (min-width: 768px) {
+            .map-container {
+                height: 600px;
+            }
+        }
+        
+        /* Desktop screens */
+        @media (min-width: 992px) {
+            .map-container {
+                height: 70vh;
+            }
         }
     </style>
 </head>

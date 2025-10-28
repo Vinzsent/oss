@@ -6,14 +6,9 @@
 	<html lang="en">
 	<head>
 		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-		<meta name="mobile-web-app-capable" content="yes">
-		<meta name="apple-mobile-web-app-capable" content="yes">
-		<meta name="apple-mobile-web-app-status-bar-style" content="default">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Micro OSS App</title>
-		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 		<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-		<link href="assets/css/mobile-responsive.css" rel="stylesheet">
 	</head>
 	<body class="bg-gray-100">
 
@@ -111,7 +106,7 @@
 		
 		<!-- Admin Authentication Modal -->
 		<div class="modal fade" id="adminModal" tabindex="-1" aria-labelledby="adminModalLabel" aria-hidden="true">
-			<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+			<div class="modal-dialog modal-dialog-centered">
 				<div class="modal-content">
 					<div class="modal-header bg-primary text-white">
 						<h5 class="modal-title" id="adminModalLabel">
@@ -121,26 +116,24 @@
 					</div>
 					<div class="modal-body">
 						<form id="adminLoginForm">
-							<div class="mb-3">
-								<label for="adminPassword" class="form-label fw-bold">Enter Admin Password:</label>
-								<input type="password" class="form-control" id="adminPassword" placeholder="Enter password" required autocomplete="off">
-								<small class="form-text text-muted">Note: You have 3 attempts</small>
+							<div class="form-group">
+								<label for="adminPassword" class="font-weight-bold">Enter Admin Password:</label>
+								<input type="password" class="form-control" id="adminPassword" placeholder="Password" required autocomplete="off">
+								<small>Note: it only has 3 attempts</small>
 							</div>
 							<div id="errorMessage" class="alert alert-danger" style="display: none;"></div>
 						</form>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary flex-fill" data-bs-dismiss="modal">Cancel</button>
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
 						<button type="button" class="btn btn-primary" id="adminLoginBtn">Access Admin</button>
 					</div>
 				</div>
 			</div>
 		</div>
 
-		<!-- Bootstrap and Tailwind JS -->
+		<!-- jQuery for Admin Modal -->
 		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 		<script src="https://kit.fontawesome.com/a076d05399.js"></script>
 		
 		<script>
@@ -163,7 +156,7 @@
 					// Clear form and close modal
 					$('#adminPassword').val('');
 					const modal = bootstrap.Modal.getInstance(document.getElementById('adminModal'));
-					modal.hide();
+					if (modal) modal.hide();
 					errorDiv.hide();
 					attemptCount = 0;
 					
@@ -177,7 +170,7 @@
 						$('#adminLoginBtn').prop('disabled', true);
 						setTimeout(function() {
 							const modal = bootstrap.Modal.getInstance(document.getElementById('adminModal'));
-							modal.hide();
+					if (modal) modal.hide();
 							$('#adminLoginBtn').prop('disabled', false);
 							attemptCount = 0;
 						}, 3000);

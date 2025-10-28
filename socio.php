@@ -235,6 +235,73 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true && isset($_SE
             .alert-settings {
                 padding: 1rem 0.5rem;
             }
+            
+            h2 {
+                font-size: 1.5rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            h4 {
+                font-size: 1.1rem;
+                margin-bottom: 0.75rem;
+            }
+            
+            h5 {
+                font-size: 1rem;
+            }
+            
+            h6 {
+                font-size: 0.95rem;
+            }
+        }
+        
+        /* ANCHOR: Mobile-first responsive adjustments */
+        @media (max-width: 767px) {
+            .content-wrapper {
+                padding-bottom: 40px;
+            }
+            
+            .mt-5 {
+                margin-top: 2rem !important;
+            }
+            
+            .card {
+                border-radius: 0.5rem;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            
+            .card-header {
+                padding: 0.75rem 1rem;
+                background-color: #f8f9fa;
+            }
+            
+            .alert {
+                padding: 0.75rem;
+                font-size: 0.9rem;
+                margin-bottom: 1rem;
+            }
+            
+            /* Better table header visibility on mobile */
+            .thead-light th {
+                position: sticky;
+                top: 0;
+                background-color: #f8f9fa !important;
+                z-index: 10;
+            }
+            
+            /* Improve pagination on mobile */
+            .pagination {
+                font-size: 0.875rem;
+            }
+            
+            .pagination .page-link {
+                padding: 0.375rem 0.75rem;
+            }
+            
+            /* Risk level legend mobile optimization */
+            .d-flex.align-items-center {
+                margin-bottom: 0.5rem !important;
+            }
         }
     </style>
 </head>
@@ -254,7 +321,7 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true && isset($_SE
                         <?php if ($selectedPurok) echo " - Purok: " . ucfirst($selectedPurok); ?></h4>
                     </div>
                     <?php if ($user_role !== 'user'): ?>
-                    <a href="add_socio.php"><button class="btn btn-primary"><i class="fas fa-plus"></i> Add New Socio-Demographic Data</button></a>
+                    <a href="add_socio.php"><button class="btn btn-primary"><i class="fas fa-plus"></i> Add Purok and Sitio</button></a>
                     <?php endif; ?>
                 </div>
                 <!-- ANCHOR: Responsive Socio Demographic Table -->

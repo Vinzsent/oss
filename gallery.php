@@ -23,9 +23,17 @@ $selectedSitio = isset($_POST['sitio']) ? htmlspecialchars($_POST['sitio']) : ''
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.min.js"></script>
     <style>
+        /* Mobile-first responsive map */
         #map {
-            height: 400px;
+            height: 300px;
             width: 100%;
+        }
+        
+        /* Tablet and larger screens */
+        @media (min-width: 768px) {
+            #map {
+                height: 400px;
+            }
         }
 
         #photoPreview img {
@@ -46,12 +54,20 @@ $selectedSitio = isset($_POST['sitio']) ? htmlspecialchars($_POST['sitio']) : ''
 
         .card {
             margin-bottom: 20px;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .card-img-top {
+            border-radius: 0.5rem 0.5rem 0 0;
+            max-height: 400px;
+            object-fit: cover;
         }
 
         /* Sticky search sidebar */
         .sticky-search {
             position: sticky;
-            top: 80px; /* adjust for your navbar height */
+            top: 80px;
             z-index: 1000;
         }
 
@@ -72,6 +88,92 @@ $selectedSitio = isset($_POST['sitio']) ? htmlspecialchars($_POST['sitio']) : ''
 
         footer {
             flex-shrink: 0;
+        }
+        
+        /* Mobile spacing adjustments */
+        @media (max-width: 767px) {
+            .container {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+            }
+            
+            h5 {
+                font-size: 1.1rem;
+            }
+            
+            .form-group {
+                margin-bottom: 1rem;
+            }
+            
+            .btn {
+                width: 100%;
+                margin-top: 0.5rem;
+            }
+            
+            .card {
+                margin-bottom: 1.5rem;
+            }
+            
+            .card-body {
+                padding: 1rem;
+            }
+            
+            .card-img-top {
+                max-height: 300px;
+            }
+            
+            /* Disable sticky on mobile for better UX */
+            .sticky-search {
+                position: static;
+            }
+            
+            .mt-5 {
+                margin-top: 2rem !important;
+            }
+            
+            /* Modal adjustments for mobile */
+            .modal-dialog {
+                margin: 0.5rem;
+                max-width: calc(100% - 1rem);
+            }
+            
+            .modal-body {
+                padding: 1rem;
+            }
+            
+            .modal-title {
+                font-size: 1.25rem;
+            }
+        }
+        
+        /* Extra small devices */
+        @media (max-width: 576px) {
+            .container {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+            
+            .card-title {
+                font-size: 1rem;
+            }
+            
+            .card-text {
+                font-size: 0.9rem;
+            }
+            
+            .btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.875rem;
+            }
+            
+            #map {
+                height: 250px;
+            }
         }
     </style>
 </head>

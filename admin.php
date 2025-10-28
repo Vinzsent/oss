@@ -380,7 +380,7 @@ $users_result = mysqli_query($conn, $users_query);
             <div class="col-md-3">
                 <div class="stats-card">
                     <?php 
-                    $admin_users = mysqli_query($conn, "SELECT COUNT(*) as count FROM users WHERE role = 'admin'");
+                    $admin_users = mysqli_query($conn, "SELECT COUNT(*) as count FROM users WHERE email LIKE '%admin%'");
                     $admin_count = ($admin_users) ? mysqli_fetch_assoc($admin_users)['count'] : 0;
                     ?>
                     <div class="stats-number"><?php echo $admin_count; ?></div>

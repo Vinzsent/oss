@@ -208,6 +208,55 @@ $user = $user_result->fetch_assoc();
                 padding: 0.5rem 1rem;
                 font-size: 0.875rem;
             }
+            
+            h2 {
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+            }
+            
+            h4 {
+                font-size: 1.25rem;
+                margin-bottom: 1rem;
+            }
+            
+            h5 {
+                font-size: 1.1rem;
+            }
+        }
+        
+        /* ANCHOR: Mobile-first responsive adjustments */
+        @media (max-width: 767px) {
+            .main-content {
+                padding-top: 1rem;
+            }
+            
+            .mt-5 {
+                margin-top: 2rem !important;
+            }
+            
+            .card {
+                border-radius: 0.5rem;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            
+            .card-header {
+                padding: 0.75rem 1rem;
+                background-color: #f8f9fa;
+            }
+            
+            .alert {
+                padding: 0.75rem;
+                font-size: 0.9rem;
+                margin-bottom: 1rem;
+            }
+            
+            /* Better table header visibility on mobile */
+            .thead-light th {
+                position: sticky;
+                top: 0;
+                background-color: #f8f9fa !important;
+                z-index: 10;
+            }
         }
     </style>
 </head>

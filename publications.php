@@ -11,7 +11,10 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true && isset($_SE
     $role_stmt->bind_param("i", $user_id);
     $role_stmt->execute();
     $role_result = $role_stmt->get_result();
-    $user_role = $role_result->fetch_assoc()['role'];
+    $user_data = $role_result->fetch_assoc();
+    if ($user_data && isset($user_data['role'])) {
+        $user_role = $user_data['role'];
+    }
 }
 
 // ANCHOR: Fetch uploaded files from database
@@ -134,7 +137,7 @@ if (!$uploads_result) {
         /* ANCHOR: Responsive design improvements */
         @media (max-width: 768px) {
             .image-container {
-                height: 60vh;
+                height: 400px;
                 margin-bottom: 1rem;
             }
             
@@ -179,11 +182,24 @@ if (!$uploads_result) {
                 padding: 0.75rem;
                 margin-bottom: 1rem;
             }
+            
+            h2 {
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+            }
+            
+            h6 {
+                font-size: 1rem;
+            }
+            
+            .mt-5 {
+                margin-top: 2rem !important;
+            }
         }
         
         @media (max-width: 576px) {
             .image-container {
-                height: 50vh;
+                height: 350px;
             }
             
             .zoom-controls {
@@ -212,6 +228,10 @@ if (!$uploads_result) {
             
             .modal-body {
                 padding: 1rem 0.75rem;
+            }
+            
+            h2 {
+                font-size: 1.35rem;
             }
         }
         
@@ -336,10 +356,10 @@ if (!$uploads_result) {
                     <select class="form-control" id="resourceSelect" name="resource" onchange="updateResource()">
                         <option value="">-- Select --</option>
                         <!-- ANCHOR: Static options -->
-                        <option value="uploads\policybrief.pdf">Policy Briefs</option>
-                        <option value="uploads\media.pdf">Media Releases</option>
-                        <option value="uploads\infographics.pdf">Infographics</option>
-                        <option value="uploads\factsheet.pdf">Fact Sheets</option>
+                        <option value="uploads/policybrief.pdf">Policy Briefs</option>
+                        <option value="uploads/media.pdf">Media Releases</option>
+                        <option value="uploads/infographics.pdf">Infographics</option>
+                        <option value="uploads/factsheet.pdf">Fact Sheets</option>
                         <!-- ANCHOR: Dynamic options from database -->
                         <?php if ($uploads_result && $uploads_result->num_rows > 0): ?>
                             <?php 

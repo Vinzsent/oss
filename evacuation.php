@@ -16,39 +16,81 @@ include('config.php');
     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
     <style>
+        /* Mobile-first responsive map container */
         .map-container {
-            height: 100vh; /* Full viewport height */
+            height: 400px;
+        }
+        
+        /* Tablet and larger screens */
+        @media (min-width: 768px) {
+            .map-container {
+                height: 600px;
+            }
+        }
+        
+        /* Desktop screens */
+        @media (min-width: 992px) {
+            .map-container {
+                height: 70vh;
+            }
+        }
+        
+        /* Mobile spacing adjustments */
+        @media (max-width: 767px) {
+            .container {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+            }
+            
+            .form-group {
+                margin-bottom: 1rem;
+            }
+            
+            .alert {
+                padding: 0.75rem;
+                font-size: 0.9rem;
+            }
+            
+            .btn {
+                width: 100%;
+                margin-top: 0.5rem;
+            }
         }
 	
 		.navigation-bar {
-    display: flex;
-    justify-content: center;
-    background-color: #f8f9fa;
-    padding: 10px 0;
-    border-bottom: 1px solid #ddd;
-}
+            display: flex;
+            justify-content: center;
+            background-color: #f8f9fa;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
 
-.nav-link {
-    display: flex;
-    align-items: center;
-    margin: 0 15px;
-    text-decoration: none;
-    color: #007bff;
-    font-weight: 600;
-    font-size: 16px;
-    transition: color 0.3s, transform 0.3s;
-}
+        .nav-link {
+            display: flex;
+            align-items: center;
+            margin: 0 15px;
+            text-decoration: none;
+            color: #007bff;
+            font-weight: 600;
+            font-size: 16px;
+            transition: color 0.3s, transform 0.3s;
+        }
 
-.nav-link:hover {
-    color: #0056b3;
-    transform: scale(1.05);
-}
+        .nav-link:hover {
+            color: #0056b3;
+            transform: scale(1.05);
+        }
 
-.nav-link i {
-    margin-right: 8px;
-}
+        .nav-link i {
+            margin-right: 8px;
+        }
 
-</style>
+    </style>
 
 
 

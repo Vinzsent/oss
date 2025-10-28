@@ -11,29 +11,78 @@ include('config.php'); // Include database configuration
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <style>
+        /* Mobile-first responsive image container */
         .image-container {
-            height: 80vh;
+            height: 400px;
             overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
         }
+        
         .image-container img {
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
             transition: transform 0.2s;
         }
+        
         .zoom-controls {
             position: absolute;
             top: 10px;
             right: 10px;
             display: flex;
             flex-direction: column;
+            z-index: 10;
         }
+        
         .zoom-controls button {
             margin: 5px;
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            font-size: 1.2rem;
+        }
+        
+        /* Tablet and larger screens */
+        @media (min-width: 768px) {
+            .image-container {
+                height: 600px;
+            }
+        }
+        
+        /* Desktop screens */
+        @media (min-width: 992px) {
+            .image-container {
+                height: 70vh;
+            }
+        }
+        
+        /* Mobile spacing adjustments */
+        @media (max-width: 767px) {
+            .container {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+            }
+            
+            h3 {
+                font-size: 1.25rem;
+            }
+            
+            .form-group {
+                margin-bottom: 1rem;
+            }
+            
+            .alert {
+                padding: 0.75rem;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
