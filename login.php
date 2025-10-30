@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // If no errors, check the credentials
     if (empty($email_err) && empty($password_err)) {
         // Use prepared statements to prevent SQL injection
-        $sql = $conn->prepare("SELECT id, email, password FROM users WHERE email = ?");
+        $sql = $conn->prepare("SELECT id, email, password, role FROM users WHERE email = ?");
         $sql->bind_param("s", $email);  // "s" means the parameter is a string
         if ($sql->execute()) {
             $result = $sql->get_result();
@@ -42,6 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $_SESSION["loggedin"] = true;
                     $_SESSION["id"] = $row["id"];
                     $_SESSION["email"] = $row["email"];
+                    $_SESSION["role"] = $row["role"];
                     session_regenerate_id(true); // Regenerate session ID to prevent session fixation
                     echo <<<HTML
                     <!DOCTYPE html>

@@ -102,15 +102,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 echo '<img src="uploads/' . htmlspecialchars($profile_picture) . '" alt="Profile Picture" class="rounded-circle" style="width: 40px; height: 40px;">'; // Profile picture
                 echo '</li>';
                 echo '<li class="nav-item">';
-                echo '<a class="nav-link" href="logout.php">Log Out</a>';
+                echo '<a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal"><i class="fas fa-sign-out-alt mr-2"></i>Log Out</a>';
                 echo '</li>';
             } else {
                 // User is not logged in, show login and sign-up options
                 echo '<li class="nav-item">';
-                echo '<a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a>';
+                echo '<a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal"><i class="fas fa-sign-out-alt mr-2"></i>Login</a>';
                 echo '</li>';
                 echo '<li class="nav-item">';
-                echo '<a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#signUpModal">Sign Up</a>';
+                echo '<a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#signUpModal"><i class="fas fa-sign-out-alt mr-2"></i>Sign Up</a>';
                 echo '</li>';
             }
             ?>
@@ -489,4 +489,25 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     </script>
+
+    <!-- Logout Confirmation Modal -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title" id="logoutModalLabel">
+                        <i class="fas fa-sign-out-alt me-2"></i>Confirm Logout
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p class="mb-0">Are you sure you want to log out?</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    <a href="logout.php" class="btn btn-primary">Yes</a>
+                </div>
+            </div>
+        </div>
+    </div>
 

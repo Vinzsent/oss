@@ -89,10 +89,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
         // Prepare SQL query
-        $sql = "INSERT INTO users (first_name, middle_name, last_name, email, password, province, city_municipality, barangay, purok, profile_picture) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $role = "user"; // Default role for new registrations
+        $sql = "INSERT INTO users (first_name, middle_name, last_name, email, password, province, city_municipality, barangay, role, purok, profile_picture) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssssssssss", $first_name, $middle_name, $last_name, $email, $hashed_password, $province, $city, $barangay, $purok, $profile_picture);
+        $stmt->bind_param("sssssssssss", $first_name, $middle_name, $last_name, $email, $hashed_password, $province, $city, $barangay, $role, $purok, $profile_picture);
 
         if ($stmt->execute()) {
             echo "<script>alert('Registration successful!'); window.location.href = 'index.php';</script>";

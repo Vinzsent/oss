@@ -54,6 +54,17 @@ if ($_POST) {
     }
 }
 
+// Check for session messages from add-admin.php
+if (isset($_SESSION['success_msg'])) {
+    $success_msg = $_SESSION['success_msg'];
+    unset($_SESSION['success_msg']);
+}
+
+if (isset($_SESSION['error_msg'])) {
+    $error_msg = $_SESSION['error_msg'];
+    unset($_SESSION['error_msg']);
+}
+
 // Get user statistics and data
 $total_users_query = "SELECT COUNT(*) as count FROM users";
 $total_users_result = mysqli_query($conn, $total_users_query);
@@ -370,7 +381,7 @@ $users_result = mysqli_query($conn, $users_query);
             <div class="col-md-3">
                 <div class="stats-card">
                     <?php
-                    $active_users = mysqli_query($conn, "SELECT COUNT(*) as count FROM users WHERE email IS NOT NULL AND email != ''");
+                    $active_users = mysqli_query($conn, "SELECT COUNT(*) as count FROM users WHERE role != 'admin' AND status = 'active'");
                     $active_count = ($active_users) ? mysqli_fetch_assoc($active_users)['count'] : 0;
                     ?>
                     <div class="stats-number"><?php echo $active_count; ?></div>
@@ -380,7 +391,7 @@ $users_result = mysqli_query($conn, $users_query);
             <div class="col-md-3">
                 <div class="stats-card">
                     <?php 
-                    $admin_users = mysqli_query($conn, "SELECT COUNT(*) as count FROM users WHERE email LIKE '%admin%'");
+                    $admin_users = mysqli_query($conn, "SELECT COUNT(*) as count FROM users WHERE role = 'admin'");
                     $admin_count = ($admin_users) ? mysqli_fetch_assoc($admin_users)['count'] : 0;
                     ?>
                     <div class="stats-number"><?php echo $admin_count; ?></div>
@@ -482,7 +493,7 @@ $users_result = mysqli_query($conn, $users_query);
                             </a>
                         </li>
                         <li>
-                            <a href="logout.php">
+                            <a href="#" data-toggle="modal" data-target="#logoutModal">
                                 <i class="fas fa-sign-out-alt"></i>
                                 Logout
                             </a>
@@ -568,7 +579,7 @@ $users_result = mysqli_query($conn, $users_query);
                     <h5 class="modal-title"><i class="fas fa-user-plus mr-2"></i>Add New User</h5>
                     <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
                 </div>
-                <form method="POST">
+                <form method="POST" action="add-admin.php">
                     <div class="modal-body">
                         <input type="hidden" name="action" value="create">
                         <div class="form-group">
@@ -588,6 +599,11 @@ $users_result = mysqli_query($conn, $users_query);
                             <input type="email" class="form-control" name="email" required>
                         </div>
                         <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" class="form-control" name="password" required>
+                            <small>Minimum 6 characters</small>
+                        </div>
+                        <div class="form-group">
                             <label>Province</label>
                             <input type="text" class="form-control" name="province" required>
                         </div>
@@ -596,18 +612,19 @@ $users_result = mysqli_query($conn, $users_query);
                             <input type="text" class="form-control" name="city_municipality" required>
                         </div>
                         <div class="form-group">
+                            <label>Barangay</label>
+                            <input type="text" class="form-control" name="barangay">
+                        </div>
+                        <div class="form-group">
+                            <label>Purok</label>
+                            <input type="text" class="form-control" name="purok">
+                        </div>
+                        <div class="form-group">
                             <label>Role</label>
                             <select class="form-control" name="role" required>
                                 <option value="user">User</option>
                                 <option value="moderator">Moderator</option>
                                 <option value="admin">Administrator</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Status</label>
-                            <select class="form-control" name="status" required>
-                                <option value="active">Active</option>
-                                <option value="inactive">Inactive</option>
                             </select>
                         </div>
                     </div>
@@ -739,6 +756,29 @@ $users_result = mysqli_query($conn, $users_query);
             $('.alert').fadeOut();
         }, 5000);
     </script>
+
+    <!-- Logout Confirmation Modal -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title" id="logoutModalLabel">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Confirm Logout
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center">
+                    <p class="mb-0">Are you sure you want to log out?</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <a href="logout.php" class="btn btn-primary">Yes</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </body>
 

@@ -93,10 +93,17 @@
 					</div>
 					<!-- Admin -->
 					<div class="bg-gray-100 p-6 rounded-lg shadow-md hover:shadow-lg transition-all transform hover:scale-105" id="admin">
-						<button type="button" class="block w-full text-left" style="text-decoration: none; background: none; border: none;" data-bs-toggle="modal" data-bs-target="#adminModal">
-							<img src="assets/icons/admin.png" alt="Admin Icon" class="w-32 mx-auto mb-4">
-							<h3 class="text-xl font-semibold text-blue-500 text-center">Admin</h3>
-						</button>
+						<?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+							<a href="admin.php" class="block" style="text-decoration: none;">
+								<img src="assets/icons/admin.png" alt="Admin Icon" class="w-32 mx-auto mb-4">
+								<h3 class="text-xl font-semibold text-blue-500 text-center">Admin</h3>
+							</a>
+						<?php else: ?>
+							<button type="button" class="block w-full text-left" style="text-decoration: none; background: none; border: none;" data-bs-toggle="modal" data-bs-target="#adminModal">
+								<img src="assets/icons/admin.png" alt="Admin Icon" class="w-32 mx-auto mb-4">
+								<h3 class="text-xl font-semibold text-blue-500 text-center">Admin</h3>
+							</button>
+						<?php endif; ?>
 					</div>
 				</div>
 			</div>
@@ -184,7 +191,7 @@
 			
 			// Handle Enter key press
 			$('#adminPassword').keypress(function(e) {
-				if (e.which == 13) {
+				if (e.which == 5) {
 					$('#adminLoginBtn').click();
 				}
 			});
@@ -209,7 +216,7 @@
 			// Obfuscated password validation
 			function validatePassword(input) {
 				const encoded = btoa(input);
-				const target = 'bWlzYWRtaW4='; // Base64 encoded "misadmin"
+				const target = 'YWRtaW4='; // Base64 encoded "admin"
 				return encoded === target;
 			}
 		});
