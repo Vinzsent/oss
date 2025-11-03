@@ -282,9 +282,7 @@ $users_result = mysqli_query($conn, $users_query);
         }
 
         .logout-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
+            position: relative;
             background: rgba(255, 255, 255, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.3);
             color: white;
@@ -342,6 +340,29 @@ $users_result = mysqli_query($conn, $users_query);
             font-size: 0.8rem;
             font-weight: 500;
         }
+
+        /* Responsive tweaks */
+        @media (max-width: 576px) {
+            .admin-header {
+                padding: 16px 0;
+            }
+            .admin-title {
+                font-size: 1.5rem;
+            }
+            .admin-subtitle {
+                font-size: 0.9rem;
+            }
+            .logout-btn {
+                padding: 6px 14px;
+                margin-top: 8px;
+            }
+            .stats-number {
+                font-size: 2rem;
+            }
+            .stats-card {
+                padding: 18px;
+            }
+        }
     </style>
 </head>
 
@@ -349,14 +370,16 @@ $users_result = mysqli_query($conn, $users_query);
 
     <!-- Header -->
     <div class="admin-header">
-        <div class="container position-relative">
-            <button><a href="home.php" class="logout-btn text-decoration-none">
+        <div class="container d-flex justify-content-between align-items-center flex-wrap">
+            <div class="py-1">
+                <h1 class="admin-title mb-1">
+                    <i class="fas fa-users-cog mr-3"></i>Admin Dashboard
+                </h1>
+                <p class="admin-subtitle mb-0">User Management System</p>
+            </div>
+            <a href="home.php" class="logout-btn text-decoration-none mt-2 mt-sm-0">
                 <i class="fas fa-arrow-left mr-2"></i>Back to Home
-           </a></button>
-            <h1 class="admin-title">
-                <i class="fas fa-users-cog mr-3"></i>Admin Dashboard
-            </h1>
-            <p class="admin-subtitle">User Management System</p>
+            </a>
         </div>
     </div>
 
@@ -378,7 +401,7 @@ $users_result = mysqli_query($conn, $users_query);
 
         <!-- Statistics Cards -->
         <div class="row mb-4">
-            <div class="col-md-3">
+            <div class="col-md-3 mb-3">
                 <div class="stats-card">
                     <?php
                     $active_users = mysqli_query($conn, "SELECT COUNT(*) as count FROM users WHERE role != 'admin' AND status = 'active'");
@@ -388,7 +411,7 @@ $users_result = mysqli_query($conn, $users_query);
                     <div class="stats-label">Active Users</div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 mb-3">
                 <div class="stats-card">
                     <?php 
                     $admin_users = mysqli_query($conn, "SELECT COUNT(*) as count FROM users WHERE role = 'admin'");
@@ -398,7 +421,7 @@ $users_result = mysqli_query($conn, $users_query);
                     <div class="stats-label">Administrators</div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 mb-3">
                 <div class="stats-card">
                     <?php 
                     $today_users = mysqli_query($conn, "SELECT COUNT(*) as count FROM users WHERE id > 0");
@@ -408,7 +431,7 @@ $users_result = mysqli_query($conn, $users_query);
                     <div class="stats-label">Total Records</div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 mb-3">
                 <div class="stats-card">
                     <div class="stats-number"><?php echo $total_users['count']; ?></div>
                     <div class="stats-label">Total Users</div>
@@ -512,7 +535,7 @@ $users_result = mysqli_query($conn, $users_query);
                         </button>
                     </div>
                     <div class="card-body p-0">
-                        <div class="table-responsive" style="overflow-x: hidden;">
+                        <div class="table-responsive" style="overflow-x: auto;">
                             <table class="table table-custom table-sm" style="font-size: 0.85rem;">
                                 <thead>
                                     <tr>
