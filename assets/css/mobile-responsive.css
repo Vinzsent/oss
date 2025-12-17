@@ -1,0 +1,48 @@
+/* Mobile Responsive Styles */
+
+/* Extra small devices (phones, 575px and down) */
+@media only screen and (max-width: 575px) {
+    .edit-container {
+        margin: 20px 10px;
+        padding: 20px;
+    }
+    
+    .page-header h2 {
+        font-size: 1.5rem;
+    }
+    
+    .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    .d-md-flex {
+        flex-direction: column !important;
+    }
+    
+    .me-md-2 {
+        margin-right: 0 !important;
+    }
+}
+
+/* Small devices (landscape phones, 576px to 767px) */
+@media only screen and (min-width: 576px) and (max-width: 767px) {
+    .edit-container {
+        margin: 30px 15px;
+        padding: 25px;
+    }
+}
+
+/* Medium devices (tablets, 768px to 991px) */
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+    .edit-container {
+        max-width: 90%;
+    }
+}
+
+/* Large devices (desktops, 992px to 1199px) */
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+    .edit-container {
+        max-width: 80%;
+    }
+}

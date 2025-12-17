@@ -239,7 +239,7 @@ include('includes/nav.php');
                     
                     <?php
                     // Fetch construction materials data
-                    $materials_sql = "SELECT material_name, households FROM household_materials ORDER BY id";
+                    $materials_sql = "SELECT material_name, id, households FROM household_materials ORDER BY id";
                     $materials_result = $conn->query($materials_sql);
 
                     // Calculate total households
@@ -269,9 +269,9 @@ include('includes/nav.php');
                                     echo "<td>" . number_format((float)$row["households"]) . "</td>";
                                     echo "<td>" . $percentage . "%</td>";
                                     echo "<td>";
-                                    echo "<button class='btn btn-sm btn-primary' onclick='editMaterialData(\"" . htmlspecialchars($row["material_name"]) . "\", " . $row["households"] . ")' style='background: #8b5cf6; border-color: #8b5cf6;'>";
+                                    echo "<a href='edit_material.php?id=" . $row['id'] . "' class='btn btn-sm btn-primary' style='background: #8b5cf6; border-color: #8b5cf6;'>";
                                     echo "<i class='fas fa-edit me-1'></i>Edit";
-                                    echo "</button>";
+                                    echo "</a>";
                                     echo "</td>";
                                     echo "</tr>";
                                 }
@@ -305,7 +305,7 @@ include('includes/nav.php');
                     
                     <?php
                     // Fetch ownership data
-                    $ownership_sql = "SELECT ownership_type, households FROM household_ownership ORDER BY id";
+                    $ownership_sql = "SELECT ownership_type, id, households FROM household_ownership ORDER BY id";
                     $ownership_result = $conn->query($ownership_sql);
 
                     // Calculate total households for ownership
@@ -335,9 +335,9 @@ include('includes/nav.php');
                                     echo "<td>" . number_format((float)$row["households"]) . "</td>";
                                     echo "<td>" . $percentage . "%</td>";
                                     echo "<td>";
-                                    echo "<button class='btn btn-sm btn-primary' onclick='editOwnershipData(\"" . htmlspecialchars($row["ownership_type"]) . "\", " . $row["households"] . ")' style='background: #8b5cf6; border-color: #8b5cf6;'>";
+                                    echo "<a href='edit_ownership.php?id=" . $row['id'] . "' class='btn btn-sm btn-primary' style='background: #8b5cf6; border-color: #8b5cf6;'>";
                                     echo "<i class='fas fa-edit me-1'></i>Edit";
-                                    echo "</button>";
+                                    echo "</a>";
                                     echo "</td>";
                                     echo "</tr>";
                                 }
