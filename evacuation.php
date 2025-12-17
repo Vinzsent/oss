@@ -606,7 +606,7 @@ include('config.php');
                 ]
             },
             lizada: {
-                coordinates: [7.011205618059396, 125.48909317879182],
+                coordinates: [7.0045, 125.5019],
                 polygon: [
                     [7.003515125221749, 125.50779461119546],
 					[7.004761501404554, 125.50527657411206],
@@ -651,7 +651,7 @@ include('config.php');
                     { coordinates: [7.0285, 125.4945], name: 'Lawis' },
                     { coordinates: [7.0290, 125.4955], name: 'Lizada Beach' },
                     { coordinates: [7.0265, 125.4960], name: 'Lizada Proper' },
-                    { coordinates: [7.0275, 125.4950], name: 'Maltabis' },
+                    { coordinates: [6.9960072, 125.4923649], name: 'Malatabis' },
                     { coordinates: [7.0285, 125.4965], name: 'New Lizada' },
                     { coordinates: [7.003567897421154, 125.50239911092739], name: 'Punong' },
                     { coordinates: [7.0280, 125.4955], name: 'Riverside' },
@@ -673,7 +673,8 @@ include('config.php');
             'San Nicolas': { coordinates: [7.0108, 125.5025], name: 'San Nicolas' },
             'Doña Rosa': { coordinates: [7.009091, 125.5058599], name: 'Doña Rosa' },
             'Duha': { coordinates: [7.009091, 125.5058599], name: 'Duha' },
-            'Prudential': { coordinates: [7.016759158375993, 125.51069182752335], name: 'Prudential' }
+            'Prudential': { coordinates: [7.016759158375993, 125.51069182752335], name: 'Prudential' },
+            'Malatabis': { coordinates: [6.9960072, 125.4923649], name: 'Malatabis' }
         };
 
         var currentPolygon = null;
@@ -740,17 +741,16 @@ include('config.php');
             currentRoutes.push(routeLine);
         });
 
-        // Add and highlight safe zones with arrowheads
-        barangay.safeZones.forEach(zone => {
-            var safeZoneMarker = L.marker(zone.coordinates, { 
-                icon: L.divIcon({
-                    className: 'safe-zone-icon',
-                    html: '<i class="fa fa-map-marker-alt" style="color: #87CEEB; font-size: 24px;"></i>' // Sky blue pin icon
-                })
-            }).addTo(map);
+        // Add barangay hall marker with blue icon
+        var barangayHallMarker = L.marker(barangay.coordinates, {
+            icon: L.divIcon({
+                className: 'barangay-hall-icon',
+                html: '<i class="fa fa-map-marker-alt" style="color: #007bff; font-size: 24px;"></i>' // Blue pin icon
+            })
+        }).addTo(map).bindPopup(selectedBarangay.charAt(0).toUpperCase() + selectedBarangay.slice(1) + ' Barangay Hall');
+        currentMarkers.push(barangayHallMarker);
 
-            currentMarkers.push(safeZoneMarker);
-        });
+        // Safe zones are no longer displayed with markers
     } else {
         map.setView([7.028012, 125.447948], 12);
     }
@@ -785,15 +785,16 @@ include('config.php');
         // Focus on selected sitio
         map.setView(sitio.coordinates, 16);
 
-        // Create a custom marker icon for the sitio
-        var sitioMarker = L.marker(sitio.coordinates, { 
-            icon: L.divIcon({ 
-                className: 'arrow-icon',
-                html: '<i class="fa fa-map-marker-alt" style="color: #87CEEB; font-size: 24px;"></i>' // Sky blue pin icon
-            })
-        }).addTo(map);
+        // Sitio markers are no longer displayed
 
-        currentMarkers.push(sitioMarker);
+        // Special connection for Lizada to Malatabis
+        if (selectedBarangay === 'lizada' && selectedSitio === 'Malatabis') {
+            var lizadaToMalatabisRoute = L.polyline([
+                barangays[selectedBarangay].coordinates, 
+                sitio.coordinates
+            ], { color: 'red', weight: 3, dashArray: '5, 10' }).addTo(map);
+            currentRoutes.push(lizadaToMalatabisRoute);
+        }
 
         // Highlight the evacuation routes
         var evacuationRoutes = barangays[selectedBarangay]?.evacuationRoutes;
@@ -803,30 +804,13 @@ include('config.php');
                 drawEvacuationRoute(sitio.coordinates, route.end, 'red'); // Using red to highlight the route
             });
 
-            // Highlight evacuation centers with a special marker
-            evacuationRoutes.forEach(route => {
-                var evacuationCenterMarker = L.marker(route.end, {
-                    icon: L.divIcon({
-                        className: 'evacuation-center-icon',
-                        html: '<i class="fa fa-map-marker-alt" style="color: #87CEEB; font-size: 24px;"></i>' // Sky blue pin icon
-                    })
-                }).addTo(map);
-
-                currentMarkers.push(evacuationCenterMarker);
-            });
+            // Evacuation center markers are no longer displayed
         }
 
         // Add and emphasize safe zones with arrowheads pointing towards evacuation centers
         barangays[selectedBarangay]?.safeZones.forEach(zone => {
             if (zone.name === selectedSitio) {
-                var safeZoneMarker = L.marker(zone.coordinates, { 
-                    icon: L.divIcon({
-                        className: 'safe-zone-icon',
-                        html: '<i class="fa fa-map-marker-alt" style="color: #87CEEB; font-size: 24px;"></i>' // Sky blue pin icon
-                    })
-                }).addTo(map);
-
-                currentMarkers.push(safeZoneMarker);
+                // Safe zone markers are no longer displayed
             }        
         });
     }

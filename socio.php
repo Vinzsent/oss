@@ -6,8 +6,8 @@ session_start();
 include('config.php');
 
 // Check if a barangay and purok are selected
-$selectedBarangay = isset($_POST['barangay']) ? $_POST['barangay'] : 'lizada';
-$selectedPurok = isset($_POST['purok']) ? $_POST['purok'] : '';
+$selectedBarangay = isset($_GET['barangay']) ? $_GET['barangay'] : (isset($_POST['barangay']) ? $_POST['barangay'] : 'lizada');
+$selectedPurok = isset($_GET['purok']) ? $_GET['purok'] : (isset($_POST['purok']) ? $_POST['purok'] : '');
 
 // Pagination settings
 $rows_per_page = 10;

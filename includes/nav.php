@@ -76,9 +76,15 @@ document.addEventListener('DOMContentLoaded', function() {
             <li class="nav-item">
                 <a class="nav-link" href="evacuation.php">Evacuation Map</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="socio.php">Socio Demographic</a>
-            </li>
+           <li class="nav-item"><a class="nav-link" href="evacuation.php">Evacuation Map</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="socioDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Socio Demographic</a>
+                    <ul class="dropdown-menu" aria-labelledby="socioDropdown">
+                        <li><a class="dropdown-item" href="population.php">Population Over Age</a></li>
+                        <li><a class="dropdown-item" href="socio.php?barangay=lizada">Lizada</a></li>
+                        <li><a class="dropdown-item" href="socio.php?barangay=daliao">Daliao</a></li>
+                    </ul>
+                </li>
             <li class="nav-item">
                 <a class="nav-link" href="gallery.php">Gallery</a>
             </li>
@@ -309,7 +315,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

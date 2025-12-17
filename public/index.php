@@ -26,7 +26,14 @@
                     </ul>
                 </li>
                 <li class="nav-item"><a class="nav-link" href="evacuation.php">Evacuation Map</a></li>
-                <li class="nav-item"><a class="nav-link" href="socio.php">Socio Demographic</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="socioDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Socio Demographic</a>
+                    <ul class="dropdown-menu" aria-labelledby="socioDropdown">
+                        <li><a class="dropdown-item" href="socio.php">Overview</a></li>
+                        <li><a class="dropdown-item" href="socio.php?barangay=lizada">Lizada</a></li>
+                        <li><a class="dropdown-item" href="socio.php?barangay=daliao">Daliao</a></li>
+                    </ul>
+                </li>
                 <li class="nav-item"><a class="nav-link" href="gallery.php">Gallery</a></li>
                 <li class="nav-item"><a class="nav-link" href="download.php">Downloadables</a></li>
                 <li class="nav-item">
