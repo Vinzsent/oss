@@ -216,10 +216,15 @@ include('includes/nav.php');
                 <i class="fas fa-users me-3"></i>Population Demographics
             </h1>
             <p class="page-subtitle">Age Distribution Analysis - Barangay Lizada</p>
-            <div class="mt-4 text-center">
+            <div class="mt-4 d-flex justify-content-center align-items-center gap-3 flex-wrap">
+                <a href="purok_demographics.php" class="back-btn btn-lg px-4 py-3 shadow-sm hover-shadow transition-all text-decoration-none">
+                    <i class="fas fa-arrow-left me-2"></i>
+                    View Purok Demographics
+                </a>
+
                 <a href="household_materials.php" class="back-btn btn-lg px-4 py-3 shadow-sm hover-shadow transition-all text-decoration-none">
                     <i class="fas fa-arrow-right me-2"></i>
-                    View Households according to the type of Materials used in Construction
+                    View Households Materials used in Construction
                 </a>
             </div>
         </div>
