@@ -219,7 +219,7 @@ include('includes/nav.php');
             <div class="mt-4 d-flex justify-content-center align-items-center gap-3 flex-wrap">
                 <a href="purok_demographics.php" class="back-btn btn-lg px-4 py-3 shadow-sm hover-shadow transition-all text-decoration-none">
                     <i class="fas fa-arrow-left me-2"></i>
-                    View Purok Demographics
+                    Purok Demographics
                 </a>
 
                 <a href="household_materials.php" class="back-btn btn-lg px-4 py-3 shadow-sm hover-shadow transition-all text-decoration-none">

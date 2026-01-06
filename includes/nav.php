@@ -2,6 +2,34 @@
 <!-- Bootstrap CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
+<!-- Custom CSS for navigation -->
+<style>
+    .dropdown-item.active {
+        background-color: #8b5cf6 !important;
+        color: white !important;
+        font-weight: bold;
+    }
+    .dropdown-item.active:hover {
+        background-color: #6b21a8 !important;
+        color: white !important;
+    }
+    /* Ensure dropdown menu is clickable and properly positioned */
+    .dropdown-menu {
+        z-index: 1050 !important;
+        pointer-events: auto !important;
+    }
+    .dropdown-toggle {
+        cursor: pointer !important;
+    }
+    .dropdown-item {
+        cursor: pointer !important;
+    }
+    /* Prevent any overlay from blocking dropdown */
+    .navbar-nav .dropdown {
+        position: relative;
+    }
+</style>
+
 <!-- Mobile Responsive CSS -->
 <link href="assets/css/mobile-responsive.css" rel="stylesheet">
 
@@ -12,13 +40,22 @@
 <!-- Mobile Navigation Auto-Close Script -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Bootstrap dropdowns explicitly to ensure they work
+    const dropdownElementList = document.querySelectorAll('.dropdown-toggle');
+    dropdownElementList.forEach(function(dropdownToggleEl) {
+        // Initialize dropdown if Bootstrap is available
+        if (typeof bootstrap !== 'undefined' && bootstrap.Dropdown) {
+            new bootstrap.Dropdown(dropdownToggleEl);
+        }
+    });
+    
     // Auto-close navbar on mobile when clicking a link
     const navLinks = document.querySelectorAll('.navbar-nav .nav-link:not(.dropdown-toggle)');
     const navbarCollapse = document.getElementById('navbarNav');
     
     navLinks.forEach(function(link) {
         link.addEventListener('click', function() {
-            if (window.innerWidth < 992 && navbarCollapse.classList.contains('show')) {
+            if (window.innerWidth < 992 && navbarCollapse && navbarCollapse.classList.contains('show')) {
                 const bsCollapse = new bootstrap.Collapse(navbarCollapse, {
                     toggle: false
                 });
@@ -27,15 +64,20 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Also close when clicking dropdown items
+    // Also close when clicking dropdown items (but allow dropdown to open first)
     const dropdownItems = document.querySelectorAll('.dropdown-item');
     dropdownItems.forEach(function(item) {
         item.addEventListener('click', function() {
-            if (window.innerWidth < 992 && navbarCollapse.classList.contains('show')) {
-                const bsCollapse = new bootstrap.Collapse(navbarCollapse, {
-                    toggle: false
-                });
-                bsCollapse.hide();
+            if (window.innerWidth < 992 && navbarCollapse && navbarCollapse.classList.contains('show')) {
+                // Small delay to allow navigation to happen first
+                setTimeout(function() {
+                    if (navbarCollapse.classList.contains('show')) {
+                        const bsCollapse = new bootstrap.Collapse(navbarCollapse, {
+                            toggle: false
+                        });
+                        bsCollapse.hide();
+                    }
+                }, 100);
             }
         });
     });
@@ -68,21 +110,19 @@ document.addEventListener('DOMContentLoaded', function() {
 			</a>
     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
         <li><a class="dropdown-item" href="alert.php">Alert Signal</a></li>
-        <li><a class="dropdown-item" href="hazard.php">Hazard Map</a></li>
+        <li><a class="dropdown-item" href="hazard_vul.php">Hazard Map</a></li>
         <li><a class="dropdown-item" href="flood_warning.php">Flood Monitoring</a></li>
     </ul>
 </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="evacuation.php">Evacuation Map</a>
-            </li>
            <li class="nav-item"><a class="nav-link" href="evacuation.php">Evacuation Map</a></li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="socioDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Socio Demographic</a>
                     <ul class="dropdown-menu" aria-labelledby="socioDropdown">
-                        <li><a class="dropdown-item" href="population.php">Population Over Age</a></li>
-                        <li><a class="dropdown-item" href="socio.php?barangay=lizada">Lizada</a></li>
-                        <li><a class="dropdown-item" href="socio.php?barangay=daliao">Daliao</a></li>
+                        <li><a class="dropdown-item <?php echo basename($_SERVER['PHP_SELF']) == 'population.php' ? 'active' : ''; ?>" href="population.php">Population Over Age</a></li>
+                        <li><a class="dropdown-item <?php echo basename($_SERVER['PHP_SELF']) == 'hazard_vul.php' ? 'active' : ''; ?>" href="hazard_vul.php">Hazard Vulnerability</a></li>
+                        <li><a class="dropdown-item <?php echo basename($_SERVER['PHP_SELF']) == 'purok_demographics.php' ? 'active' : ''; ?>" href="purok_demographics.php">Purok Demographics</a></li>
+                        <li><a class="dropdown-item <?php echo basename($_SERVER['PHP_SELF']) == 'socio.php' && isset($_GET['barangay']) && $_GET['barangay'] == 'lizada' ? 'active' : ''; ?>" href="socio.php?barangay=lizada">Lizada</a></li>
+                        <li><a class="dropdown-item <?php echo basename($_SERVER['PHP_SELF']) == 'socio.php' && isset($_GET['barangay']) && $_GET['barangay'] == 'daliao' ? 'active' : ''; ?>" href="socio.php?barangay=daliao">Daliao</a></li>
                     </ul>
                 </li>
             <li class="nav-item">

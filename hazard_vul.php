@@ -1,88 +1,6 @@
 <?php
 session_start();
 include('config.php');
-
-// Pagination settings
-$rows_per_page = 10;
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-if ($page < 1) $page = 1;
-$offset = ($page - 1) * $rows_per_page;
-
-// Initialize totals array
-$totals = array(
-    'total_families' => 0,
-    'total_persons_male' => 0,
-    'total_persons_female' => 0,
-    'infant_male' => 0,
-    'infant_female' => 0,
-    'children_male' => 0,
-    'children_female' => 0,
-    'adult_male' => 0,
-    'adult_female' => 0,
-    'elderly_male' => 0,
-    'elderly_female' => 0,
-    'pwd_male' => 0,
-    'pwd_female' => 0,
-    'sickness_male' => 0,
-    'sickness_female' => 0,
-    'pregnant_women' => 0
-);
-
-// Get total count for pagination
-$count_query = "SELECT COUNT(*) as total FROM flood_data";
-$count_result = $conn->query($count_query);
-$total_rows = 0;
-$total_pages = 0;
-
-if ($count_result) {
-    $total_rows = $count_result->fetch_assoc()['total'];
-    $total_pages = ceil($total_rows / $rows_per_page);
-}
-
-// Calculate totals from ALL records (not just paginated ones)
-$totals_query = "SELECT * FROM flood_data";
-$totals_result = $conn->query($totals_query);
-
-if ($totals_result && $totals_result->num_rows > 0) {
-    while ($row = $totals_result->fetch_assoc()) {
-        // Calculate totals for numeric columns only
-        if (isset($row['total_families'])) $totals['total_families'] += (int)$row['total_families'];
-        if (isset($row['total_persons_male'])) $totals['total_persons_male'] += (int)$row['total_persons_male'];
-        if (isset($row['total_persons_female'])) $totals['total_persons_female'] += (int)$row['total_persons_female'];
-        if (isset($row['infant_male'])) $totals['infant_male'] += (int)$row['infant_male'];
-        if (isset($row['infant_female'])) $totals['infant_female'] += (int)$row['infant_female'];
-        if (isset($row['children_male'])) $totals['children_male'] += (int)$row['children_male'];
-        if (isset($row['children_female'])) $totals['children_female'] += (int)$row['children_female'];
-        if (isset($row['adult_male'])) $totals['adult_male'] += (int)$row['adult_male'];
-        if (isset($row['adult_female'])) $totals['adult_female'] += (int)$row['adult_female'];
-        if (isset($row['elderly_male'])) $totals['elderly_male'] += (int)$row['elderly_male'];
-        if (isset($row['elderly_female'])) $totals['elderly_female'] += (int)$row['elderly_female'];
-        if (isset($row['pwd_male'])) $totals['pwd_male'] += (int)$row['pwd_male'];
-        if (isset($row['pwd_female'])) $totals['pwd_female'] += (int)$row['pwd_female'];
-        if (isset($row['sickness_male'])) $totals['sickness_male'] += (int)$row['sickness_male'];
-        if (isset($row['sickness_female'])) $totals['sickness_female'] += (int)$row['sickness_female'];
-        if (isset($row['pregnant_women'])) $totals['pregnant_women'] += (int)$row['pregnant_women'];
-    }
-}
-
-// Query to fetch paginated demographic data
-$query = "SELECT * FROM flood_data ORDER BY purok_name LIMIT $rows_per_page OFFSET $offset";
-$demographic_result = $conn->query($query);
-
-// Initialize demographic_data array
-$demographic_data = array();
-
-// Check if query was successful and fetch paginated data
-if ($demographic_result && $demographic_result->num_rows > 0) {
-    while ($row = $demographic_result->fetch_assoc()) {
-        $demographic_data[] = $row;
-    }
-} else {
-    // If table doesn't exist or query fails, show error message
-    if ($total_rows == 0) {
-        $error_message = "No demographic data found. " . ($conn->error ? "Error: " . $conn->error : "The flood_data table may not exist.");
-    }
-}
 ?>
 
 <!DOCTYPE html>
@@ -90,7 +8,7 @@ if ($demographic_result && $demographic_result->num_rows > 0) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Purok Demographics - Micro Online Synthesis System</title>
+    <title>Population Demographics - Micro Online Synthesis System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -100,30 +18,30 @@ if ($demographic_result && $demographic_result->num_rows > 0) {
         }
         
         .main-container {
-            max-width: 100%;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 10px;
+            padding: 20px;
         }
         
         .page-header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 20px;
+            padding: 30px;
             border-radius: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         
         .page-title {
-            font-size: 1.8rem;
+            font-size: 2.5rem;
             font-weight: bold;
             margin: 0;
             text-align: center;
         }
         
         .page-subtitle {
-            font-size: 1rem;
-            margin: 8px 0 0 0;
+            font-size: 1.2rem;
+            margin: 10px 0 0 0;
             text-align: center;
             opacity: 0.9;
         }
@@ -131,11 +49,9 @@ if ($demographic_result && $demographic_result->num_rows > 0) {
         .table-container {
             background: white;
             border-radius: 10px;
-            padding: 15px;
+            padding: 40px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
+            margin-bottom: 30px;
         }
         
         .demographic-table {
@@ -145,8 +61,6 @@ if ($demographic_result && $demographic_result->num_rows > 0) {
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            min-width: 1200px;
-            font-size: 0.85rem;
         }
         
         .demographic-table thead {
@@ -155,13 +69,11 @@ if ($demographic_result && $demographic_result->num_rows > 0) {
         }
         
         .demographic-table th {
-            padding: 8px 4px;
+            padding: 15px;
             text-align: center;
             font-weight: bold;
-            font-size: 0.75rem;
+            font-size: 1.1rem;
             border: none;
-            white-space: nowrap;
-            line-height: 1.2;
         }
         
         .demographic-table tbody tr {
@@ -178,30 +90,21 @@ if ($demographic_result && $demographic_result->num_rows > 0) {
             cursor: pointer;
         }
         
-        .demographic-table tbody tr:last-child {
-            background-color: #e9d5f7;
-        }
-        
-        .demographic-table tbody tr:last-child:hover {
-            background-color: #d8b4fe;
-        }
-        
         .demographic-table td {
-            padding: 6px 4px;
+            padding: 12px 15px;
             text-align: center;
             border: 1px solid #e9d5f7;
             font-weight: 500;
             color: #1f2937;
-            font-size: 0.8rem;
-            line-height: 1.3;
         }
         
         .demographic-table tbody tr:last-child td {
             font-weight: bold;
+            background-color: #e9d5f7;
             color: #6b21a8;
         }
         
-        .purok-name {
+        .age-bracket {
             text-align: left !important;
             font-weight: 600;
         }
@@ -209,24 +112,23 @@ if ($demographic_result && $demographic_result->num_rows > 0) {
         .stats-card {
             background: white;
             border-radius: 10px;
-            padding: 15px;
+            padding: 20px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             border-left: 4px solid #8b5cf6;
         }
         
         .stats-card h5 {
             color: #8b5cf6;
             font-weight: bold;
-            margin-bottom: 10px;
-            font-size: 1rem;
+            margin-bottom: 15px;
         }
         
         .stat-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 6px 0;
+            padding: 8px 0;
             border-bottom: 1px solid #f3f4f6;
         }
         
@@ -236,24 +138,23 @@ if ($demographic_result && $demographic_result->num_rows > 0) {
         
         .stat-label {
             color: #6b7280;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
         }
         
         .stat-value {
             font-weight: bold;
             color: #1f2937;
-            font-size: 0.95rem;
+            font-size: 1.1rem;
         }
         
         .export-btn {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            padding: 6px 12px;
+            padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
             font-weight: 500;
-            font-size: 0.85rem;
             transition: transform 0.2s ease;
         }
         
@@ -262,15 +163,37 @@ if ($demographic_result && $demographic_result->num_rows > 0) {
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
         }
         
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 10px;
+            }
+            
+            .page-title {
+                font-size: 1.8rem;
+            }
+            
+            .table-container {
+                padding: 15px;
+            }
+            
+            .demographic-table {
+                font-size: 0.9rem;
+            }
+            
+            .demographic-table th,
+            .demographic-table td {
+                padding: 8px;
+            }
+        }
+        
         .back-btn {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            padding: 8px 16px;
+            padding: 12px 24px;
             border-radius: 8px;
             cursor: pointer;
             font-weight: 500;
-            font-size: 0.9rem;
             transition: transform 0.2s ease;
             text-decoration: none;
             display: inline-flex;
@@ -284,136 +207,43 @@ if ($demographic_result && $demographic_result->num_rows > 0) {
         }
         
         .pagination {
-            margin-top: 20px;
+            display: flex;
+            padding-left: 0;
+            list-style: none;
+            border-radius: 0.25rem;
         }
         
-        .pagination .page-link {
+        .page-link {
+            position: relative;
+            display: block;
             color: #8b5cf6;
-            border-color: #e9d5f7;
-            padding: 8px 16px;
-            transition: all 0.3s ease;
-        }
-        
-        .pagination .page-link:hover {
-            background-color: #8b5cf6;
-            color: white;
-            border-color: #8b5cf6;
-        }
-        
-        .pagination .page-item.active .page-link {
-            background-color: #8b5cf6;
-            border-color: #8b5cf6;
-            color: white;
-        }
-        
-        .pagination .page-item.disabled .page-link {
-            color: #6c757d;
-            pointer-events: none;
-            cursor: not-allowed;
+            text-decoration: none;
             background-color: #fff;
-            border-color: #dee2e6;
+            border: 1px solid #dee2e6;
+            transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            padding: 0.5rem 0.75rem;
         }
         
-        @media (max-width: 1200px) {
-            .demographic-table {
-                min-width: 1000px;
-                font-size: 0.8rem;
-            }
-            
-            .demographic-table th {
-                font-size: 0.7rem;
-                padding: 6px 3px;
-            }
-            
-            .demographic-table td {
-                font-size: 0.75rem;
-                padding: 5px 3px;
-            }
+        .page-link:hover {
+            z-index: 2;
+            color: #fff;
+            background-color: #8b5cf6;
+            border-color: #8b5cf6;
         }
         
-        @media (max-width: 768px) {
-            .main-container {
-                padding: 5px;
-            }
-            
-            .page-header {
-                padding: 15px;
-                margin-bottom: 15px;
-            }
-            
-            .page-title {
-                font-size: 1.4rem;
-            }
-            
-            .page-subtitle {
-                font-size: 0.85rem;
-            }
-            
-            .table-container {
-                padding: 10px;
-                margin-bottom: 15px;
-            }
-            
-            .demographic-table {
-                min-width: 900px;
-                font-size: 0.75rem;
-            }
-            
-            .demographic-table th {
-                font-size: 0.65rem;
-                padding: 5px 2px;
-            }
-            
-            .demographic-table td {
-                font-size: 0.7rem;
-                padding: 4px 2px;
-            }
-            
-            .stats-card {
-                padding: 12px;
-                margin-bottom: 12px;
-            }
-            
-            .stats-card h5 {
-                font-size: 0.9rem;
-                margin-bottom: 8px;
-            }
-            
-            .stat-label {
-                font-size: 0.75rem;
-            }
-            
-            .stat-value {
-                font-size: 0.85rem;
-            }
-            
-            .back-btn {
-                padding: 6px 12px;
-                font-size: 0.8rem;
-            }
-            
-            .pagination {
-                flex-wrap: wrap;
-                margin-top: 15px;
-            }
-            
-            .pagination .page-link {
-                padding: 4px 8px;
-                font-size: 0.8rem;
-            }
+        .page-item.active .page-link {
+            z-index: 3;
+            color: #fff;
+            background-color: #8b5cf6;
+            border-color: #8b5cf6;
         }
         
-        @media (max-width: 480px) {
-            .demographic-table {
-                min-width: 800px;
-            }
-            
-            .page-title {
-                font-size: 1.2rem;
-            }
+        .page-item {
+            margin: 0 2px;
         }
-         /* Custom CSS for navigation */
-         .dropdown-item.active {
+        
+        /* Custom CSS for navigation */
+        .dropdown-item.active {
             background-color: #8b5cf6 !important;
             color: white !important;
             font-weight: bold;
@@ -568,238 +398,304 @@ if ($demographic_result && $demographic_result->num_rows > 0) {
     </script>
     
     <div class="main-container">
+        <?php
+        if (isset($_SESSION['success'])) {
+            echo "<div class='alert alert-success alert-dismissible fade show' role='alert'>";
+            echo "<i class='fas fa-check-circle me-2'></i>" . htmlspecialchars($_SESSION['success']);
+            echo "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>";
+            echo "</div>";
+            unset($_SESSION['success']);
+        }
+        
+        if (isset($_SESSION['error'])) {
+            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert'>";
+            echo "<i class='fas fa-exclamation-triangle me-2'></i>" . htmlspecialchars($_SESSION['error']);
+            echo "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>";
+            echo "</div>";
+            unset($_SESSION['error']);
+        }
+        ?>
         <div class="page-header">
             <h1 class="page-title">
-                <i class="fas fa-users me-3"></i>Purok Demographics
+                <i class="fas fa-exclamation-triangle me-3"></i>Hazard Vulnerability 
             </h1>
-            <p class="page-subtitle">Detailed Population Statistics by Purok - Barangay Lizada</p>
-            <div class="mt-3 text-center">
-                <a href="population.php" class="back-btn shadow-sm hover-shadow transition-all text-decoration-none">
+            <p class="page-subtitle">Age Distribution Analysis - Barangay Lizada</p>
+            <div class="mt-4 d-flex justify-content-center align-items-center gap-3 flex-wrap">
+                <a href="purok_demographics.php" class="back-btn btn-lg px-4 py-3 shadow-sm hover-shadow transition-all text-decoration-none">
                     <i class="fas fa-arrow-left me-2"></i>
-                    Back to Population Demographics
+                    View Flood Data
+                </a>
+
+                <a href="household_materials.php" class="back-btn btn-lg px-4 py-3 shadow-sm hover-shadow transition-all text-decoration-none">
+                    <i class="fas fa-arrow-right me-2"></i>
+                    View Households Materials used in Construction
                 </a>
             </div>
         </div>
         
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-12"> 
                 <div class="table-container">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="mb-0" style="font-size: 1rem; font-weight: 600;">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="mb-0">
                             <i class="fas fa-chart-bar me-2 text-purple"></i>
-                            Demographic Data by Purok
-                        </h5>
-                        <button class="export-btn" onclick="exportTable()">
-                            <i class="fas fa-download me-1"></i>Export
-                        </button>
+                            Age Bracket Distribution
+                        </h4>
                     </div>
                     
+                    <?php
+                    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                    $per_page = 10;
+                    $offset = ($page - 1) * $per_page;
+                    
+                    $count_query = "SELECT COUNT(*) as total FROM hazard";
+                    $count_result = $conn->query($count_query);
+                    $total_rows = $count_result->fetch_assoc()['total'];
+                    $total_pages = ceil($total_rows / $per_page);
+                    
+                    $hazard_query = "SELECT * FROM hazard LIMIT $offset, $per_page";
+                    $hazard_result = $conn->query($hazard_query);
+                    $totals = array(
+                        "total_female" => 0,
+                        "total_male" => 0,
+                        "total_population" => 0
+                    );
+                    $age_groups = array(
+                        "youth_0_14" => 0,
+                        "adults_15_64" => 0,
+                        "elderly_65_plus" => 0
+                    );
+                    ?>
                     <table class="demographic-table" id="demographicTable">
                         <thead>
                             <tr>
-                                <th>PUROK</th>
-                                <th>FAMILIES</th>
-                                <th>MALE</th>
-                                <th>FEMALE</th>
-                                <th>INF M</th>
-                                <th>INF F</th>
-                                <th>CHILD M</th>
-                                <th>CHILD F</th>
-                                <th>ADULT M</th>
-                                <th>ADULT F</th>
-                                <th>ELDER M</th>
-                                <th>ELDER F</th>
-                                <th>PWD M</th>
-                                <th>PWD F</th>
-                                <th>SICK M</th>
-                                <th>SICK F</th>
-                                <th>PREGNANT</th>
+                                <th>AREA</th>
+                                <th>LOW FAMILY</th>
+                                <th>LOW PERSON</th>
+                                <th>MODERATE FAMILY</th>
+                                <th>MODERATE PERSON</th>
+                                <th>HIGH FAMILY</th>
+                                <th>HIGH PERSON</th>
                                 <th>ACTION</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
-                            if (!empty($demographic_data)) {
-                                foreach ($demographic_data as $row) {
+                            if ($hazard_result && $hazard_result->num_rows > 0) {
+                                while($row = $hazard_result->fetch_assoc()) {
+                                    $bracket = isset($row["hazard"]) ? $row["hazard"] : "";
+                                    $female = isset($row["female"]) ? (int)$row["female"] : 0;
+                                    $male = isset($row["male"]) ? (int)$row["male"] : 0;
+                                    $row_total = isset($row["total"]) && is_numeric($row["total"]) ? (int)$row["total"] : ($female + $male);
+
+                                    $totals["total_female"] += $female;
+                                    $totals["total_male"] += $male;
+                                    $totals["total_population"] += $row_total;
+
                                     echo "<tr>";
-                                    echo "<td class='purok-name'>" . htmlspecialchars($row['purok_name'] ?? '') . "</td>";
-                                    echo "<td>" . number_format($row['total_families'] ?? 0) . "</td>";
-                                    echo "<td>" . number_format($row['total_persons_male'] ?? 0) . "</td>";
-                                    echo "<td>" . number_format($row['total_persons_female'] ?? 0) . "</td>";
-                                    echo "<td>" . number_format($row['infant_male'] ?? 0) . "</td>";
-                                    echo "<td>" . number_format($row['infant_female'] ?? 0) . "</td>";
-                                    echo "<td>" . number_format($row['children_male'] ?? 0) . "</td>";
-                                    echo "<td>" . number_format($row['children_female'] ?? 0) . "</td>";
-                                    echo "<td>" . number_format($row['adult_male'] ?? 0) . "</td>";
-                                    echo "<td>" . number_format($row['adult_female'] ?? 0) . "</td>";
-                                    echo "<td>" . number_format($row['elderly_male'] ?? 0) . "</td>";
-                                    echo "<td>" . number_format($row['elderly_female'] ?? 0) . "</td>";
-                                    echo "<td>" . number_format($row['pwd_male'] ?? 0) . "</td>";
-                                    echo "<td>" . number_format($row['pwd_female'] ?? 0) . "</td>";
-                                    echo "<td>" . number_format($row['sickness_male'] ?? 0) . "</td>";
-                                    echo "<td>" . number_format($row['sickness_female'] ?? 0) . "</td>";
-                                    echo "<td>" . number_format($row['pregnant_women'] ?? 0) . "</td>";
+
+                                    echo "<td>" . htmlspecialchars(isset($row["area"]) ? $row["area"] : "") . "</td>";
+                                    echo "<td>" . number_format(isset($row["low_family"]) ? (int)$row["low_family"] : 0) . "</td>";
+                                    echo "<td>" . number_format(isset($row["low_person"]) ? (int)$row["low_person"] : 0) . "</td>";
+                                    echo "<td>" . number_format(isset($row["moderate_family"]) ? (int)$row["moderate_family"] : 0) . "</td>";
+                                    echo "<td>" . number_format(isset($row["moderate_person"]) ? (int)$row["moderate_person"] : 0) . "</td>";
+                                    echo "<td>" . number_format(isset($row["high_family"]) ? (int)$row["high_family"] : 0) . "</td>";
+                                    echo "<td>" . number_format(isset($row["high_person"]) ? (int)$row["high_person"] : 0) . "</td>";
                                     echo "<td>";
-                                    echo "<button class='btn btn-sm btn-primary' onclick='editData(\"" . htmlspecialchars($row['purok_name'] ?? '') . "\")' style='background: #8b5cf6; border-color: #8b5cf6;'>";
+                                    echo "<button class='btn btn-sm btn-primary' onclick='openEditModal(" . json_encode($row) . ")' style='background: #8b5cf6; border-color: #8b5cf6;'>";
                                     echo "<i class='fas fa-edit me-1'></i>Edit";
                                     echo "</button>";
                                     echo "</td>";
                                     echo "</tr>";
                                 }
-                                
-                                // Add total row
+
                                 echo "<tr>";
-                                echo "<td class='purok-name'><strong>TOTAL</strong></td>";
-                                echo "<td><strong>" . number_format($totals['total_families']) . "</strong></td>";
-                                echo "<td><strong>" . number_format($totals['total_persons_male']) . "</strong></td>";
-                                echo "<td><strong>" . number_format($totals['total_persons_female']) . "</strong></td>";
-                                echo "<td><strong>" . number_format($totals['infant_male']) . "</strong></td>";
-                                echo "<td><strong>" . number_format($totals['infant_female']) . "</strong></td>";
-                                echo "<td><strong>" . number_format($totals['children_male']) . "</strong></td>";
-                                echo "<td><strong>" . number_format($totals['children_female']) . "</strong></td>";
-                                echo "<td><strong>" . number_format($totals['adult_male']) . "</strong></td>";
-                                echo "<td><strong>" . number_format($totals['adult_female']) . "</strong></td>";
-                                echo "<td><strong>" . number_format($totals['elderly_male']) . "</strong></td>";
-                                echo "<td><strong>" . number_format($totals['elderly_female']) . "</strong></td>";
-                                echo "<td><strong>" . number_format($totals['pwd_male']) . "</strong></td>";
-                                echo "<td><strong>" . number_format($totals['pwd_female']) . "</strong></td>";
-                                echo "<td><strong>" . number_format($totals['sickness_male']) . "</strong></td>";
-                                echo "<td><strong>" . number_format($totals['sickness_female']) . "</strong></td>";
-                                echo "<td><strong>" . number_format($totals['pregnant_women']) . "</strong></td>";
+                                echo "<td><strong>TOTAL</strong></td>";
+                                echo "<td>-</td>";
+                                echo "<td>-</td>";
+                                echo "<td>-</td>";
+                                echo "<td>-</td>";
+                                echo "<td>-</td>";
+                                echo "<td>-</td>";
                                 echo "<td>-</td>";
                                 echo "</tr>";
                             } else {
-                                // Show error message if no data
-                                $colspan = 18; // Number of columns
-                                echo "<tr><td colspan='$colspan' class='text-center p-5'>";
-                                echo "<div class='alert alert-warning' role='alert'>";
-                                echo "<i class='fas fa-exclamation-triangle me-2'></i>";
-                                echo isset($error_message) ? htmlspecialchars($error_message) : "No demographic data available.";
-                                echo "</div>";
-                                echo "</td></tr>";
+                                echo "<tr><td colspan='8' class='text-center'>No data available</td></tr>";
                             }
                             ?>
                         </tbody>
                     </table>
                     
-                    <?php if (!empty($demographic_data) && $total_pages > 1): ?>
+                    <?php if ($total_pages > 1): ?>
                     <nav aria-label="Page navigation" class="mt-4">
                         <ul class="pagination justify-content-center">
-                            <li class="page-item <?php echo $page <= 1 ? 'disabled' : ''; ?>">
-                                <a class="page-link" href="?page=<?php echo $page - 1; ?>" aria-label="Previous">
-                                    <span aria-hidden="true">&laquo;</span>
-                                </a>
-                            </li>
+                            <?php if ($page > 1): ?>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=<?php echo $page - 1; ?>" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                            <?php endif; ?>
                             
-                            <?php
-                            // Show page numbers
-                            $start_page = max(1, $page - 2);
-                            $end_page = min($total_pages, $page + 2);
+                            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                                <li class="page-item <?php echo $i == $page ? 'active' : ''; ?>">
+                                    <a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                                </li>
+                            <?php endfor; ?>
                             
-                            if ($start_page > 1) {
-                                echo '<li class="page-item"><a class="page-link" href="?page=1">1</a></li>';
-                                if ($start_page > 2) {
-                                    echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
-                                }
-                            }
-                            
-                            for ($i = $start_page; $i <= $end_page; $i++) {
-                                $active = $i == $page ? 'active' : '';
-                                echo "<li class='page-item $active'><a class='page-link' href='?page=$i'>$i</a></li>";
-                            }
-                            
-                            if ($end_page < $total_pages) {
-                                if ($end_page < $total_pages - 1) {
-                                    echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
-                                }
-                                echo "<li class='page-item'><a class='page-link' href='?page=$total_pages'>$total_pages</a></li>";
-                            }
-                            ?>
-                            
-                            <li class="page-item <?php echo $page >= $total_pages ? 'disabled' : ''; ?>">
-                                <a class="page-link" href="?page=<?php echo $page + 1; ?>" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                </a>
-                            </li>
+                            <?php if ($page < $total_pages): ?>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=<?php echo $page + 1; ?>" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            <?php endif; ?>
                         </ul>
-                        <div class="text-center text-muted mt-2">
-                            <small>Showing <?php echo count($demographic_data); ?> of <?php echo $total_rows; ?> records (Page <?php echo $page; ?> of <?php echo $total_pages; ?>)</small>
-                        </div>
                     </nav>
                     <?php endif; ?>
                 </div>
             </div>
         </div>
-        
-        <div class="row">
-            <div class="col-lg-4">
-                <div class="stats-card">
-                    <h5><i class="fas fa-home me-2"></i>Families & Persons</h5>
-                    <div class="stat-item">
-                        <span class="stat-label">Total Families</span>
-                        <span class="stat-value"><?php echo number_format($totals['total_families']); ?></span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Total Male</span>
-                        <span class="stat-value"><?php echo number_format($totals['total_persons_male']); ?></span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Total Female</span>
-                        <span class="stat-value"><?php echo number_format($totals['total_persons_female']); ?></span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Total Persons</span>
-                        <span class="stat-value"><?php echo number_format($totals['total_persons_male'] + $totals['total_persons_female']); ?></span>
-                    </div>
+    </div>
+    
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #8b5cf6; color: white;">
+                    <h5 class="modal-title" id="editModalLabel">
+                        <i class="fas fa-edit me-2"></i>Edit Hazard Data
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-            </div>
-            
-            <div class="col-lg-4">
-                <div class="stats-card">
-                    <h5><i class="fas fa-child me-2"></i>Age Groups</h5>
-                    <div class="stat-item">
-                        <span class="stat-label">Infants (M+F)</span>
-                        <span class="stat-value"><?php echo number_format($totals['infant_male'] + $totals['infant_female']); ?></span>
+                <form id="editForm" method="POST" action="update_hazard.php">
+                    <div class="modal-body">
+                        <input type="hidden" id="editId" name="id">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="editArea" class="form-label">Area</label>
+                                <input type="text" class="form-control" id="editArea" name="area" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="editHazard" class="form-label">Hazard</label>
+                                <input type="text" class="form-control" id="editHazard" name="hazard" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="editLowFamily" class="form-label">Low Family</label>
+                                <input type="number" class="form-control" id="editLowFamily" name="low_family" min="0" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="editLowPerson" class="form-label">Low Person</label>
+                                <input type="number" class="form-control" id="editLowPerson" name="low_person" min="0" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="editModerateFamily" class="form-label">Moderate Family</label>
+                                <input type="number" class="form-control" id="editModerateFamily" name="moderate_family" min="0" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="editModeratePerson" class="form-label">Moderate Person</label>
+                                <input type="number" class="form-control" id="editModeratePerson" name="moderate_person" min="0" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="editHighFamily" class="form-label">High Family</label>
+                                <input type="number" class="form-control" id="editHighFamily" name="high_family" min="0" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="editHighPerson" class="form-label">High Person</label>
+                                <input type="number" class="form-control" id="editHighPerson" name="high_person" min="0" required>
+                            </div>
+                        </div>
                     </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Children (M+F)</span>
-                        <span class="stat-value"><?php echo number_format($totals['children_male'] + $totals['children_female']); ?></span>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" style="background: #8b5cf6; border-color: #8b5cf6;">
+                            <i class="fas fa-save me-1"></i>Save Changes
+                        </button>
                     </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Adults (M+F)</span>
-                        <span class="stat-value"><?php echo number_format($totals['adult_male'] + $totals['adult_female']); ?></span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Elderly (M+F)</span>
-                        <span class="stat-value"><?php echo number_format($totals['elderly_male'] + $totals['elderly_female']); ?></span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-4">
-                <div class="stats-card">
-                    <h5><i class="fas fa-info-circle me-2"></i>Special Categories</h5>
-                    <div class="stat-item">
-                        <span class="stat-label">PWD (Total)</span>
-                        <span class="stat-value"><?php echo number_format($totals['pwd_male'] + $totals['pwd_female']); ?></span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">With Sickness (Total)</span>
-                        <span class="stat-value"><?php echo number_format($totals['sickness_male'] + $totals['sickness_female']); ?></span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Pregnant Women</span>
-                        <span class="stat-value"><?php echo number_format($totals['pregnant_women']); ?></span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Total Puroks</span>
-                        <span class="stat-value"><?php echo count($demographic_data); ?></span>
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
-
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function openEditModal(rowData) {
+            // Populate the modal fields with the row data
+            document.getElementById('editId').value = rowData.id || '';
+            document.getElementById('editArea').value = rowData.area || '';
+            document.getElementById('editHazard').value = rowData.hazard || '';
+            document.getElementById('editLowFamily').value = rowData.low_family || 0;
+            document.getElementById('editLowPerson').value = rowData.low_person || 0;
+            document.getElementById('editModerateFamily').value = rowData.moderate_family || 0;
+            document.getElementById('editModeratePerson').value = rowData.moderate_person || 0;
+            document.getElementById('editHighFamily').value = rowData.high_family || 0;
+            document.getElementById('editHighPerson').value = rowData.high_person || 0;
+            
+            // Show the modal
+            const modal = new bootstrap.Modal(document.getElementById('editModal'));
+            modal.show();
+        }
+        
+        function exportTable() {
+            const table = document.getElementById('demographicTable');
+            let csv = [];
+            
+            // Get headers (exclude Action column)
+            const headers = [];
+            table.querySelectorAll('thead th').forEach((th, index) => {
+                if (index < 7) { // Only include first 7 columns, exclude Action
+                    headers.push(th.textContent.trim());
+                }
+            });
+            csv.push(headers.join(','));
+            
+            // Get data rows (exclude Action column and TOTAL row)
+            table.querySelectorAll('tbody tr').forEach(tr => {
+                const row = [];
+                tr.querySelectorAll('td').forEach((td, index) => {
+                    if (index < 7 && !td.textContent.includes('TOTAL')) { // Only include first 7 columns, exclude Action and TOTAL
+                        row.push(td.textContent.trim());
+                    }
+                });
+                if (row.length > 0) {
+                    csv.push(row.join(','));
+                }
+            });
+            
+            // Create download link
+            const csvContent = csv.join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'hazard_data_' + new Date().toISOString().split('T')[0] + '.csv';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+        
+        // Add row click functionality (exclude action column clicks)
+        document.querySelectorAll('.demographic-table tbody tr').forEach(row => {
+            row.addEventListener('click', function(e) {
+                // Don't highlight row if clicking on action button
+                if (e.target.tagName === 'BUTTON' || e.target.tagName === 'I') {
+                    return;
+                }
+                
+                // Highlight selected row
+                document.querySelectorAll('.demographic-table tbody tr').forEach(r => {
+                    r.style.backgroundColor = '';
+                });
+                this.style.backgroundColor = '#c084fc';
+            });
+        });
+    </script>
+    
     <!-- Login Modal -->
     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -1125,72 +1021,5 @@ if ($demographic_result && $demographic_result->num_rows > 0) {
             </div>
         </div>
     </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        function editData(purokName) {
-            // TODO: Implement edit functionality
-            alert('Edit functionality to be implemented for Purok: ' + purokName);
-        }
-        
-        function exportTable() {
-            const table = document.getElementById('demographicTable');
-            let csv = [];
-            
-            // Get headers (exclude Action column)
-            const headers = [];
-            table.querySelectorAll('thead th').forEach((th, index) => {
-                const thText = th.textContent.trim();
-                if (thText !== 'ACTION') {
-                    headers.push(thText);
-                }
-            });
-            csv.push(headers.join(','));
-            
-            // Get data rows (exclude Action column)
-            table.querySelectorAll('tbody tr').forEach(tr => {
-                const row = [];
-                tr.querySelectorAll('td').forEach((td, index) => {
-                    const headerCount = table.querySelectorAll('thead th').length;
-                    if (index < headerCount - 1) { // Exclude Action column
-                        row.push(td.textContent.trim());
-                    }
-                });
-                csv.push(row.join(','));
-            });
-            
-            // Create download link
-            const csvContent = csv.join('\n');
-            const blob = new Blob([csvContent], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'purok_demographics_' + new Date().toISOString().split('T')[0] + '.csv';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-        }
-        
-        // Add row click functionality (exclude action column clicks)
-        document.querySelectorAll('.demographic-table tbody tr').forEach(row => {
-            row.addEventListener('click', function(e) {
-                // Don't highlight row if clicking on action button
-                if (e.target.tagName === 'BUTTON' || e.target.tagName === 'I') {
-                    return;
-                }
-                
-                // Highlight selected row
-                document.querySelectorAll('.demographic-table tbody tr').forEach(r => {
-                    r.style.backgroundColor = '';
-                });
-                // Don't change background of total row
-                if (!this.querySelector('.purok-name') || this.querySelector('.purok-name').textContent.trim() !== 'TOTAL') {
-                    this.style.backgroundColor = '#c084fc';
-                }
-            });
-        });
-    </script>
 </body>
 </html>
-
