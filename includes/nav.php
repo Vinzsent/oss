@@ -121,6 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <li><a class="dropdown-item <?php echo basename($_SERVER['PHP_SELF']) == 'population.php' ? 'active' : ''; ?>" href="population.php">Population Over Age</a></li>
                         <li><a class="dropdown-item <?php echo basename($_SERVER['PHP_SELF']) == 'hazard_vul.php' ? 'active' : ''; ?>" href="hazard_vul.php">Hazard Vulnerability</a></li>
                         <li><a class="dropdown-item <?php echo basename($_SERVER['PHP_SELF']) == 'purok_demographics.php' ? 'active' : ''; ?>" href="purok_demographics.php">Purok Demographics</a></li>
+                        <li><a class="dropdown-item <?php echo basename($_SERVER['PHP_SELF']) == 'purok_evac.php' ? 'active' : ''; ?>" href="purok_evac.php">Purok Evacuation</a></li>
                         <li><a class="dropdown-item <?php echo basename($_SERVER['PHP_SELF']) == 'socio.php' && isset($_GET['barangay']) && $_GET['barangay'] == 'lizada' ? 'active' : ''; ?>" href="socio.php?barangay=lizada">Lizada</a></li>
                         <li><a class="dropdown-item <?php echo basename($_SERVER['PHP_SELF']) == 'socio.php' && isset($_GET['barangay']) && $_GET['barangay'] == 'daliao' ? 'active' : ''; ?>" href="socio.php?barangay=daliao">Daliao</a></li>
                     </ul>
