@@ -1,6 +1,14 @@
 <?php
 session_start();
 include('config.php');
+
+// Check authentication and get user role
+$is_logged_in = isset($_SESSION['id']) && isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true;
+$user_role = isset($_SESSION['role']) ? $_SESSION['role'] : null;
+$is_admin = $user_role === 'admin';
+
+// Include auth check - this will show modal if not logged in
+include('includes/auth_check.php');
 ?>
 
 <!DOCTYPE html>
@@ -49,18 +57,26 @@ include('config.php');
         .table-container {
             background: white;
             border-radius: 10px;
-            padding: 40px;
+            padding: 20px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             margin-bottom: 30px;
+            overflow-x: auto;
+        }
+        
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
         
         .demographic-table {
             width: 100%;
             border-collapse: separate;
             border-spacing: 0;
-            border-radius: 8px;
+            border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            font-size: 0.75rem;
+            table-layout: fixed;
         }
         
         .demographic-table thead {
@@ -69,11 +85,14 @@ include('config.php');
         }
         
         .demographic-table th {
-            padding: 15px;
+            padding: 8px 4px;
             text-align: center;
             font-weight: bold;
-            font-size: 1.1rem;
+            font-size: 0.8rem;
             border: none;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         
         .demographic-table tbody tr {
@@ -91,11 +110,14 @@ include('config.php');
         }
         
         .demographic-table td {
-            padding: 12px 15px;
+            padding: 6px 4px;
             text-align: center;
             border: 1px solid #e9d5f7;
             font-weight: 500;
             color: #1f2937;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         
         .demographic-table tbody tr:last-child td {
@@ -242,6 +264,29 @@ include('config.php');
             margin: 0 2px;
         }
         
+        /* Column width optimizations */
+        .demographic-table th:nth-child(1) { width: 100px; } /* Purok Name */
+        .demographic-table th:nth-child(2) { width: 80px; } /* Total Pop Families */
+        .demographic-table th:nth-child(3) { width: 80px; } /* Total Pop Persons */
+        .demographic-table th:nth-child(4) { width: 90px; } /* Vulnerable Families */
+        .demographic-table th:nth-child(5) { width: 90px; } /* Vulnerable Persons */
+        .demographic-table th:nth-child(6) { width: 120px; } /* Plan A Center Name */
+        .demographic-table th:nth-child(7) { width: 140px; } /* Plan A Address */
+        .demographic-table th:nth-child(8) { width: 90px; } /* Plan A Cap Families */
+        .demographic-table th:nth-child(9) { width: 90px; } /* Plan A Cap Persons */
+        .demographic-table th:nth-child(10) { width: 110px; } /* To be Accom Families */
+        .demographic-table th:nth-child(11) { width: 110px; } /* To be Accom Persons */
+        .demographic-table th:nth-child(12) { width: 100px; } /* Not Accom Families */
+        .demographic-table th:nth-child(13) { width: 100px; } /* Not Accom Persons */
+        .demographic-table th:nth-child(14) { width: 120px; } /* Plan B Center Name */
+        .demographic-table th:nth-child(15) { width: 140px; } /* Plan B Address */
+        .demographic-table th:nth-child(16) { width: 90px; } /* Plan B Cap Families */
+        .demographic-table th:nth-child(17) { width: 90px; } /* Plan B Cap Persons */
+        .demographic-table th:nth-child(18) { width: 130px; } /* Not Accom AB Families */
+        .demographic-table th:nth-child(19) { width: 130px; } /* Not Accom AB Persons */
+        .demographic-table th:nth-child(20) { width: 120px; } /* Remarks */
+        .demographic-table th:nth-child(21) { width: 60px; } /* Action */
+        
         /* Custom CSS for navigation */
         .dropdown-item.active {
             background-color: #8b5cf6 !important;
@@ -304,7 +349,7 @@ include('config.php');
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="socioDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Socio Demographic</a>
                     <ul class="dropdown-menu" aria-labelledby="socioDropdown">
-                       <li><a class="dropdown-item" href="purok_evac.php">Purok Evacuation</a></li>
+                       <li><a class="dropdown-item" href="population.php">Population Over Age</a></li>
                        <li><a class="dropdown-item" href="hazard_vul.php">Hazard Vulnerability</a></li>
                        <li><a class="dropdown-item" href="purok_demographics.php">Purok Demographics</a></li>
                        <li><a class="dropdown-item" href="purok_evac.php">Purok Evacuation</a></li>
@@ -369,7 +414,8 @@ include('config.php');
     });
     </script>
     
-    <div class="main-container">
+    <?php if ($is_logged_in): ?>
+    <div class="main-container main-content-protected">
         <?php
         if (isset($_SESSION['success'])) {
             echo "<div class='alert alert-success alert-dismissible fade show' role='alert'>";
@@ -389,9 +435,9 @@ include('config.php');
         ?>
         <div class="page-header">
             <h1 class="page-title">
-                <i class="fas fa-exclamation-triangle me-3"></i>Hazard Vulnerability 
+                <i class="fas fa-person-running me-3"></i>Purok Evacuation population 
             </h1>
-            <p class="page-subtitle">Age Distribution Analysis - Barangay Lizada</p>
+            <p class="page-subtitle">Evacuation plan of the affected population in times of disaster or emergency.</p>
             <div class="mt-4 d-flex justify-content-center align-items-center gap-3 flex-wrap">
                 <a href="purok_demographics.php" class="back-btn btn-lg px-4 py-3 shadow-sm hover-shadow transition-all text-decoration-none">
                     <i class="fas fa-arrow-left me-2"></i>
@@ -404,9 +450,303 @@ include('config.php');
                 </a>
             </div>
         </div>
+        
+        <!-- Table Container -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="table-container">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="mb-0">
+                            <i class="fas fa-route me-2 text-purple"></i>Purok Evacuation Plan
+                        </h4>
+                    </div>
+                    
+                    <?php
+                    // Pagination variables
+                    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                    $per_page = 10; // Show 10 records per page
+                    $offset = ($page - 1) * $per_page;
+                    
+                    // Get total records
+                    $count_query = "SELECT COUNT(*) as total FROM purok_evacuation_plan";
+                    $count_result = $conn->query($count_query);
+                    $total_rows = $count_result->fetch_assoc()['total'];
+                    $total_pages = ceil($total_rows / $per_page);
+                    
+                    // Query to get evacuation plan data with pagination
+                    $query = "SELECT * FROM purok_evacuation_plan ORDER BY purok_name ASC LIMIT $per_page OFFSET $offset";
+                    $result = $conn->query($query);
+                    ?>
+                    
+                    <div class="table-responsive">
+                        <table class="demographic-table" id="evacuationTable">
+                            <thead>
+                                <tr>
+                                    <th>Purok Name</th>
+                                    <th>Total Population (Families)</th>
+                                    <th>Total Population (Persons)</th>
+                                    <th>Vulnerable Population (Families)</th>
+                                    <th>Vulnerable Population (Persons)</th>
+                                    <th>Plan A - Center Name</th>
+                                    <th>Plan A - Center Address</th>
+                                    <th>Plan A - Capacity (Families)</th>
+                                    <th>Plan A - Capacity (Persons)</th>
+                                    <th>To be Accommodated (Families)</th>
+                                    <th>To be Accommodated (Persons)</th>
+                                    <th>Not Accommodated (Families)</th>
+                                    <th>Not Accommodated (Persons)</th>
+                                    <th>Plan B - Center Name</th>
+                                    <th>Plan B - Center Address</th>
+                                    <th>Plan B - Capacity (Families)</th>
+                                    <th>Plan B - Capacity (Persons)</th>
+                                    <th>Not Accommodated (Plan A & B) (Families)</th>
+                                    <th>Not Accommodated (Plan A & B) (Persons)</th>
+                                    <th>Remarks</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                if ($result && $result->num_rows > 0) {
+                                    while($row = $result->fetch_assoc()) {
+                                        echo "<tr>";
+                                        echo "<td>" . htmlspecialchars($row["purok_name"]) . "</td>";
+                                        echo "<td>" . number_format($row["total_pop_families"]) . "</td>";
+                                        echo "<td>" . number_format($row["total_pop_persons"]) . "</td>";
+                                        echo "<td>" . number_format($row["risk_pop_families"]) . "</td>";
+                                        echo "<td>" . number_format($row["risk_pop_persons"]) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row["plan_a_center_name"]) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row["plan_a_center_address"]) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row["plan_a_capacity_families"]) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row["plan_a_capacity_persons"]) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row["to_be_accommodated_families"]) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row["to_be_accommodated_persons"]) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row["not_accommodated_families"]) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row["not_accommodated_persons"]) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row["plan_b_center_name"]) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row["plan_b_center_address"]) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row["plan_b_capacity_families"]) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row["plan_b_capacity_persons"]) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row["not_accom_plan_ab_families"]) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row["not_accom_plan_ab_persons"]) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row["remarks"]) . "</td>";
+                                        echo "<td>";
+                                        echo "<button class='btn btn-sm btn-primary' onclick='editEvacuationPlan(" . $row["purok_id"] . ")' style='background: #8b5cf6; border-color: #8b5cf6;'>";
+                                        echo "<i class='fas fa-edit me-1'></i>Edit";
+                                        echo "</button>";
+                                        echo "</td>";
+                                        echo "</tr>";
+                                    }
+                                } else {
+                                    echo "<tr><td colspan='21' class='text-center'>No evacuation plan data available</td></tr>";
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Pagination -->
+                    <?php if ($total_pages > 1): ?>
+                    <nav aria-label="Page navigation" class="mt-4">
+                        <ul class="pagination justify-content-center">
+                            <?php if ($page > 1): ?>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=<?php echo $page - 1; ?>" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+                            
+                            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                                <li class="page-item <?php echo $i == $page ? 'active' : ''; ?>">
+                                    <a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                                </li>
+                            <?php endfor; ?>
+                            
+                            <?php if ($page < $total_pages): ?>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=<?php echo $page + 1; ?>" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+                        </ul>
+                    </nav>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
     </div>
 
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #8b5cf6; color: white;">
+                    <h5 class="modal-title" id="editModalLabel">
+                        <i class="fas fa-edit me-2"></i>Edit Evacuation Plan
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="editForm" method="POST" action="update_evacuation_plan.php">
+                    <div class="modal-body">
+                        <input type="hidden" id="editId" name="purok_id">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="editPurokName" class="form-label">Purok Name</label>
+                                <input type="text" class="form-control" id="editPurokName" name="purok_name">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="editTotalPopFamilies" class="form-label">Total Population (Families)</label>
+                                <input type="number" class="form-control" id="editTotalPopFamilies" name="total_pop_families" min="0">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="editTotalPopPersons" class="form-label">Total Population (Persons)</label>
+                                <input type="number" class="form-control" id="editTotalPopPersons" name="total_pop_persons" min="0">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="editRiskPopFamilies" class="form-label">Vulnerable Population (Families)</label>
+                                <input type="number" class="form-control" id="editRiskPopFamilies" name="risk_pop_families" min="0">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="editRiskPopPersons" class="form-label">Vulnerable Population (Persons)</label>
+                                <input type="number" class="form-control" id="editRiskPopPersons" name="risk_pop_persons" min="0">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="editPlanACenterName" class="form-label">Plan A - Center Name</label>
+                                <input type="text" class="form-control" id="editPlanACenterName" name="plan_a_center_name">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="editPlanACenterAddress" class="form-label">Plan A - Center Address</label>
+                                <input type="text" class="form-control" id="editPlanACenterAddress" name="plan_a_center_address">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="editPlanACapacityFamilies" class="form-label">Plan A - Capacity (Families)</label>
+                                <input type="number" class="form-control" id="editPlanACapacityFamilies" name="plan_a_capacity_families" min="0">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="editPlanACapacityPersons" class="form-label">Plan A - Capacity (Persons)</label>
+                                <input type="number" class="form-control" id="editPlanACapacityPersons" name="plan_a_capacity_persons" min="0">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                <label for="editToBeAccommodatedFamilies" class="form-label">To be Accommodated (Families)</label>
+                                <input type="number" class="form-control" id="editToBeAccommodatedFamilies" name="to_be_accommodated_families" min="0">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="editToBeAccommodatedPersons" class="form-label">To be Accommodated (Persons)</label>
+                                <input type="number" class="form-control" id="editToBeAccommodatedPersons" name="to_be_accommodated_persons" min="0">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="editNotAccommodatedFamilies" class="form-label">Not Accommodated (Families)</label>
+                                <input type="number" class="form-control" id="editNotAccommodatedFamilies" name="not_accommodated_families" min="0">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="editNotAccommodatedPersons" class="form-label">Not Accommodated (Persons)</label>
+                                <input type="number" class="form-control" id="editNotAccommodatedPersons" name="not_accommodated_persons" min="0">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="editPlanBCenterName" class="form-label">Plan B - Center Name</label>
+                                <input type="text" class="form-control" id="editPlanBCenterName" name="plan_b_center_name">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="editPlanBCenterAddress" class="form-label">Plan B - Center Address</label>
+                                <input type="text" class="form-control" id="editPlanBCenterAddress" name="plan_b_center_address">
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label for="editPlanBCapacityFamilies" class="form-label">Plan B - Cap (Families)</label>
+                                <input type="number" class="form-control" id="editPlanBCapacityFamilies" name="plan_b_capacity_families" min="0">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                <label for="editPlanBCapacityPersons" class="form-label">Plan B - Capacity (Persons)</label>
+                                <input type="number" class="form-control" id="editPlanBCapacityPersons" name="plan_b_capacity_persons" min="0">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="editNotAccomPlanABFamilies" class="form-label">Not Accom (A&B) (Families)</label>
+                                <input type="number" class="form-control" id="editNotAccomPlanABFamilies" name="not_accom_plan_ab_families" min="0">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="editNotAccomPlanABPersons" class="form-label">Not Accom (A&B) (Persons)</label>
+                                <input type="number" class="form-control" id="editNotAccomPlanABPersons" name="not_accom_plan_ab_persons" min="0">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="editRemarks" class="form-label">Remarks</label>
+                                <input type="text" class="form-control" id="editRemarks" name="remarks">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" style="background: #8b5cf6; border-color: #8b5cf6;">
+                            <i class="fas fa-save me-1"></i>Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
     <!-- Bootstrap JS (includes Popper) for dropdowns/toggles -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        function editEvacuationPlan(id) {
+            // Fetch evacuation plan data from the server
+            fetch(`get_evacuation_plan.php?id=${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Access the data object from the response
+                        const evacuationData = data.data;
+                        
+                        // Populate the modal fields with the data
+                        document.getElementById('editId').value = evacuationData.purok_id;
+                        document.getElementById('editPurokName').value = evacuationData.purok_name;
+                        document.getElementById('editTotalPopFamilies').value = evacuationData.total_pop_families;
+                        document.getElementById('editTotalPopPersons').value = evacuationData.total_pop_persons;
+                        document.getElementById('editRiskPopFamilies').value = evacuationData.risk_pop_families;
+                        document.getElementById('editRiskPopPersons').value = evacuationData.risk_pop_persons;
+                        document.getElementById('editPlanACenterName').value = evacuationData.plan_a_center_name;
+                        document.getElementById('editPlanACenterAddress').value = evacuationData.plan_a_center_address;
+                        document.getElementById('editPlanACapacityFamilies').value = evacuationData.plan_a_capacity_families;
+                        document.getElementById('editPlanACapacityPersons').value = evacuationData.plan_a_capacity_persons;
+                        document.getElementById('editToBeAccommodatedFamilies').value = evacuationData.to_be_accommodated_families;
+                        document.getElementById('editToBeAccommodatedPersons').value = evacuationData.to_be_accommodated_persons;
+                        document.getElementById('editNotAccommodatedFamilies').value = evacuationData.not_accommodated_families;
+                        document.getElementById('editNotAccommodatedPersons').value = evacuationData.not_accommodated_persons;
+                        document.getElementById('editPlanBCenterName').value = evacuationData.plan_b_center_name;
+                        document.getElementById('editPlanBCenterAddress').value = evacuationData.plan_b_center_address;
+                        document.getElementById('editPlanBCapacityFamilies').value = evacuationData.plan_b_capacity_families;
+                        document.getElementById('editPlanBCapacityPersons').value = evacuationData.plan_b_capacity_persons;
+                        document.getElementById('editNotAccomPlanABFamilies').value = evacuationData.not_accom_plan_ab_families;
+                        document.getElementById('editNotAccomPlanABPersons').value = evacuationData.not_accom_plan_ab_persons;
+                        document.getElementById('editRemarks').value = evacuationData.remarks;
+                        
+                        // Show the modal
+                        const modal = new bootstrap.Modal(document.getElementById('editModal'));
+                        modal.show();
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching evacuation plan data:', error);
+                    alert('Error fetching evacuation plan data. Please try again.');
+                });
+        }
+    </script>
+    <?php else: ?>
+    <!-- Content hidden when not logged in - auth_check.php handles the modal -->
+    <div class="main-content-protected" style="display: none;"></div>
+    <?php endif; ?>
 </body>
 </html>

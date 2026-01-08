@@ -796,6 +796,27 @@ include('config.php');
             currentRoutes.push(lizadaToMalatabisRoute);
         }
 
+        // Special connection for Curvada to Lizada Barangay Hall
+        if (selectedBarangay === 'lizada' && selectedSitio === 'Curvada') {
+            var pointA = [7.001017616252098, 125.48834294409042]; // San Vicente Ferrer Chapel
+            var pointB = [7.011517255842192, 125.48905104728294]; // Lizada Barangay Hall
+            
+            // Draw Point A Marker
+            var markerA = L.marker(pointA).addTo(map).bindPopup('Point A: San Vicente Ferrer Chapel');
+            currentMarkers.push(markerA);
+
+            // Draw Point B Marker (Evacuation Center)
+            var markerB = L.marker(pointB).addTo(map).bindPopup('Point B: Lizada Barangay Hall');
+            currentMarkers.push(markerB);
+
+            // Draw Red Line using Road Network
+            drawEvacuationRoute(pointA, pointB, 'red');
+            
+            // Fit bounds to show the whole route (approximate since route is async, but points are fixed)
+            var bounds = L.latLngBounds([pointA, pointB]);
+            map.fitBounds(bounds, {padding: [50, 50]});
+        }
+
         // Highlight the evacuation routes
         var evacuationRoutes = barangays[selectedBarangay]?.evacuationRoutes;
         if (evacuationRoutes) {

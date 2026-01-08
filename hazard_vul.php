@@ -1,7 +1,14 @@
 <?php
 session_start();
 include('config.php');
-include('includes/nav.php');
+
+// Check authentication and get user role
+$is_logged_in = isset($_SESSION['id']) && isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true;
+$user_role = isset($_SESSION['role']) ? $_SESSION['role'] : null;
+$is_admin = $user_role === 'admin';
+
+// Include auth check - this will show modal if not logged in
+include('includes/auth_check.php');
 ?>
 
 <!DOCTYPE html>
@@ -10,7 +17,6 @@ include('includes/nav.php');
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Population Demographics - Micro Online Synthesis System</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
@@ -242,10 +248,21 @@ include('includes/nav.php');
         .page-item {
             margin: 0 2px;
         }
+        /* Hide action column for non-admin users */
+        <?php if (!$is_admin): ?>
+        .demographic-table th.action-column,
+        .demographic-table td.action-column {
+            display: none;
+        }
+        <?php endif; ?>
     </style>
 </head>
 <body>
-    <div class="main-container">
+
+<?php include('includes/nav.php'); ?>  
+
+    <?php if ($is_logged_in): ?>
+    <div class="main-container main-content-protected">
         <?php
         if (isset($_SESSION['success'])) {
             echo "<div class='alert alert-success alert-dismissible fade show' role='alert'>";
@@ -280,7 +297,9 @@ include('includes/nav.php');
                 </a>
             </div>
         </div>
-        
+
+
+        <!-- Age Bracket Distribution TABLE CONTAINER -->
         <div class="row">
             <div class="col-lg-12"> 
                 <div class="table-container">
@@ -324,7 +343,9 @@ include('includes/nav.php');
                                 <th>MODERATE PERSON</th>
                                 <th>HIGH FAMILY</th>
                                 <th>HIGH PERSON</th>
-                                <th>ACTION</th>
+                                <?php if ($is_admin): ?>
+                                <th class="action-column">ACTION</th>
+                                <?php endif; ?>
                             </tr>
                         </thead>
                         <tbody>
@@ -349,11 +370,13 @@ include('includes/nav.php');
                                     echo "<td>" . number_format(isset($row["moderate_person"]) ? (int)$row["moderate_person"] : 0) . "</td>";
                                     echo "<td>" . number_format(isset($row["high_family"]) ? (int)$row["high_family"] : 0) . "</td>";
                                     echo "<td>" . number_format(isset($row["high_person"]) ? (int)$row["high_person"] : 0) . "</td>";
-                                    echo "<td>";
-                                    echo "<button class='btn btn-sm btn-primary' onclick='openEditModal(" . json_encode($row) . ")' style='background: #8b5cf6; border-color: #8b5cf6;'>";
-                                    echo "<i class='fas fa-edit me-1'></i>Edit";
-                                    echo "</button>";
-                                    echo "</td>";
+                                    if ($is_admin) {
+                                        echo "<td class='action-column'>";
+                                        echo "<button class='btn btn-sm btn-primary' onclick='openEditModal(" . json_encode($row) . ")' style='background: #8b5cf6; border-color: #8b5cf6;'>";
+                                        echo "<i class='fas fa-edit me-1'></i>Edit";
+                                        echo "</button>";
+                                        echo "</td>";
+                                    }
                                     echo "</tr>";
                                 }
 
@@ -364,11 +387,13 @@ include('includes/nav.php');
                                 echo "<td>-</td>";
                                 echo "<td>-</td>";
                                 echo "<td>-</td>";
-                                echo "<td>-</td>";
-                                echo "<td>-</td>";
+                                if ($is_admin) {
+                                    echo "<td class='action-column'>-</td>";
+                                }
                                 echo "</tr>";
                             } else {
-                                echo "<tr><td colspan='8' class='text-center'>No data available</td></tr>";
+                                $colspan = $is_admin ? 8 : 7;
+                                echo "<tr><td colspan='$colspan' class='text-center'>No data available</td></tr>";
                             }
                             ?>
                         </tbody>
@@ -469,7 +494,6 @@ include('includes/nav.php');
         </div>
     </div>
     
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function openEditModal(rowData) {
             // Populate the modal fields with the row data
@@ -543,5 +567,9 @@ include('includes/nav.php');
             });
         });
     </script>
+    <?php else: ?>
+    <!-- Content hidden when not logged in - auth_check.php handles the modal -->
+    <div class="main-content-protected" style="display: none;"></div>
+    <?php endif; ?>
 </body>
 </html>

@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			</a>
     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
         <li><a class="dropdown-item" href="alert.php">Alert Signal</a></li>
-        <li><a class="dropdown-item" href="hazard_vul.php">Hazard Map</a></li>
+        <li><a class="dropdown-item" href="hazard.php">Hazard Map</a></li>
         <li><a class="dropdown-item" href="flood_warning.php">Flood Monitoring</a></li>
     </ul>
 </li>

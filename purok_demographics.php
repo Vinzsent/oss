@@ -2,6 +2,14 @@
 session_start();
 include('config.php');
 
+// Check authentication and get user role
+$is_logged_in = isset($_SESSION['id']) && isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true;
+$user_role = isset($_SESSION['role']) ? $_SESSION['role'] : null;
+$is_admin = $user_role === 'admin';
+
+// Include auth check - this will show modal if not logged in
+include('includes/auth_check.php');
+
 // Pagination settings
 $rows_per_page = 10;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -437,6 +445,13 @@ if ($demographic_result && $demographic_result->num_rows > 0) {
         .navbar-nav .dropdown {
             position: relative;
         }
+        /* Hide action column for non-admin users */
+        <?php if (!$is_admin): ?>
+        .demographic-table th.action-column,
+        .demographic-table td.action-column {
+            display: none;
+        }
+        <?php endif; ?>
     </style>
 </head>
 <body>
@@ -521,6 +536,9 @@ if ($demographic_result && $demographic_result->num_rows > 0) {
         </div>
     </nav>
     
+    <!-- Include auth check modal -->
+    <?php include('includes/auth_check.php'); ?>
+    
     <!-- Mobile Navigation Auto-Close Script -->
     <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -568,7 +586,8 @@ if ($demographic_result && $demographic_result->num_rows > 0) {
     });
     </script>
     
-    <div class="main-container">
+    <?php if ($is_logged_in): ?>
+    <div class="main-container main-content-protected">
         <div class="page-header">
             <h1 class="page-title">
                 <i class="fas fa-users me-3"></i>Purok Demographics
@@ -615,7 +634,9 @@ if ($demographic_result && $demographic_result->num_rows > 0) {
                                 <th>SICK M</th>
                                 <th>SICK F</th>
                                 <th>PREGNANT</th>
-                                <th>ACTION</th>
+                                <?php if ($is_admin): ?>
+                                <th class="action-column">ACTION</th>
+                                <?php endif; ?>
                             </tr>
                         </thead>
                         <tbody>
@@ -640,11 +661,13 @@ if ($demographic_result && $demographic_result->num_rows > 0) {
                                     echo "<td>" . number_format($row['sickness_male'] ?? 0) . "</td>";
                                     echo "<td>" . number_format($row['sickness_female'] ?? 0) . "</td>";
                                     echo "<td>" . number_format($row['pregnant_women'] ?? 0) . "</td>";
-                                    echo "<td>";
-                                    echo "<button class='btn btn-sm btn-primary' onclick='editData(\"" . htmlspecialchars($row['purok_name'] ?? '') . "\")' style='background: #8b5cf6; border-color: #8b5cf6;'>";
-                                    echo "<i class='fas fa-edit me-1'></i>Edit";
-                                    echo "</button>";
-                                    echo "</td>";
+                                    if ($is_admin) {
+                                        echo "<td class='action-column'>";
+                                        echo "<button class='btn btn-sm btn-primary' onclick='editData(\"" . htmlspecialchars($row['purok_name'] ?? '') . "\")' style='background: #8b5cf6; border-color: #8b5cf6;'>";
+                                        echo "<i class='fas fa-edit me-1'></i>Edit";
+                                        echo "</button>";
+                                        echo "</td>";
+                                    }
                                     echo "</tr>";
                                 }
                                 
@@ -667,11 +690,13 @@ if ($demographic_result && $demographic_result->num_rows > 0) {
                                 echo "<td><strong>" . number_format($totals['sickness_male']) . "</strong></td>";
                                 echo "<td><strong>" . number_format($totals['sickness_female']) . "</strong></td>";
                                 echo "<td><strong>" . number_format($totals['pregnant_women']) . "</strong></td>";
-                                echo "<td>-</td>";
+                                if ($is_admin) {
+                                    echo "<td class='action-column'>-</td>";
+                                }
                                 echo "</tr>";
                             } else {
                                 // Show error message if no data
-                                $colspan = 18; // Number of columns
+                                $colspan = $is_admin ? 18 : 17; // Number of columns
                                 echo "<tr><td colspan='$colspan' class='text-center p-5'>";
                                 echo "<div class='alert alert-warning' role='alert'>";
                                 echo "<i class='fas fa-exclamation-triangle me-2'></i>";
@@ -1192,6 +1217,10 @@ if ($demographic_result && $demographic_result->num_rows > 0) {
             });
         });
     </script>
+    <?php else: ?>
+    <!-- Content hidden when not logged in - auth_check.php handles the modal -->
+    <div class="main-content-protected" style="display: none;"></div>
+    <?php endif; ?>
 </body>
 </html>
 

@@ -5,6 +5,14 @@ session_start();
 // Database connection
 include('config.php');
 
+// Check authentication and get user role
+$is_logged_in = isset($_SESSION['id']) && isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true;
+$user_role_session = isset($_SESSION['role']) ? $_SESSION['role'] : null;
+$is_admin = $user_role_session === 'admin';
+
+// Include auth check - this will show modal if not logged in
+include('includes/auth_check.php');
+
 // Check if a barangay and purok are selected
 $selectedBarangay = isset($_GET['barangay']) ? $_GET['barangay'] : (isset($_POST['barangay']) ? $_POST['barangay'] : 'lizada');
 $selectedPurok = isset($_GET['purok']) ? $_GET['purok'] : (isset($_POST['purok']) ? $_POST['purok'] : '');
@@ -69,10 +77,14 @@ function getUserRole($conn, $user_id) {
     return $role;
 }
 
-// Get current user's role
+// Get current user's role (keeping for backward compatibility)
 $user_role = '';
 if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true && isset($_SESSION['id'])) {
     $user_role = getUserRole($conn, $_SESSION['id']);
+    // Update session role if not set
+    if (!isset($_SESSION['role'])) {
+        $_SESSION['role'] = $user_role;
+    }
 }
 
 ?>
@@ -303,10 +315,17 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true && isset($_SE
                 margin-bottom: 0.5rem !important;
             }
         }
+        /* Hide action column for non-admin users */
+        <?php if (!$is_admin): ?>
+        .action-column {
+            display: none;
+        }
+        <?php endif; ?>
     </style>
 </head>
 <body>
-    <div class="content-wrapper">
+    <?php if ($is_logged_in): ?>
+    <div class="content-wrapper main-content-protected">
         <!-- Navigation Bar -->
         <?php include('includes/nav.php'); ?>
 
@@ -320,7 +339,7 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true && isset($_SE
                         <h4 class="mb-0">Barangay: <?php echo ucfirst($selectedBarangay); ?> 
                         <?php if ($selectedPurok) echo " - Purok: " . ucfirst($selectedPurok); ?></h4>
                     </div>
-                    <?php if ($user_role !== 'user'): ?>
+                    <?php if ($is_admin): ?>
                     <a href="add_socio.php"><button class="btn btn-primary"><i class="fas fa-plus"></i> Add Purok and Sitio</button></a>
                     <?php endif; ?>
                 </div>
@@ -513,5 +532,9 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true && isset($_SE
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <?php else: ?>
+    <!-- Content hidden when not logged in - auth_check.php handles the modal -->
+    <div class="main-content-protected" style="display: none;"></div>
+    <?php endif; ?>
 </body>
 </html>

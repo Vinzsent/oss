@@ -2,6 +2,14 @@
 session_start();
 include('config.php');
 include('includes/nav.php');
+
+// Check authentication and get user role
+$is_logged_in = isset($_SESSION['id']) && isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true;
+$user_role = isset($_SESSION['role']) ? $_SESSION['role'] : null;
+$is_admin = $user_role === 'admin';
+
+// Include auth check - this will show modal if not logged in
+include('includes/auth_check.php');
 ?>
 
 <!DOCTYPE html>
@@ -207,10 +215,18 @@ include('includes/nav.php');
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
             color: white;
         }
+        /* Hide action column for non-admin users */
+        <?php if (!$is_admin): ?>
+        .demographic-table th.action-column,
+        .demographic-table td.action-column {
+            display: none;
+        }
+        <?php endif; ?>
     </style>
 </head>
 <body>
-    <div class="main-container">
+    <?php if ($is_logged_in): ?>
+    <div class="main-container main-content-protected">
         <div class="page-header">
             <h1 class="page-title">
                 <i class="fas fa-users me-3"></i>Population Demographics
@@ -265,7 +281,9 @@ include('includes/nav.php');
                                 <th>FEMALE</th>
                                 <th>MALE</th>
                                 <th>TOTAL</th>
-                                <th>ACTION</th>
+                                <?php if ($is_admin): ?>
+                                <th class="action-column">ACTION</th>
+                                <?php endif; ?>
                             </tr>
                         </thead>
                         <tbody>
@@ -286,11 +304,13 @@ include('includes/nav.php');
                                     echo "<td>" . number_format($row["female"]) . "</td>";
                                     echo "<td>" . number_format($row["male"]) . "</td>";
                                     echo "<td>" . number_format($row["total"]) . "</td>";
-                                    echo "<td>";
-                                    echo "<button class='btn btn-sm btn-primary' onclick='editPopulationData(\"" . htmlspecialchars($bracket) . "\", " . $row["female"] . ", " . $row["male"] . ")' style='background: #8b5cf6; border-color: #8b5cf6;'>";
-                                    echo "<i class='fas fa-edit me-1'></i>Edit";
-                                    echo "</button>";
-                                    echo "</td>";
+                                    if ($is_admin) {
+                                        echo "<td class='action-column'>";
+                                        echo "<button class='btn btn-sm btn-primary' onclick='editPopulationData(\"" . htmlspecialchars($bracket) . "\", " . $row["female"] . ", " . $row["male"] . ")' style='background: #8b5cf6; border-color: #8b5cf6;'>";
+                                        echo "<i class='fas fa-edit me-1'></i>Edit";
+                                        echo "</button>";
+                                        echo "</td>";
+                                    }
                                     echo "</tr>";
                                     
                                     // Mark this bracket as displayed
@@ -303,10 +323,13 @@ include('includes/nav.php');
                                 echo "<td><strong>" . number_format($totals["total_female"]) . "</strong></td>";
                                 echo "<td><strong>" . number_format($totals["total_male"]) . "</strong></td>";
                                 echo "<td><strong>" . number_format($totals["total_population"]) . "</strong></td>";
-                                echo "<td>-</td>";
+                                if ($is_admin) {
+                                    echo "<td class='action-column'>-</td>";
+                                }
                                 echo "</tr>";
                             } else {
-                                echo "<tr><td colspan='5' class='text-center'>No data available</td></tr>";
+                                $colspan = $is_admin ? 5 : 4;
+                                echo "<tr><td colspan='$colspan' class='text-center'>No data available</td></tr>";
                             }
                             ?>
                         </tbody>
@@ -442,5 +465,9 @@ include('includes/nav.php');
             });
         });
     </script>
+    <?php else: ?>
+    <!-- Content hidden when not logged in - auth_check.php handles the modal -->
+    <div class="main-content-protected" style="display: none;"></div>
+    <?php endif; ?>
 </body>
 </html>
