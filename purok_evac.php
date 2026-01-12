@@ -482,27 +482,27 @@ include('includes/auth_check.php');
                         <table class="demographic-table" id="evacuationTable">
                             <thead>
                                 <tr>
-                                    <th>Purok Name</th>
-                                    <th>Total Population (Families)</th>
-                                    <th>Total Population (Persons)</th>
-                                    <th>Vulnerable Population (Families)</th>
-                                    <th>Vulnerable Population (Persons)</th>
-                                    <th>Plan A - Center Name</th>
-                                    <th>Plan A - Center Address</th>
-                                    <th>Plan A - Capacity (Families)</th>
-                                    <th>Plan A - Capacity (Persons)</th>
-                                    <th>To be Accommodated (Families)</th>
-                                    <th>To be Accommodated (Persons)</th>
-                                    <th>Not Accommodated (Families)</th>
-                                    <th>Not Accommodated (Persons)</th>
-                                    <th>Plan B - Center Name</th>
-                                    <th>Plan B - Center Address</th>
-                                    <th>Plan B - Capacity (Families)</th>
-                                    <th>Plan B - Capacity (Persons)</th>
-                                    <th>Not Accommodated (Plan A & B) (Families)</th>
-                                    <th>Not Accommodated (Plan A & B) (Persons)</th>
-                                    <th>Remarks</th>
-                                    <th>Action</th>
+                                    <th title="Purok Name">Purok Name</th>
+                                    <th title="Total Population (Families)">Total Population (Families)</th>
+                                    <th title="Total Population (Persons)">Total Population (Persons)</th>
+                                    <th title="Vulnerable Population (Families)">Vulnerable Population (Families)</th>
+                                    <th title="Vulnerable Population (Persons)">Vulnerable Population (Persons)</th>
+                                    <th title="Plan A - Center Name">Plan A - Center Name</th>
+                                    <th title="Plan A - Center Address">Plan A - Center Address</th>
+                                    <th title="Plan A - Capacity (Families)">Plan A - Capacity (Families)</th>
+                                    <th title="Plan A - Capacity (Persons)">Plan A - Capacity (Persons)</th>
+                                    <th title="To be Accommodated (Families)">To be Accommodated (Families)</th>
+                                    <th title="To be Accommodated (Persons)">To be Accommodated (Persons)</th>
+                                    <th title="Not Accommodated (Families)">Not Accommodated (Families)</th>
+                                    <th title="Not Accommodated (Persons)">Not Accommodated (Persons)</th>
+                                    <th title="Plan B - Center Name">Plan B - Center Name</th>
+                                    <th title="Plan B - Center Address">Plan B - Center Address</th>
+                                    <th title="Plan B - Capacity (Families)">Plan B - Capacity (Families)</th>
+                                    <th title="Plan B - Capacity (Persons)">Plan B - Capacity (Persons)</th>
+                                    <th title="Not Accommodated (Plan A & B) (Families)">Not Accommodated (Plan A & B) (Families)</th>
+                                    <th title="Not Accommodated (Plan A & B) (Persons)">Not Accommodated (Plan A & B) (Persons)</th>
+                                    <th title="Remarks">Remarks</th>
+                                    <th title="Action">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -515,7 +515,7 @@ include('includes/auth_check.php');
                                         echo "<td>" . number_format($row["total_pop_persons"]) . "</td>";
                                         echo "<td>" . number_format($row["risk_pop_families"]) . "</td>";
                                         echo "<td>" . number_format($row["risk_pop_persons"]) . "</td>";
-                                        echo "<td>" . htmlspecialchars($row["plan_a_center_name"]) . "</td>";
+                                        echo "<td title='$row[plan_a_center_name]'>" . htmlspecialchars($row["plan_a_center_name"]) . "</td>";
                                         echo "<td>" . htmlspecialchars($row["plan_a_center_address"]) . "</td>";
                                         echo "<td>" . htmlspecialchars($row["plan_a_capacity_families"]) . "</td>";
                                         echo "<td>" . htmlspecialchars($row["plan_a_capacity_persons"]) . "</td>";

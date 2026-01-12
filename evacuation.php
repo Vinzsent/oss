@@ -10,139 +10,214 @@ include('config.php');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Micro OSS App</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Evacuation Map - Micro OSS App</title>
+    <!-- Font Awesome 6.4.0 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    
     <style>
-        /* Mobile-first responsive map container */
-        .map-container {
-            height: 400px;
+        body {
+            background-color: #f5f5f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
-        /* Tablet and larger screens */
-        @media (min-width: 768px) {
-            .map-container {
-                height: 600px;
-            }
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
         }
         
-        /* Desktop screens */
-        @media (min-width: 992px) {
-            .map-container {
-                height: 70vh;
-            }
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         
-        /* Mobile spacing adjustments */
-        @media (max-width: 767px) {
-            .container {
-                padding-left: 15px;
-                padding-right: 15px;
-            }
-            
-            h2 {
-                font-size: 1.5rem;
-                margin-bottom: 1rem;
-            }
-            
-            .form-group {
-                margin-bottom: 1rem;
-            }
-            
-            .alert {
-                padding: 0.75rem;
-                font-size: 0.9rem;
-            }
-            
-            .btn {
-                width: 100%;
-                margin-top: 0.5rem;
-            }
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 0;
+            text-align: center;
         }
-	
-		.navigation-bar {
-            display: flex;
-            justify-content: center;
-            background-color: #f8f9fa;
-            padding: 10px 0;
-            border-bottom: 1px solid #ddd;
+        
+        .page-subtitle {
+            font-size: 1.2rem;
+            margin: 10px 0 0 0;
+            text-align: center;
+            opacity: 0.9;
+        }
+        
+        .content-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            height: 100%;
         }
 
-        .nav-link {
+        .map-container {
+            height: 600px;
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #e9d5f7;
+        }
+
+        /* Mobile adjustments */
+        @media (max-width: 768px) {
+            .map-container {
+                height: 400px;
+            }
+            .main-container {
+                padding: 10px;
+            }
+            .page-title {
+                font-size: 1.8rem;
+            }
+        }
+        
+        .section-title {
+            color: #6b21a8;
+            font-weight: bold;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #f3f4f6;
+            padding-bottom: 10px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #4b5563;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .alert-info-custom {
+            background-color: #e0f2fe;
+            border-left: 4px solid #0ea5e9;
+            color: #0c4a6e;
+            padding: 15px;
+            border-radius: 6px;
+        }
+        
+        .legend-item {
             display: flex;
             align-items: center;
-            margin: 0 15px;
-            text-decoration: none;
-            color: #007bff;
-            font-weight: 600;
-            font-size: 16px;
-            transition: color 0.3s, transform 0.3s;
+            margin-bottom: 8px;
         }
-
-        .nav-link:hover {
-            color: #0056b3;
-            transform: scale(1.05);
+        
+        .legend-item i {
+            width: 20px;
+            text-align: center;
+            margin-right: 10px;
         }
-
-        .nav-link i {
-            margin-right: 8px;
+        
+        footer {
+            background-color: #1f2937 !important;
+            color: white;
+            padding: 20px 0;
+            margin-top: 40px;
+            text-align: center;
         }
-
     </style>
-
-
-
-
 </head>
 
 <body>
     <?php include('includes/nav.php'); ?>
-    <div class="container mt-5">
+    
+    <div class="main-container">
+        <div class="page-header">
+            <h1 class="page-title">
+                <i class="fas fa-map-marked-alt me-3"></i>Evacuation Map
+            </h1>
+            <p class="page-subtitle">Find safe zones and evacuation routes in your area</p>
+        </div>
+
         <div class="row">
-            <div class="col-md-8">
-                <h2>Evacuation Map</h2>
-                <div id="map" class="map-container bg-light">
-                    <!-- Map placeholder -->
-                    <div id="hazard-map" style="width: 100%; height: 100%;"></div>
+            <!-- Map Section -->
+            <div class="col-lg-8 mb-4">
+                <div class="content-card">
+                    <h4 class="section-title">
+                        <i class="fas fa-globe-asia me-2"></i>Map View
+                    </h4>
+                    <div id="map" class="map-container">
+                        <div id="hazard-map" style="width: 100%; height: 100%;"></div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <h2>Barangay Maps</h2>
-                <div class="alert alert-info">
-                    <strong>Search for Barangay:</strong>
-                </div>
-                <div class="alert-settings">
-                    <form>
-                        <div class="form-group">
-                            <label for="notificationType">Select Barangay</label>
-                            <select class="form-control" id="notificationType" onchange="focusBarangay()">
-                                <option value="">Select Barangay</option>
-                                <option value="daliao">Daliao</option>
-                                <option value="lizada">Lizada</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="frequency"><strong>Purok/Sitio</strong></label>
-                            <select class="form-control" id="frequency" onchange="focusSitioAndRoute()">
-                                <option>--Select--</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Clear</button>
-                    </form>
+
+            <!-- Sidebar Controls -->
+            <div class="col-lg-4 mb-4">
+                <div class="content-card">
+                    <h4 class="section-title">
+                        <i class="fas fa-columns me-2"></i>Barangay Maps
+                    </h4>
+                    
+                    <div class="alert-info-custom mb-4">
+                        <strong><i class="fas fa-info-circle me-1"></i> Search for Barangay:</strong>
+                        <p class="mb-0 mt-1 small">Select a barangay to view specific locations and routes.</p>
+                    </div>
+                    
+                    <div class="alert-settings">
+                        <form onsubmit="return false;">
+                            <div class="mb-3">
+                                <label for="notificationType" class="form-label">Select Barangay</label>
+                                <select class="form-select" id="notificationType" onchange="focusBarangay()">
+                                    <option value="">Select Barangay</option>
+                                    <option value="daliao">Daliao</option>
+                                    <option value="lizada">Lizada</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="frequency" class="form-label">Purok/Sitio</label>
+                                <select class="form-select" id="frequency" onchange="focusSitioAndRoute()">
+                                    <option>--Select--</option>
+                                </select>
+                            </div>
+                            <button type="button" class="btn btn-primary w-100" onclick="location.reload()">Clear Map</button>
+                        </form>
+                    </div>
+                    
+                    <hr class="my-4">
+                    
+                    <h5 class="mb-3 fw-bold text-secondary">Legends</h5>
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="fas fa-map-marker-alt text-danger me-2" style="font-size: 1.2rem;"></i>
+                        <span>Evacuation Area</span>
+                    </div>
+                    <!-- Add more legends here if needed -->
+                    <div class="d-flex align-items-center mb-2">
+                         <i class="fas fa-map-marker-alt text-primary me-2" style="font-size: 1.2rem;"></i>
+                         <span>Barangay Hall</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     
-    <footer class="bg-dark text-white mt-5 p-4 text-center">
-        &copy; 2024 Flood Resilience App. All Rights Reserved.
+    <footer>
+        <div class="container">
+            &copy; 2024 Flood Resilience App. All Rights Reserved.
+        </div>
     </footer>
 
+    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.min.js"></script>
     <script>
@@ -805,16 +880,84 @@ include('config.php');
             var markerA = L.marker(pointA).addTo(map).bindPopup('Point A: San Vicente Ferrer Chapel');
             currentMarkers.push(markerA);
 
-            // Draw Point B Marker (Evacuation Center)
-            var markerB = L.marker(pointB).addTo(map).bindPopup('Point B: Lizada Barangay Hall');
+            // Draw Point B Marker (Evacuation Center) - RED ICON
+            var markerB = L.marker(pointB, {
+                icon: L.divIcon({
+                    className: 'custom-red-marker',
+                    html: '<i class="fas fa-map-marker-alt" style="color: red; font-size: 32px; text-shadow: 1px 1px 2px black;"></i>',
+                    iconSize: [32, 32],
+                    iconAnchor: [16, 32],
+                    popupAnchor: [0, -32]
+                })
+            }).addTo(map).bindPopup('Point B: Lizada Barangay Hall');
             currentMarkers.push(markerB);
 
-            // Draw Red Line using Road Network
-            drawEvacuationRoute(pointA, pointB, 'red');
+            // Hardcoded road path for instant display (Lat, Lon)
+            var roadPath = [
+                [7.000743, 125.488355], [7.000751, 125.488532], [7.000839, 125.489277], [7.000852, 125.489438], 
+                [7.000848, 125.489543], [7.000824, 125.489629], [7.000793, 125.489753], [7.000781, 125.489866], 
+                [7.000788, 125.489932], [7.000815, 125.490038], [7.001001, 125.489954], [7.001221, 125.489881], 
+                [7.001552, 125.489779], [7.001801, 125.489738], [7.002125, 125.489697], [7.002452, 125.489629], 
+                [7.00355, 125.489332], [7.004313, 125.48915], [7.004571, 125.48911], [7.004783, 125.489091], 
+                [7.005143, 125.489071], [7.005128, 125.488589], [7.0051, 125.488169], [7.005056, 125.487853], 
+                [7.005035, 125.487583], [7.005053, 125.487345], [7.005102, 125.486881], [7.005135, 125.486251], 
+                [7.005473, 125.486254], [7.00578, 125.486259], [7.00624, 125.486271], [7.0065, 125.486289], 
+                [7.00675, 125.486326], [7.007021, 125.486381], [7.007091, 125.486395], [7.007217, 125.486431], 
+                [7.007402, 125.486483], [7.007683, 125.486592], [7.007948, 125.486719], [7.008132, 125.486808], 
+                [7.008265, 125.486877], [7.008414, 125.486952], [7.008563, 125.487039], [7.008725, 125.487144], 
+                [7.008922, 125.48727], [7.008949, 125.487288], [7.009166, 125.487432], [7.009335, 125.487545], 
+                [7.00944, 125.487615], [7.009466, 125.487632], [7.009531, 125.487675], [7.009636, 125.487745], 
+                [7.009847, 125.487888], [7.010104, 125.488058], [7.010274, 125.488171], [7.010479, 125.488307], 
+                [7.010548, 125.488352], [7.010678, 125.488438], [7.010804, 125.488522], [7.010907, 125.488592], 
+                [7.010961, 125.488625], [7.011087, 125.488707], [7.011255, 125.48882], [7.011418, 125.48893], 
+                [7.011542, 125.489012]
+            ];
+
+            // Use polyline for instant display instead of routing machine
+            var curvadaRoute = L.polyline(roadPath, { color: 'red', weight: 3 }).addTo(map);
+            currentRoutes.push(curvadaRoute);
             
-            // Fit bounds to show the whole route (approximate since route is async, but points are fixed)
-            var bounds = L.latLngBounds([pointA, pointB]);
-            map.fitBounds(bounds, {padding: [50, 50]});
+            // Fit bounds to show the whole route
+            map.fitBounds(curvadaRoute.getBounds(), {padding: [50, 50]});
+        }
+
+        // Special connection for Samuel to Point B
+        if (selectedBarangay === 'lizada' && selectedSitio === 'Samuel') {
+            var pointA = [6.997276229113358, 125.49007325692209]; // Point A
+            var pointB = [6.996233070351961, 125.48702575577394]; // Point B
+            
+            // Draw Point A Marker
+            var markerA = L.marker(pointA).addTo(map).bindPopup('Point A');
+            currentMarkers.push(markerA);
+
+            // Draw Point B Marker (Evacuation Center) - RED ICON
+            var markerB = L.marker(pointB, {
+                icon: L.divIcon({
+                    className: 'custom-red-marker',
+                    html: '<i class="fas fa-map-marker-alt" style="color: red; font-size: 32px; text-shadow: 1px 1px 2px black;"></i>',
+                    iconSize: [32, 32],
+                    iconAnchor: [16, 32],
+                    popupAnchor: [0, -32]
+                })
+            }).addTo(map).bindPopup('Point B');
+            currentMarkers.push(markerB);
+
+            // Hardcoded road path for instant display (Lat, Lon)
+            var samuelRoadPath = [
+                [6.997278, 125.490067], [6.996783, 125.489926], [6.996549, 125.489867], [6.996427, 125.48984], 
+                [6.99633, 125.489831], [6.996249, 125.489832], [6.996269, 125.489469], [6.996309, 125.489008], 
+                [6.996372, 125.48859], [6.99643, 125.488206], [6.996462, 125.488014], [6.996507, 125.4878], 
+                [6.996541, 125.48761], [6.996569, 125.487394], [6.996579, 125.487288], [6.996577, 125.487181], 
+                [6.996566, 125.487045], [6.996549, 125.486926], [6.996382, 125.486959], [6.996299, 125.486972], 
+                [6.996227, 125.486983]
+            ];
+
+            // Use polyline for instant display
+            var samuelRoute = L.polyline(samuelRoadPath, { color: 'red', weight: 3 }).addTo(map);
+            currentRoutes.push(samuelRoute);
+            
+            // Fit bounds to show the whole route
+            map.fitBounds(samuelRoute.getBounds(), {padding: [50, 50]});
         }
 
         // Highlight the evacuation routes
@@ -857,6 +1000,103 @@ function drawEvacuationRoute(start, end, color = 'blue') {
         createMarker: function() { return null; } // we already place custom markers
     }).addTo(map);
     allRoutingControls.push(routingControl); // add routing control to array
+    allRoutingControls.push(routingControl); // add routing control to array
+ }
+
+ function findNearestEvacuationCenter() {
+    if (!navigator.geolocation) {
+        alert("Geolocation is not supported by your browser");
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(success, error);
+
+    function success(position) {
+        var lat = position.coords.latitude;
+        var long = position.coords.longitude;
+        var userLocation = [lat, long];
+
+        // Combine all safe zones from all barangays
+        var allSafeZones = [];
+        for (var bgy in barangays) {
+            if (barangays[bgy].safeZones) {
+                allSafeZones = allSafeZones.concat(barangays[bgy].safeZones);
+            }
+        }
+
+        if (allSafeZones.length === 0) {
+            alert("No evacuation centers defined.");
+            return;
+        }
+
+        // Find nearest safe zone
+        var nearest = null;
+        var minDistance = Infinity;
+
+        allSafeZones.forEach(zone => {
+            var dist = getDistance(lat, long, zone.coordinates[0], zone.coordinates[1]);
+            if (dist < minDistance) {
+                minDistance = dist;
+                nearest = zone;
+            }
+        });
+
+        if (nearest) {
+            // Clear map
+            if (currentPolygon) map.removeLayer(currentPolygon);
+            currentRoutes.forEach(route => map.removeLayer(route));
+            currentMarkers.forEach(marker => map.removeLayer(marker));
+            allRoutingControls.forEach(control => map.removeControl(control));
+            currentRoutes = [];
+            currentMarkers = [];
+            allRoutingControls = [];
+
+            // Add User Marker (Point A)
+            var markerA = L.marker(userLocation).addTo(map).bindPopup("Your Location").openPopup();
+            currentMarkers.push(markerA);
+
+            // Add Nearest Evacuation Center Marker (Point B) - RED ICON
+            var markerB = L.marker(nearest.coordinates, {
+                icon: L.divIcon({
+                    className: 'custom-red-marker',
+                    html: '<i class="fas fa-map-marker-alt" style="color: red; font-size: 32px; text-shadow: 1px 1px 2px black;"></i>',
+                    iconSize: [32, 32],
+                    iconAnchor: [16, 32],
+                    popupAnchor: [0, -32]
+                })
+            }).addTo(map).bindPopup("Nearest Evacuation Center: " + nearest.name);
+            currentMarkers.push(markerB);
+
+            // Draw route
+            drawEvacuationRoute(userLocation, nearest.coordinates, 'red');
+
+            // Fit bounds
+            var bounds = L.latLngBounds([userLocation, nearest.coordinates]);
+            map.fitBounds(bounds, {padding: [50, 50]});
+        }
+    }
+
+    function error() {
+        alert("Unable to retrieve your location");
+    }
+ }
+
+ // Helper to calculate distance (Haversine Formula) in km
+ function getDistance(lat1, lon1, lat2, lon2) {
+    var R = 6371; // Radius of the earth in km
+    var dLat = deg2rad(lat2 - lat1);
+    var dLon = deg2rad(lon2 - lon1);
+    var a = 
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+        Math.sin(dLon/2) * Math.sin(dLon/2); 
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    var d = R * c; // Distance in km
+    return d;
+ }
+
+ function deg2rad(deg) {
+    return deg * (Math.PI/180);
  }
 
 document.addEventListener('DOMContentLoaded', function() {
