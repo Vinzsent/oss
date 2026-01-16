@@ -6,6 +6,7 @@ include('includes/nav.php');
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,58 +18,58 @@ include('includes/nav.php');
             background-color: #f5f5f5;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         .main-container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
-        
+
         .page-header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 30px;
             border-radius: 10px;
             margin-bottom: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
-        
+
         .page-title {
             font-size: 2.5rem;
             font-weight: bold;
             margin: 0;
             text-align: center;
         }
-        
+
         .page-subtitle {
             font-size: 1.2rem;
             margin: 10px 0 0 0;
             text-align: center;
             opacity: 0.9;
         }
-        
+
         .table-container {
             background: white;
             border-radius: 10px;
             padding: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             margin-bottom: 30px;
         }
-        
+
         .demographic-table {
             width: 100%;
             border-collapse: separate;
             border-spacing: 0;
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-        
+
         .demographic-table thead {
             background-color: #8b5cf6;
             color: white;
         }
-        
+
         .demographic-table th {
             padding: 15px;
             text-align: center;
@@ -76,21 +77,21 @@ include('includes/nav.php');
             font-size: 1.1rem;
             border: none;
         }
-        
+
         .demographic-table tbody tr {
             background-color: #fce7f3;
             transition: background-color 0.3s ease;
         }
-        
+
         .demographic-table tbody tr:nth-child(even) {
             background-color: #fbcfe8;
         }
-        
+
         .demographic-table tbody tr:hover {
             background-color: #f9a8d4;
             cursor: pointer;
         }
-        
+
         .demographic-table td {
             padding: 12px 15px;
             text-align: center;
@@ -98,33 +99,33 @@ include('includes/nav.php');
             font-weight: 500;
             color: #1f2937;
         }
-        
+
         .demographic-table tbody tr:last-child td {
             font-weight: bold;
             background-color: #e9d5f7;
             color: #6b21a8;
         }
-        
+
         .material-type {
             text-align: left !important;
             font-weight: 600;
         }
-        
+
         .stats-card {
             background: white;
             border-radius: 10px;
             padding: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
             border-left: 4px solid #8b5cf6;
         }
-        
+
         .stats-card h5 {
             color: #8b5cf6;
             font-weight: bold;
             margin-bottom: 15px;
         }
-        
+
         .stat-item {
             display: flex;
             justify-content: space-between;
@@ -132,22 +133,22 @@ include('includes/nav.php');
             padding: 8px 0;
             border-bottom: 1px solid #f3f4f6;
         }
-        
+
         .stat-item:last-child {
             border-bottom: none;
         }
-        
+
         .stat-label {
             color: #6b7280;
             font-size: 0.9rem;
         }
-        
+
         .stat-value {
             font-weight: bold;
             color: #1f2937;
             font-size: 1.1rem;
         }
-        
+
         .export-btn {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -158,12 +159,12 @@ include('includes/nav.php');
             font-weight: 500;
             transition: transform 0.2s ease;
         }
-        
+
         .export-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
         }
-        
+
         .back-btn {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -177,30 +178,30 @@ include('includes/nav.php');
             display: inline-flex;
             align-items: center;
         }
-        
+
         .back-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
             color: white;
         }
-        
+
         @media (max-width: 768px) {
             .main-container {
                 padding: 10px;
             }
-            
+
             .page-title {
                 font-size: 1.8rem;
             }
-            
+
             .table-container {
                 padding: 15px;
             }
-            
+
             .demographic-table {
                 font-size: 0.9rem;
             }
-            
+
             .demographic-table th,
             .demographic-table td {
                 padding: 8px;
@@ -208,6 +209,7 @@ include('includes/nav.php');
         }
     </style>
 </head>
+
 <body>
     <div class="main-container">
         <div class="page-header">
@@ -215,14 +217,8 @@ include('includes/nav.php');
                 <i class="fas fa-home me-3"></i>Household Materials Analysis
             </h1>
             <p class="page-subtitle">Construction Materials & Ownership Types - Barangay Lizada</p>
-            <div class="mt-4 text-center">
-                <a href="population.php" class="back-btn">
-                    <i class="fas fa-arrow-left me-2"></i>
-                    Back to Population Demographics
-                </a>
-            </div>
         </div>
-        
+
         <div class="row">
             <div class="col-lg-9">
                 <!-- Construction Materials Table -->
@@ -236,7 +232,7 @@ include('includes/nav.php');
                             <i class="fas fa-download me-1"></i>Export
                         </button>
                     </div>
-                    
+
                     <?php
                     // Fetch construction materials data
                     $materials_sql = "SELECT material_name, id, households FROM household_materials ORDER BY id";
@@ -247,7 +243,7 @@ include('includes/nav.php');
                     $total_materials_result = $conn->query($total_materials_sql);
                     $materials_totals = $total_materials_result->fetch_assoc();
                     ?>
-                    
+
                     <table class="demographic-table" id="materialsTable">
                         <thead>
                             <tr>
@@ -260,10 +256,10 @@ include('includes/nav.php');
                         <tbody>
                             <?php
                             if ($materials_result->num_rows > 0) {
-                                while($row = $materials_result->fetch_assoc()) {
-                                    $percentage = $materials_totals["total_households"] > 0 ? 
+                                while ($row = $materials_result->fetch_assoc()) {
+                                    $percentage = $materials_totals["total_households"] > 0 ?
                                         round(($row["households"] / $materials_totals["total_households"]) * 100, 1) : 0;
-                                    
+
                                     echo "<tr>";
                                     echo "<td class='material-type'>" . htmlspecialchars($row["material_name"]) . "</td>";
                                     echo "<td>" . number_format((float)$row["households"]) . "</td>";
@@ -275,7 +271,7 @@ include('includes/nav.php');
                                     echo "</td>";
                                     echo "</tr>";
                                 }
-                                
+
                                 // Add total row
                                 echo "<tr>";
                                 echo "<td class='material-type'><strong>TOTAL</strong></td>";
@@ -290,7 +286,7 @@ include('includes/nav.php');
                         </tbody>
                     </table>
                 </div>
-                
+
                 <!-- Ownership Types Table -->
                 <div class="table-container">
                     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -302,7 +298,7 @@ include('includes/nav.php');
                             <i class="fas fa-download me-1"></i>Export
                         </button>
                     </div>
-                    
+
                     <?php
                     // Fetch ownership data
                     $ownership_sql = "SELECT ownership_type, id, households FROM household_ownership ORDER BY id";
@@ -313,7 +309,7 @@ include('includes/nav.php');
                     $total_ownership_result = $conn->query($total_ownership_sql);
                     $ownership_totals = $total_ownership_result->fetch_assoc();
                     ?>
-                    
+
                     <table class="demographic-table" id="ownershipTable">
                         <thead>
                             <tr>
@@ -326,10 +322,10 @@ include('includes/nav.php');
                         <tbody>
                             <?php
                             if ($ownership_result->num_rows > 0) {
-                                while($row = $ownership_result->fetch_assoc()) {
-                                    $percentage = $ownership_totals["total_households"] > 0 ? 
+                                while ($row = $ownership_result->fetch_assoc()) {
+                                    $percentage = $ownership_totals["total_households"] > 0 ?
                                         round(($row["households"] / $ownership_totals["total_households"]) * 100, 1) : 0;
-                                    
+
                                     echo "<tr>";
                                     echo "<td class='material-type'>" . htmlspecialchars($row["ownership_type"]) . "</td>";
                                     echo "<td>" . number_format((float)$row["households"]) . "</td>";
@@ -341,7 +337,7 @@ include('includes/nav.php');
                                     echo "</td>";
                                     echo "</tr>";
                                 }
-                                
+
                                 // Add total row
                                 echo "<tr>";
                                 echo "<td class='material-type'><strong>TOTAL</strong></td>";
@@ -357,7 +353,7 @@ include('includes/nav.php');
                     </table>
                 </div>
             </div>
-            
+
             <div class="col-lg-3">
                 <div class="stats-card">
                     <h5><i class="fas fa-chart-pie me-2"></i>Materials Statistics</h5>
@@ -381,7 +377,7 @@ include('includes/nav.php');
                         </span>
                     </div>
                 </div>
-                
+
                 <div class="stats-card">
                     <h5><i class="fas fa-home me-2"></i>Ownership Statistics</h5>
                     <div class="stat-item">
@@ -404,7 +400,7 @@ include('includes/nav.php');
                         </span>
                     </div>
                 </div>
-                
+
                 <div class="stats-card">
                     <h5><i class="fas fa-info-circle me-2"></i>Data Information</h5>
                     <div class="stat-item">
@@ -423,24 +419,24 @@ include('includes/nav.php');
             </div>
         </div>
     </div>
-    
+
     <script>
         function editMaterialData(materialType, households) {
             // Redirect to edit page with pre-filled data
             const url = `edit_household_materials.php?edit=1&material_type=${encodeURIComponent(materialType)}&households=${households}`;
             window.location.href = url;
         }
-        
+
         function editOwnershipData(ownershipType, households) {
             // Redirect to edit page with pre-filled data
             const url = `edit_household_ownership.php?edit=1&ownership_type=${encodeURIComponent(ownershipType)}&households=${households}`;
             window.location.href = url;
         }
-        
+
         function exportTable(tableId) {
             const table = document.getElementById(tableId);
             let csv = [];
-            
+
             // Get headers (exclude Action column)
             const headers = [];
             table.querySelectorAll('thead th').forEach((th, index) => {
@@ -449,7 +445,7 @@ include('includes/nav.php');
                 }
             });
             csv.push(headers.join(','));
-            
+
             // Get data rows (exclude Action column)
             table.querySelectorAll('tbody tr').forEach(tr => {
                 const row = [];
@@ -460,10 +456,12 @@ include('includes/nav.php');
                 });
                 csv.push(row.join(','));
             });
-            
+
             // Create download link
             const csvContent = csv.join('\n');
-            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const blob = new Blob([csvContent], {
+                type: 'text/csv'
+            });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
@@ -473,7 +471,7 @@ include('includes/nav.php');
             document.body.removeChild(a);
             window.URL.revokeObjectURL(url);
         }
-        
+
         // Add row click functionality (exclude action column clicks)
         document.querySelectorAll('.demographic-table tbody tr').forEach(row => {
             row.addEventListener('click', function(e) {
@@ -481,7 +479,7 @@ include('includes/nav.php');
                 if (e.target.tagName === 'BUTTON' || e.target.tagName === 'I') {
                     return;
                 }
-                
+
                 // Highlight selected row
                 document.querySelectorAll('.demographic-table tbody tr').forEach(r => {
                     r.style.backgroundColor = '';
@@ -491,4 +489,5 @@ include('includes/nav.php');
         });
     </script>
 </body>
+
 </html>

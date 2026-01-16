@@ -1,112 +1,221 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Micro OSS App</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Community Map - Micro Online Synthesis System</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <style>
+        /* Adopted styles from hazard_vul.php */
+        body {
+            background-color: #f5f5f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 0;
+            text-align: center;
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            margin: 10px 0 0 0;
+            text-align: center;
+            opacity: 0.9;
+        }
+
+        /* Card/Container Styles */
+        .content-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            height: 100%;
+        }
+
+        .stats-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            border-left: 4px solid #8b5cf6;
+        }
+
+        .stats-card h5 {
+            color: #8b5cf6;
+            font-weight: bold;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #f3f4f6;
+            padding-bottom: 10px;
+        }
+
+        /* Map Styles */
         .map-container {
-            height: 400px;
-            /* Responsive height for mobile */
+            height: 500px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e5e7eb;
         }
-        
-        /* Tablet and larger screens */
-        @media (min-width: 768px) {
+
+        /* Responsive height */
+        @media (max-width: 768px) {
             .map-container {
-                height: 600px;
+                height: 400px;
+            }
+
+            .page-title {
+                font-size: 1.8rem;
             }
         }
-        
-        /* Desktop screens */
-        @media (min-width: 992px) {
-            .map-container {
-                height: 70vh;
-            }
+
+        /* Custom form controls */
+        .form-control {
+            border: 1px solid #e2e8f0;
+            border-radius: 0.375rem;
+            padding: 0.5rem 0.75rem;
+        }
+
+        .form-control:focus {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+
+        .btn-purple {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+        }
+
+        .btn-purple:hover {
+            color: white;
+            opacity: 0.9;
+        }
+
+        /* Footer consistency */
+        .app-footer {
+            background: #1f2937;
+            /* Dark gray to match Nav/Standard */
+            color: white;
+            padding: 20px 0;
+            margin-top: 40px;
+            text-align: center;
         }
     </style>
 </head>
 
 <body>
-<?php
-// Start session to access user data
-session_start();
+    <?php
+    // Start session to access user data
+    session_start();
 
-// Include database configuration file
-include('config.php');
-?>
+    // Include database configuration file
+    include('config.php');
+    ?>
     <!-- Navigation Bar -->
     <?php include('includes/nav.php'); ?>
 
 
-    <div class="container mt-5">
+    <div class="main-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">
+                <i class="fas fa-map-marked-alt me-3"></i>Community Hazard Map
+            </h1>
+            <p class="page-subtitle">Geospatial Analysis of Toril District, Davao City</p>
+        </div>
+
         <div class="row">
-            <div class="col-md-8">
-                <h2>Map of Toril District, Davao City</h2>
-                <div id="map" class="map-container bg-light">
-                    <!-- Map placeholder -->
-                    <div id="hazard-map" style="width: 100%; height: 100%;"></div>
+            <!-- Main Map Section -->
+            <div class="col-lg-8">
+                <div class="content-card">
+                    <h4 class="mb-4" style="color: #4b5563; font-weight: 700;">
+                        <i class="fas fa-globe-asia me-2 text-purple" style="color: #8b5cf6;"></i>Toril District Map
+                    </h4>
+                    <div id="map" class="map-container">
+                        <!-- Map placeholder -->
+                        <div id="hazard-map" style="width: 100%; height: 100%;"></div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <h2>Barangay Maps</h2>
-                <div class="alert alert-info">
-                    <strong>Search for Barangay:</strong>
-                </div>
-                <div class="alert-settings">
+
+            <!-- Sidebar Controls -->
+            <div class="col-lg-4">
+                <!-- Location Filter -->
+                <div class="stats-card">
+                    <h5><i class="fas fa-search-location me-2"></i>Locate Area</h5>
                     <form>
-                        <div class="form-group">
-                            <select class="form-control" id="notificationType" onchange="focusBarangay()">
-                                <option value="">--Select--</option>
+                        <div class="mb-3">
+                            <label for="notificationType" class="form-label text-muted fw-bold small">BARANGAY</label>
+                            <select class="form-select" id="notificationType" onchange="focusBarangay()">
+                                <option value="">-- Select Barangay --</option>
                                 <option value="daliao">Daliao</option>
                                 <option value="lizada">Lizada</option>
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label for="purok"><strong>Purok/Sitio</strong></label>
-                            <select class="form-control" id="frequency" onchange="focusSitio()">
-                                <option>--Select--</option>
+                        <div class="mb-3">
+                            <label for="frequency" class="form-label text-muted fw-bold small">PUROK / SITIO</label>
+                            <select class="form-select" id="frequency" onchange="focusSitio()">
+                                <option>-- Select Sitio --</option>
                             </select>
                         </div>
                     </form>
-
-                    <!-- Hazard Alerts or Additional Tips -->
-                    <div class="alert alert-warning mt-4">
-                        <h5>Flood Resilience Tips</h5>
-                        <ul>
-                            <li>Ensure that flood-prone areas are identified and mapped.</li>
-                            <li>Prepare an emergency kit with necessary supplies.</li>
-                            <li>Always stay updated with local flood alerts.</li>
-                            <li>Review evacuation routes and emergency shelters in your area.</li>
-                            <li>Educate family members on flood preparedness and safety protocols.</li>
-                        </ul>
-                    </div>
                 </div>
-            </div>
-            <!-- Preparedness Tips -->
-            <div class="alert alert-success mt-4">
-                <h5>Flood Preparedness Tips</h5>
-                <p>During heavy rains and floods, it’s essential to be well-prepared:</p>
-                <ul>
-                    <li>Move to higher ground immediately when flooding occurs.</li>
-                    <li>Avoid walking or driving through flooded areas.</li>
-                    <li>Keep your emergency kit close, and include important documents, first-aid supplies, water, food, and a flashlight.</li>
-                </ul>
+
+                <!-- Resilience Tips -->
+                <div class="stats-card" style="border-left-color: #f59e0b;">
+                    <h5 style="color: #d97706;"><i class="fas fa-shield-alt me-2"></i>Resilience Tips</h5>
+                    <ul class="list-unstyled mb-0 small">
+                        <li class="mb-2"><i class="fas fa-check-circle me-2 text-warning"></i>Identify flood-prone areas.</li>
+                        <li class="mb-2"><i class="fas fa-check-circle me-2 text-warning"></i>Prepare an emergency kit.</li>
+                        <li class="mb-2"><i class="fas fa-check-circle me-2 text-warning"></i>Monitor local flood alerts.</li>
+                        <li class="mb-2"><i class="fas fa-check-circle me-2 text-warning"></i>Know evacuation routes.</li>
+                    </ul>
+                </div>
+
+                <!-- Preparedness Tips -->
+                <div class="stats-card" style="border-left-color: #10b981;">
+                    <h5 style="color: #059669;"><i class="fas fa-umbrella me-2"></i>Flood Preparedness</h5>
+                    <p class="small text-muted mb-2">During heavy rains:</p>
+                    <ul class="list-unstyled mb-0 small">
+                        <li class="mb-2"><i class="fas fa-arrow-up me-2 text-success"></i>Move to higher ground immediately.</li>
+                        <li class="mb-2"><i class="fas fa-ban me-2 text-success"></i>Avoid walking in floodwaters.</li>
+                        <li class="mb-2"><i class="fas fa-first-aid me-2 text-success"></i>Keep emergency kit accessible.</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
 
 
-    <footer class="bg-dark text-white mt-5 p-4 text-center">
-        &copy; 2024 Flood Resilience App. All Rights Reserved.
+    <footer class="app-footer">
+        <div class="container">
+            <small>&copy; 2024 Flood Resilience App. All Rights Reserved.</small>
+        </div>
     </footer>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
         // Initialize the map
