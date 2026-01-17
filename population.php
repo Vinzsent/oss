@@ -247,6 +247,8 @@ include('includes/auth_check.php');
                             </h4>
                         </div>
 
+                        <button class="mb-4 btn btn-primary" onclick="exportTable()">Export to Excel</button>
+
                         <?php
                         // Fetch data from age_population table, excluding any existing TOTAL rows
                         $sql = "SELECT age_bracket, female, male, total FROM age_population WHERE age_bracket != 'TOTAL' ORDER BY id";
@@ -412,7 +414,8 @@ include('includes/auth_check.php');
                 const headers = [];
                 table.querySelectorAll('thead th').forEach((th, index) => {
                     if (index < 4) { // Only include first 4 columns, exclude Action
-                        headers.push(th.textContent.trim());
+                        // Escape quotes and wrap in quotes
+                        headers.push('"' + th.textContent.trim().replace(/"/g, '""') + '"');
                     }
                 });
                 csv.push(headers.join(','));
@@ -422,16 +425,17 @@ include('includes/auth_check.php');
                     const row = [];
                     tr.querySelectorAll('td').forEach((td, index) => {
                         if (index < 4) { // Only include first 4 columns, exclude Action
-                            row.push(td.textContent.trim());
+                            // Escape quotes and wrap in quotes
+                            row.push('"' + td.textContent.trim().replace(/"/g, '""') + '"');
                         }
                     });
                     csv.push(row.join(','));
                 });
 
-                // Create download link
-                const csvContent = csv.join('\n');
+                // Create download link with BOM for Excel character encoding support
+                const csvContent = '\uFEFF' + csv.join('\n');
                 const blob = new Blob([csvContent], {
-                    type: 'text/csv'
+                    type: 'text/csv;charset=utf-8;'
                 });
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
