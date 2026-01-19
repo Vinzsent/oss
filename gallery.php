@@ -15,250 +15,263 @@ $selectedSitio = isset($_POST['sitio']) ? htmlspecialchars($_POST['sitio']) : ''
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Micro OSS App</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Gallery - Micro Online Synthesis System</title>
+    <!-- Use FontAwesome 6.4.0 like hazard_vul.php -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/css/bootstrap.min.css">
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.min.js"></script>
+
     <style>
-        /* Mobile-first responsive map */
+        /* Styles from hazard_vul.php */
+        body {
+            background-color: #f5f5f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1;
+            width: 100%;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 0;
+            text-align: center;
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            margin: 10px 0 0 0;
+            text-align: center;
+            opacity: 0.9;
+        }
+
+        /* Container for content sections (replacing plain cards) */
+        .content-container {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .stats-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            border-left: 4px solid #8b5cf6;
+        }
+
+        .stats-card h5,
+        .stats-card h2 {
+            color: #8b5cf6;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            color: #8b5cf6;
+            font-weight: bold;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #f3f4f6;
+            padding-bottom: 10px;
+        }
+
+        /* Button Gradient Style */
+        .btn-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            transition: transform 0.2s ease;
+        }
+
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+
+        /* Gallery Card Styles */
+        .gallery-card {
+            margin-bottom: 20px;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+            border: none;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .gallery-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-img-top {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        /* Map Styles */
         #map {
             height: 300px;
             width: 100%;
+            border-radius: 8px;
+            margin-bottom: 15px;
         }
-        
-        /* Tablet and larger screens */
+
         @media (min-width: 768px) {
             #map {
                 height: 400px;
             }
         }
 
-        #photoPreview img {
-            max-width: 100%;
-            max-height: 300px;
-            display: none;
-        }
-
-        table {
-            width: 100%;
-            margin-bottom: 1rem;
-            color: #212529;
-        }
-
-        thead th {
-            background-color: #f8f9fa;
-        }
-
-        .card {
-            margin-bottom: 20px;
-            border-radius: 0.5rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        .card-img-top {
-            border-radius: 0.5rem 0.5rem 0 0;
-            max-height: 400px;
-            object-fit: cover;
-        }
-
-        /* Sticky search sidebar */
+        /* Sticky Search */
         .sticky-search {
             position: sticky;
-            top: 80px;
-            z-index: 1000;
+            top: 20px;
+            z-index: 900;
         }
 
-        /* Sticky Footer Styles */
-        html,
-        body {
-            height: 100%;
+        /* Modal Styles matching hazard_vul.php */
+        .modal-header {
+            background-color: #8b5cf6;
+            color: white;
         }
 
-        body {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .content-wrapper {
-            flex: 1 0 auto;
-        }
-
-        footer {
-            flex-shrink: 0;
-        }
-        
-        /* Mobile spacing adjustments */
-        @media (max-width: 767px) {
-            .container {
-                padding-left: 15px;
-                padding-right: 15px;
-            }
-            
-            h2 {
-                font-size: 1.5rem;
-                margin-bottom: 1rem;
-            }
-            
-            h5 {
-                font-size: 1.1rem;
-            }
-            
-            .form-group {
-                margin-bottom: 1rem;
-            }
-            
-            .btn {
-                width: 100%;
-                margin-top: 0.5rem;
-            }
-            
-            .card {
-                margin-bottom: 1.5rem;
-            }
-            
-            .card-body {
-                padding: 1rem;
-            }
-            
-            .card-img-top {
-                max-height: 300px;
-            }
-            
-            /* Disable sticky on mobile for better UX */
-            .sticky-search {
-                position: static;
-            }
-            
-            .mt-5 {
-                margin-top: 2rem !important;
-            }
-            
-            /* Modal adjustments for mobile */
-            .modal-dialog {
-                margin: 0.5rem;
-                max-width: calc(100% - 1rem);
-            }
-            
-            .modal-body {
-                padding: 1rem;
-            }
-            
-            .modal-title {
-                font-size: 1.25rem;
-            }
-        }
-        
-        /* Extra small devices */
-        @media (max-width: 576px) {
-            .container {
-                padding-left: 10px;
-                padding-right: 10px;
-            }
-            
-            .card-title {
-                font-size: 1rem;
-            }
-            
-            .card-text {
-                font-size: 0.9rem;
-            }
-            
-            .btn {
-                padding: 0.5rem 1rem;
-                font-size: 0.875rem;
-            }
-            
-            #map {
-                height: 250px;
-            }
+        .btn-close-white {
+            filter: invert(1) grayscale(100%) brightness(200%);
         }
     </style>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 
 <body>
     <!-- Navigation Bar -->
     <?php include('includes/nav.php'); ?>
 
-    <div class="content-wrapper">
-        <div class="container mt-5">
-            <div class="row">
-                <!-- Gallery Section -->
-                <div class="col-md-8">
-                    <h2>Gallery</h2>
-                    <?php
-                    // Initialize to avoid undefined variable notices when no filters are selected
-                    $stmt = null;
-                    $result = null;
+    <div class="main-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">
+                <i class="fas fa-images me-3"></i>Community Gallery
+            </h1>
+            <p class="page-subtitle">Visual Archive of Barangay Conditions</p>
+        </div>
 
-                    if (!empty($selectedSitio)) {
-                        // If sitio is selected, filter by sitio and optionally by barangay if provided
-                        if (!empty($selectedBarangay)) {
-                            $stmt = $conn->prepare("SELECT barangay, sitio_purok, photo, description FROM flood_archive WHERE sitio_purok = ? AND barangay = ?");
-                            $stmt->bind_param("ss", $selectedSitio, $selectedBarangay);
-                        } else {
-                            $stmt = $conn->prepare("SELECT barangay, sitio_purok, photo, description FROM flood_archive WHERE sitio_purok = ?");
-                            $stmt->bind_param("s", $selectedSitio);
+        <div class="row">
+            <!-- Gallery Section -->
+            <div class="col-lg-8">
+                <div class="content-container">
+                    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
+                        <h4 class="mb-0 text-purple" style="color: #8b5cf6; font-weight: bold;">
+                            <i class="fas fa-photo-video me-2"></i>Photo Stream
+                        </h4>
+                        <button class="btn btn-gradient" data-bs-toggle="modal" data-bs-target="#uploadPhotoModal">
+                            <i class="fas fa-upload me-2"></i>Upload Photo
+                        </button>
+                    </div>
+
+                    <div class="row">
+                        <?php
+                        $stmt = null;
+                        $result = null;
+
+                        if (!empty($selectedSitio)) {
+                            // If sitio is selected, filter by sitio and optionally by barangay if provided
+                            if (!empty($selectedBarangay)) {
+                                $stmt = $conn->prepare("SELECT barangay, sitio_purok, photo, description FROM flood_archive WHERE sitio_purok = ? AND barangay = ?");
+                                $stmt->bind_param("ss", $selectedSitio, $selectedBarangay);
+                            } else {
+                                $stmt = $conn->prepare("SELECT barangay, sitio_purok, photo, description FROM flood_archive WHERE sitio_purok = ?");
+                                $stmt->bind_param("s", $selectedSitio);
+                            }
+                            $stmt->execute();
+                            $result = $stmt->get_result();
+                        } elseif (!empty($selectedBarangay)) {
+                            // Fallback: filter by barangay only
+                            $stmt = $conn->prepare("SELECT barangay, sitio_purok, photo, description FROM flood_archive WHERE barangay = ?");
+                            $stmt->bind_param("s", $selectedBarangay);
+                            $stmt->execute();
+                            $result = $stmt->get_result();
                         }
-                        $stmt->execute();
-                        $result = $stmt->get_result();
-                    } elseif (!empty($selectedBarangay)) {
-                        // Fallback: filter by barangay only
-                        $stmt = $conn->prepare("SELECT barangay, sitio_purok, photo, description FROM flood_archive WHERE barangay = ?");
-                        $stmt->bind_param("s", $selectedBarangay);
-                        $stmt->execute();
-                        $result = $stmt->get_result();
-                    }
 
-                    if ($result && $result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            $photo = base64_encode($row['photo']);
-                            $barangay = htmlspecialchars($row['barangay'], ENT_QUOTES, 'UTF-8');
-                            $sitioPurok = htmlspecialchars($row['sitio_purok'], ENT_QUOTES, 'UTF-8');
-                            $description = htmlspecialchars($row['description'], ENT_QUOTES, 'UTF-8');
-                    ?>
-                            <div class="card">
-                                <img src="data:image/jpeg;base64,<?= $photo ?>" class="card-img-top" alt="<?= $barangay ?> - <?= $sitioPurok ?>">
-                                <div class="card-body">
-                                    <h5 class="card-title"><?= $barangay ?> - <?= $sitioPurok ?></h5>
-                                    <p class="card-text"><?= $description ?></p>
+                        if ($result && $result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                $photo = base64_encode($row['photo']);
+                                $barangay = htmlspecialchars($row['barangay'], ENT_QUOTES, 'UTF-8');
+                                $sitioPurok = htmlspecialchars($row['sitio_purok'], ENT_QUOTES, 'UTF-8');
+                                $description = htmlspecialchars($row['description'], ENT_QUOTES, 'UTF-8');
+                        ?>
+                                <div class="col-md-6 mb-4">
+                                    <div class="card gallery-card h-100">
+                                        <img src="data:image/jpeg;base64,<?= $photo ?>" class="card-img-top" alt="<?= $barangay ?> - <?= $sitioPurok ?>">
+                                        <div class="card-body">
+                                            <h6 class="card-subtitle mb-2 text-muted"><?= $barangay ?> - <?= $sitioPurok ?></h6>
+                                            <p class="card-text"><?= $description ?></p>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                    <?php
-                        }
-                    } else {
-                        if (!empty($selectedSitio) || !empty($selectedBarangay)) {
-                            echo "<p>No records found for the selected filters.</p>";
+                        <?php
+                            }
                         } else {
-                            echo "<p>Please select a sitio or barangay to view the flood archive.</p>";
+                            echo '<div class="col-12 text-center py-5">';
+                            echo '<div class="text-muted"><i class="fas fa-images fa-3x mb-3"></i><p class="lead">';
+                            if (!empty($selectedSitio) || !empty($selectedBarangay)) {
+                                echo "No records found for the selected filters.";
+                            } else {
+                                echo "Select a location to view photos.";
+                            }
+                            echo '</p></div></div>';
                         }
-                    }
-                    if ($stmt instanceof mysqli_stmt) {
-                        $stmt->close();
-                    }
-                    ?>
-                    <!-- Upload Photo Button -->
-                    <button class="btn btn-primary mt-3" data-toggle="modal" data-target="#uploadPhotoModal">Upload Photo</button>
+                        if ($stmt instanceof mysqli_stmt) {
+                            $stmt->close();
+                        }
+                        ?>
+                    </div>
                 </div>
+            </div>
 
-                <!-- Search Section -->
-                <div class="col-md-4">
-                    <div class="sticky-search">
-                        <h2>Search for Barangay</h2>
+            <!-- Search Section -->
+            <div class="col-lg-4">
+                <div class="sticky-search">
+                    <div class="stats-card">
+                        <h5><i class="fas fa-search me-2"></i>Filter Gallery</h5>
                         <form method="post">
-                            <div class="form-group">
-                                <label for="barangay">Barangay</label>
-                                <select class="form-control" id="barangay" name="barangay">
+                            <div class="mb-3">
+                                <label for="barangay" class="form-label text-muted">Barangay</label>
+                                <select class="form-select" id="barangay" name="barangay">
                                     <option value="">--Select Barangay--</option>
                                 </select>
                             </div>
-                            <div class="form-group">
-                                <label for="sitio">Sitio</label>
-                                <select class="form-control" id="sitio" name="sitio" onchange="this.form.submit()">
+                            <div class="mb-3">
+                                <label for="sitio" class="form-label text-muted">Sitio</label>
+                                <select class="form-select" id="sitio" name="sitio" onchange="this.form.submit()">
                                     <option value="">--Select Sitio--</option>
                                 </select>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-outline-primary btn-sm">Apply Filters</button>
                             </div>
                         </form>
                     </div>
@@ -268,52 +281,66 @@ $selectedSitio = isset($_POST['sitio']) ? htmlspecialchars($_POST['sitio']) : ''
     </div>
 
     <!-- Upload Photo Modal -->
-    <div class="modal fade" id="uploadPhotoModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
+    <div class="modal fade" id="uploadPhotoModal" tabindex="-1" aria-labelledby="uploadPhotoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Upload Photo</h5>
-                    <button class="close" data-dismiss="modal">&times;</button>
+                    <h5 class="modal-title" id="uploadPhotoModalLabel"><i class="fas fa-upload me-2"></i>Upload Photo</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form action="upload_photo.php" method="POST" enctype="multipart/form-data">
                     <div class="modal-body">
-                        <div class="form-group">
-                            <label for="barangayModal">Barangay</label>
-                            <select class="form-control" id="barangayModal" name="barangay" required>
-                                <option value="">--Select Barangay--</option>
-                            </select>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="barangayModal" class="form-label">Barangay</label>
+                                <select class="form-select" id="barangayModal" name="barangay" required>
+                                    <option value="">--Select Barangay--</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="sitioModal" class="form-label">Sitio</label>
+                                <select class="form-select" id="sitioModal" name="sitio" required>
+                                    <option value="">--Select Sitio--</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="sitioModal">Sitio</label>
-                            <select class="form-control" id="sitioModal" name="sitio" required>
-                                <option value="">--Select Sitio--</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="photo">Photo</label>
+                        <div class="mb-3">
+                            <label for="photo" class="form-label">Photo</label>
                             <input type="file" class="form-control" id="photo" name="photo" accept="image/*" required onchange="previewPhoto(event)">
                         </div>
                         <!-- Location Fields -->
-                        <label for="latitude">Latitude:</label>
-                        <input type="text" name="latitude" id="latitude" placeholder="Select on map" class="form-control" required readonly>
-                        <label for="longitude">Longitude:</label>
-                        <input type="text" name="longitude" id="longitude" placeholder="Select on map" class="form-control" required readonly><br>
-                        <div class="form-group">
-                            <label>Preview</label>
-                            <div id="photoPreview" style="border: 1px solid #ddd; padding: 10px; text-align: center;">
-                                <img id="previewImage" src="#" alt="Photo Preview" style="max-width: 100%; max-height: 300px; display: none;">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="latitude" class="form-label">Latitude</label>
+                                <input type="text" name="latitude" id="latitude" placeholder="Select on map" class="form-control" required readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="longitude" class="form-label">Longitude</label>
+                                <input type="text" name="longitude" id="longitude" placeholder="Select on map" class="form-control" required readonly>
                             </div>
                         </div>
-                        <h2 class="mt-5">Specify Location on Map</h2>
-                        <div id="map"></div>
-                        <div class="form-group">
-                            <label for="description">Description</label>
+
+                        <div class="mb-3">
+                            <label class="form-label">Preview</label>
+                            <div id="photoPreview" class="text-center p-2 bg-light rounded border">
+                                <img id="previewImage" src="#" alt="Photo Preview" style="max-width: 100%; max-height: 300px; display: none; margin: 0 auto;">
+                                <span id="previewPlaceholder" class="text-muted">No image selected</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Specify Location on Map</label>
+                            <div id="map"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
                             <textarea class="form-control" id="description" name="description" rows="3"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Upload</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" style="background: #8b5cf6; border-color: #8b5cf6;">Upload</button>
                     </div>
                 </form>
             </div>
@@ -321,14 +348,13 @@ $selectedSitio = isset($_POST['sitio']) ? htmlspecialchars($_POST['sitio']) : ''
     </div>
 
     <!-- Footer -->
-    <footer class="bg-dark text-white mt-5 p-4 text-center">
-        &copy; 2024 Flood Resilience App. All Rights Reserved.
+    <footer class="bg-white text-center py-4 mt-auto border-top">
+        <div class="container">
+            <p class="mb-0 text-dark">&copy; 2024 Flood Resilience App. All Rights Reserved.</p>
+        </div>
     </footer>
 
-    <!-- Optimized Scripts -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Scripts -->
     <script>
         // Dynamic data fetching functions
         async function fetchBarangays() {
@@ -410,14 +436,20 @@ $selectedSitio = isset($_POST['sitio']) ? htmlspecialchars($_POST['sitio']) : ''
         // Preview uploaded photo
         function previewPhoto(event) {
             const file = event.target.files[0];
+            const previewImage = document.getElementById("previewImage");
+            const placeholder = document.getElementById("previewPlaceholder");
+
             if (file) {
                 const reader = new FileReader();
                 reader.onload = () => {
-                    const previewImage = document.getElementById("previewImage");
                     previewImage.src = reader.result;
                     previewImage.style.display = "block";
+                    if (placeholder) placeholder.style.display = 'none';
                 };
                 reader.readAsDataURL(file);
+            } else {
+                previewImage.style.display = "none";
+                if (placeholder) placeholder.style.display = 'block';
             }
         }
     </script>
@@ -429,8 +461,9 @@ $selectedSitio = isset($_POST['sitio']) ? htmlspecialchars($_POST['sitio']) : ''
 
         function initLeafletMap() {
             const defaultLocation = [7.0731, 125.6128];
+            const mapContainer = document.getElementById("map");
 
-            if (!mapInstance) {
+            if (!mapInstance && mapContainer) {
                 mapInstance = L.map("map").setView(defaultLocation, 14);
 
                 // Add OpenStreetMap tiles
@@ -440,9 +473,14 @@ $selectedSitio = isset($_POST['sitio']) ? htmlspecialchars($_POST['sitio']) : ''
                 }).addTo(mapInstance);
 
                 // Draggable marker
-                markerInstance = L.marker(defaultLocation, { draggable: true }).addTo(mapInstance);
+                markerInstance = L.marker(defaultLocation, {
+                    draggable: true
+                }).addTo(mapInstance);
                 markerInstance.on("moveend", (event) => {
-                    const { lat, lng } = event.target.getLatLng();
+                    const {
+                        lat,
+                        lng
+                    } = event.target.getLatLng();
                     document.getElementById("latitude").value = lat.toFixed(6);
                     document.getElementById("longitude").value = lng.toFixed(6);
                 });
@@ -464,27 +502,20 @@ $selectedSitio = isset($_POST['sitio']) ? htmlspecialchars($_POST['sitio']) : ''
 
             // Important: fix rendering after modal becomes visible
             setTimeout(() => {
-                mapInstance.invalidateSize();
-            }, 200);
+                if (mapInstance) mapInstance.invalidateSize();
+            }, 300);
         }
 
-        // Bootstrap modal event: initialize/refresh map when shown
-        document.addEventListener("DOMContentLoaded", function () {
+        // Bootstrap 5 modal event
+        document.addEventListener("DOMContentLoaded", function() {
             const modalEl = document.getElementById('uploadPhotoModal');
             if (modalEl) {
-                // For Bootstrap 4 with jQuery available
-                if (window.$ && $(modalEl).on) {
-                    $(modalEl).on('shown.bs.modal', function () {
-                        initLeafletMap();
-                    });
-                } else {
-                    // Fallback: observe attribute changes to detect visibility
-                    modalEl.addEventListener('transitionend', () => initLeafletMap());
-                }
+                modalEl.addEventListener('shown.bs.modal', function() {
+                    initLeafletMap();
+                });
             }
         });
     </script>
-
 </body>
 
 </html>
