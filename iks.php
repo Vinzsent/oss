@@ -52,6 +52,7 @@ session_start();
             margin: 10px 0 0 0;
             text-align: center;
             opacity: 0.9;
+            color: #fff;
         }
 
         .content-container {
