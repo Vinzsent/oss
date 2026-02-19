@@ -407,106 +407,10 @@ include('includes/auth_check.php');
 
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <a class="navbar-brand" href="index.php"><strong>Micro Online Synthesis System</strong></a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="home.php">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="maps.php">Community Map</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a
-                        class="nav-link dropdown-toggle"
-                        href="#"
-                        id="navbarDropdown"
-                        role="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        Early Warning System
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="alert.php">Alert Signal</a></li>
-                        <li><a class="dropdown-item" href="hazard_vul.php">Hazard Map</a></li>
-                        <li><a class="dropdown-item" href="flood_warning.php">Flood Monitoring</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item"><a class="nav-link" href="evacuation.php">Evacuation Map</a></li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="socioDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Socio Demographic</a>
-                    <ul class="dropdown-menu" aria-labelledby="socioDropdown">
-                        <li><a class="dropdown-item <?php echo basename($_SERVER['PHP_SELF']) == 'population.php' ? 'active' : ''; ?>" href="population.php">Population Over Age</a></li>
-                        <li><a class="dropdown-item <?php echo basename($_SERVER['PHP_SELF']) == 'hazard_vul.php' ? 'active' : ''; ?>" href="hazard_vul.php">Hazard Vulnerability</a></li>
-                        <li><a class="dropdown-item <?php echo basename($_SERVER['PHP_SELF']) == 'purok_demographics.php' ? 'active' : ''; ?>" href="purok_demographics.php">Purok Demographics</a></li>
-                        <li><a class="dropdown-item <?php echo basename($_SERVER['PHP_SELF']) == 'household_materials.php' ? 'active' : ''; ?>" href="household_materials.php">Household Materials Analysis</a></li>
-                        <li><a class="dropdown-item <?php echo basename($_SERVER['PHP_SELF']) == 'purok_evac.php' ? 'active' : ''; ?>" href="purok_evac.php">Purok Evacuation</a></li>
-                        <li><a class="dropdown-item <?php echo basename($_SERVER['PHP_SELF']) == 'socio.php' && isset($_GET['barangay']) && $_GET['barangay'] == 'lizada' ? 'active' : ''; ?>" href="socio.php?barangay=lizada">Lizada</a></li>
-                        <li><a class="dropdown-item <?php echo basename($_SERVER['PHP_SELF']) == 'socio.php' && isset($_GET['barangay']) && $_GET['barangay'] == 'daliao' ? 'active' : ''; ?>" href="socio.php?barangay=daliao">Daliao</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="gallery.php">Gallery</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="iks.php">IKS</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="publications.php">Publications</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="download.php">Downloadables</a>
-                </li>
+    <?php include('includes/nav.php'); ?>
 
-                <?php
-                // Check if user is logged in
-                if (isset($_SESSION['id'])) {
-                    // User is logged in, show profile picture and logout option
-                    // Check if profile picture is set in the session
-                    $profile_picture = isset($_SESSION['profile_picture']) && !empty($_SESSION['profile_picture']) ? $_SESSION['profile_picture'] : 'default-profile.jpg';
-                    echo '<li class="nav-item">';
-                    echo '<img src="uploads/' . htmlspecialchars($profile_picture) . '" alt="Profile Picture" class="rounded-circle" style="width: 40px; height: 40px;">'; // Profile picture
-                    echo '</li>';
-                    echo '<li class="nav-item">';
-                    echo '<a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal"><i class="fas fa-sign-out-alt mr-2"></i>Log Out</a>';
-                    echo '</li>';
-                } else {
-                    // User is not logged in, show login and sign-up options
-                    echo '<li class="nav-item">';
-                    echo '<a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal"><i class="fas fa-sign-out-alt mr-2"></i>Login</a>';
-                    echo '</li>';
-                    echo '<li class="nav-item">';
-                    echo '<a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#signUpModal"><i class="fas fa-sign-out-alt mr-2"></i>Sign Up</a>';
-                    echo '</li>';
-                }
-                ?>
-            </ul>
-        </div>
-    </nav>
-
-    <!-- Mobile Navigation Auto-Close Script -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Auto-close navbar on mobile when clicking a link
-            const navLinks = document.querySelectorAll('.navbar-nav .nav-link:not(.dropdown-toggle)');
-            const navbarCollapse = document.getElementById('navbarNav');
-
-            navLinks.forEach(function(link) {
-                link.addEventListener('click', function() {
-                    if (window.innerWidth < 992 && navbarCollapse && navbarCollapse.classList.contains('show')) {
-                        const bsCollapse = new bootstrap.Collapse(navbarCollapse, {
-                            toggle: false
-                        });
-                        bsCollapse.hide();
-                    }
-                });
-            });
-        });
-    </script>
+    <!-- Include auth check modal -->
+    <?php include('includes/auth_check.php'); ?>
 
     <?php if ($is_logged_in): ?>
         <div class="main-container main-content-protected">
@@ -778,59 +682,59 @@ include('includes/auth_check.php');
             </div>
         </div>
 
-        <!-- Bootstrap JS (includes Popper) for dropdowns/toggles -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-        <script>
-            function editEvacuationPlan(id) {
-                // Fetch evacuation plan data from the server
-                fetch(`get_evacuation_plan.php?id=${id}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            // Access the data object from the response
-                            const evacuationData = data.data;
-
-                            // Populate the modal fields with the data
-                            document.getElementById('editId').value = evacuationData.purok_id;
-                            document.getElementById('editPurokName').value = evacuationData.purok_name;
-                            document.getElementById('editTotalPopFamilies').value = evacuationData.total_pop_families;
-                            document.getElementById('editTotalPopPersons').value = evacuationData.total_pop_persons;
-                            document.getElementById('editRiskPopFamilies').value = evacuationData.risk_pop_families;
-                            document.getElementById('editRiskPopPersons').value = evacuationData.risk_pop_persons;
-                            document.getElementById('editPlanACenterName').value = evacuationData.plan_a_center_name;
-                            document.getElementById('editPlanACenterAddress').value = evacuationData.plan_a_center_address;
-                            document.getElementById('editPlanACapacityFamilies').value = evacuationData.plan_a_capacity_families;
-                            document.getElementById('editPlanACapacityPersons').value = evacuationData.plan_a_capacity_persons;
-                            document.getElementById('editToBeAccommodatedFamilies').value = evacuationData.to_be_accommodated_families;
-                            document.getElementById('editToBeAccommodatedPersons').value = evacuationData.to_be_accommodated_persons;
-                            document.getElementById('editNotAccommodatedFamilies').value = evacuationData.not_accommodated_families;
-                            document.getElementById('editNotAccommodatedPersons').value = evacuationData.not_accommodated_persons;
-                            document.getElementById('editPlanBCenterName').value = evacuationData.plan_b_center_name;
-                            document.getElementById('editPlanBCenterAddress').value = evacuationData.plan_b_center_address;
-                            document.getElementById('editPlanBCapacityFamilies').value = evacuationData.plan_b_capacity_families;
-                            document.getElementById('editPlanBCapacityPersons').value = evacuationData.plan_b_capacity_persons;
-                            document.getElementById('editNotAccomPlanABFamilies').value = evacuationData.not_accom_plan_ab_families;
-                            document.getElementById('editNotAccomPlanABPersons').value = evacuationData.not_accom_plan_ab_persons;
-                            document.getElementById('editRemarks').value = evacuationData.remarks;
-
-                            // Show the modal
-                            const modal = new bootstrap.Modal(document.getElementById('editModal'));
-                            modal.show();
-                        } else {
-                            alert('Error: ' + data.message);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error fetching evacuation plan data:', error);
-                        alert('Error fetching evacuation plan data. Please try again.');
-                    });
-            }
-        </script>
-    <?php else: ?>
-        <!-- Content hidden when not logged in - auth_check.php handles the modal -->
-        <div class="main-content-protected" style="display: none;"></div>
     <?php endif; ?>
+
+    <script>
+        function editEvacuationPlan(id) {
+            // Fetch evacuation plan data from the server
+            fetch(`get_evacuation_plan.php?id=${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Access the data object from the response
+                        const evacuationData = data.data;
+
+                        // Populate the modal fields with the data
+                        document.getElementById('editId').value = evacuationData.purok_id;
+                        document.getElementById('editPurokName').value = evacuationData.purok_name;
+                        document.getElementById('editTotalPopFamilies').value = evacuationData.total_pop_families;
+                        document.getElementById('editTotalPopPersons').value = evacuationData.total_pop_persons;
+                        document.getElementById('editRiskPopFamilies').value = evacuationData.risk_pop_families;
+                        document.getElementById('editRiskPopPersons').value = evacuationData.risk_pop_persons;
+                        document.getElementById('editPlanACenterName').value = evacuationData.plan_a_center_name;
+                        document.getElementById('editPlanACenterAddress').value = evacuationData.plan_a_center_address;
+                        document.getElementById('editPlanACapacityFamilies').value = evacuationData.plan_a_capacity_families;
+                        document.getElementById('editPlanACapacityPersons').value = evacuationData.plan_a_capacity_persons;
+                        document.getElementById('editToBeAccommodatedFamilies').value = evacuationData.to_be_accommodated_families;
+                        document.getElementById('editToBeAccommodatedPersons').value = evacuationData.to_be_accommodated_persons;
+                        document.getElementById('editNotAccommodatedFamilies').value = evacuationData.not_accommodated_families;
+                        document.getElementById('editNotAccommodatedPersons').value = evacuationData.not_accommodated_persons;
+                        document.getElementById('editPlanBCenterName').value = evacuationData.plan_b_center_name;
+                        document.getElementById('editPlanBCenterAddress').value = evacuationData.plan_b_center_address;
+                        document.getElementById('editPlanBCapacityFamilies').value = evacuationData.plan_b_capacity_families;
+                        document.getElementById('editPlanBCapacityPersons').value = evacuationData.plan_b_capacity_persons;
+                        document.getElementById('editNotAccomPlanABFamilies').value = evacuationData.not_accom_plan_ab_families;
+                        document.getElementById('editNotAccomPlanABPersons').value = evacuationData.not_accom_plan_ab_persons;
+                        document.getElementById('editRemarks').value = evacuationData.remarks;
+
+                        // Show the modal
+                        const modal = new bootstrap.Modal(document.getElementById('editModal'));
+                        modal.show();
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching evacuation plan data:', error);
+                    alert('Error fetching evacuation plan data. Please try again.');
+                });
+        }
+    </script>
+
+    <!-- Bootstrap JS -->
+
+    <?php include('includes/scripts.php'); ?>
+    <?php include('includes/footer.php'); ?>
 </body>
 
 </html>

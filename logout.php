@@ -9,4 +9,3 @@ session_destroy();
 // Redirect to login page or home page after logout
 header("Location: index.php");
 exit();
-?>

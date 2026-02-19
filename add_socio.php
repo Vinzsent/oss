@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $check_stmt->bind_param("ss", $barangay, $sitio_purok);
         $check_stmt->execute();
         $result = $check_stmt->get_result();
-        
+
         if ($result->num_rows > 0) {
             $message = 'This sitio/purok already exists in the selected barangay.';
             $message_type = 'warning';
@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                           VALUES (?, ?, ?, ?, ?)";
             $insert_stmt = $conn->prepare($insert_sql);
             $insert_stmt->bind_param("ssiii", $barangay, $sitio_purok, $total_families, $total_persons, $risk_level);
-            
+
             if ($insert_stmt->execute()) {
                 $message = 'Socio-demographic data added successfully!';
                 $message_type = 'success';
@@ -73,6 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -80,21 +81,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
-        html, body {
+        html,
+        body {
             height: 100%;
             margin: 0;
         }
+
         body {
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
+
         .content-wrapper {
             flex: 1 0 auto;
             padding-bottom: 60px;
         }
     </style>
 </head>
+
 <body>
     <!-- Navigation Bar -->
     <?php include('includes/nav.php'); ?>
@@ -132,21 +137,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                                 <div class="form-group">
                                     <label for="sitio_purok">Sitio/Purok Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="sitio_purok" name="sitio_purok" 
-                                           value="<?php echo htmlspecialchars($_POST['sitio_purok'] ?? ''); ?>" 
-                                           required>
+                                    <input type="text" class="form-control" id="sitio_purok" name="sitio_purok"
+                                        value="<?php echo htmlspecialchars($_POST['sitio_purok'] ?? ''); ?>"
+                                        required>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="total_families">Total Number of Families <span class="text-danger">*</span></label>
-                                    <input type="number" class="form-control" id="total_families" name="total_families" 
-                                           min="1" value="<?php echo $_POST['total_families'] ?? ''; ?>" required>
+                                    <input type="number" class="form-control" id="total_families" name="total_families"
+                                        min="1" value="<?php echo $_POST['total_families'] ?? ''; ?>" required>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="total_persons">Total Number of Persons <span class="text-danger">*</span></label>
-                                    <input type="number" class="form-control" id="total_persons" name="total_persons" 
-                                           min="1" value="<?php echo $_POST['total_persons'] ?? ''; ?>" required>
+                                    <input type="number" class="form-control" id="total_persons" name="total_persons"
+                                        min="1" value="<?php echo $_POST['total_persons'] ?? ''; ?>" required>
                                 </div>
 
                                 <div class="form-group">
@@ -158,7 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         <option value="3" <?php echo (isset($_POST['risk_level']) && $_POST['risk_level'] == 3) ? 'selected' : ''; ?>>High</option>
                                     </select>
                                     <small class="form-text text-muted">
-                                        Risk Level Colors: 
+                                        Risk Level Colors:
                                         <span class="badge" style="background-color: white; color: black; border: 1px solid #dee2e6;">None</span>
                                         <span class="badge badge-warning">Low</span>
                                         <span class="badge" style="background-color: orange; color: white;">Medium</span>
@@ -188,8 +193,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </footer>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <?php include('includes/scripts.php'); ?>
 </body>
+
 </html>

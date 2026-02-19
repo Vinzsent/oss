@@ -285,6 +285,10 @@ include('config.php');
                         </form>
                     </div>
 
+                    <h3 class="text-center mt-2">OR</h3>
+
+                    <a href="evacuation-manual.php" class="btn btn-primary w-100 mt-2"><i class="fas fa-map-marked-alt me-2"></i> Manual Evacuation</a>
+
                     <hr class="my-4">
 
                     <h5 class="mb-3 fw-bold text-secondary">Legends</h5>
@@ -295,7 +299,7 @@ include('config.php');
                     <!-- Add more legends here if needed -->
                     <div class="d-flex align-items-center mb-2">
                         <i class="fas fa-map-marker-alt text-primary me-2" style="font-size: 1.2rem;"></i>
-                        <span>Barangay Hall</span>
+                        <span>Your Location</span>
                     </div>
                 </div>
             </div>
@@ -308,7 +312,6 @@ include('config.php');
         </div>
     </footer>
 
-    <!-- Scripts -->
     <!-- Scripts -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.min.js"></script>
@@ -504,6 +507,8 @@ include('config.php');
             return deg * (Math.PI / 180);
         }
     </script>
+
+    <?php include('includes/scripts.php'); ?>
 </body>
 
 </html>

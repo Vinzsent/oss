@@ -204,11 +204,8 @@ include('config.php');
         </div>
     </footer>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Keeping legacy scripts references if strictly needed, though logic is Vanilla JS below -->
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/shpjs/3.6.1/shp.min.js"></script>
+
+    <?php include('includes/scripts.php'); ?>
 
     <script>
         function updateImage() {

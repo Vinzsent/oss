@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $warning_level = $_POST['warning_level'] ?? '';
     $status = $_POST['status'] ?? '';
     $recommendation = $_POST['recommendation'] ?? '';
-    
+
     // Validate required fields
     if (!empty($barangay) && !empty($sitio) && !empty($warning_level) && !empty($status)) {
         // Prepare and execute the insert query
@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                               (barangay, sitio, warning_level, status, recommended_action, date_created) 
                               VALUES (?, ?, ?, ?, ?, NOW())");
         $stmt->bind_param("sssss", $barangay, $sitio, $warning_level, $status, $recommendation);
-        
+
         if ($stmt->execute()) {
             $message = "Flood warning data added successfully!";
             $messageType = "success";
@@ -41,6 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -53,17 +54,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             display: flex;
             flex-direction: column;
         }
+
         .main-content {
             flex: 1;
         }
+
         .form-container {
             background-color: #f8f9fa;
             padding: 2rem;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
+
 <body>
     <!-- Navigation Bar -->
     <?php include('includes/nav.php'); ?>
@@ -72,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <h2><i class="fas fa-exclamation-triangle"></i> Add Flood Warning</h2>
-                
+
                 <?php if (!empty($message)): ?>
                     <div class="alert alert-<?php echo $messageType; ?> alert-dismissible fade show" role="alert">
                         <?php echo $message; ?>
@@ -155,8 +159,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         &copy; 2024 Flood Resilience App. All Rights Reserved.
     </footer>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <?php include('includes/scripts.php'); ?>
 </body>
+
 </html>

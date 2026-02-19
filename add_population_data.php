@@ -9,20 +9,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $female = $_POST['female'];
     $male = $_POST['male'];
     $total = $female + $male;
-    
+
     // Check if age bracket already exists
     $check_sql = "SELECT id FROM age_population WHERE age_bracket = ?";
     $check_stmt = $conn->prepare($check_sql);
     $check_stmt->bind_param("s", $age_bracket);
     $check_stmt->execute();
     $result = $check_stmt->get_result();
-    
+
     if ($result->num_rows > 0) {
         // Update existing record
         $update_sql = "UPDATE age_population SET female = ?, male = ?, total = ? WHERE age_bracket = ?";
         $update_stmt = $conn->prepare($update_sql);
         $update_stmt->bind_param("iiis", $female, $male, $total, $age_bracket);
-        
+
         if ($update_stmt->execute()) {
             $success_message = "Age bracket data updated successfully!";
         } else {
@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $insert_sql = "INSERT INTO age_population (age_bracket, female, male, total) VALUES (?, ?, ?, ?)";
         $insert_stmt = $conn->prepare($insert_sql);
         $insert_stmt->bind_param("siii", $age_bracket, $female, $male, $total);
-        
+
         if ($insert_stmt->execute()) {
             $success_message = "New age bracket data added successfully!";
         } else {
@@ -50,7 +50,7 @@ $brackets_result = $conn->query($brackets_sql);
 $existing_brackets = array();
 
 if ($brackets_result->num_rows > 0) {
-    while($row = $brackets_result->fetch_assoc()) {
+    while ($row = $brackets_result->fetch_assoc()) {
         $existing_brackets[] = $row['age_bracket'];
     }
 }
@@ -70,6 +70,7 @@ if ($is_edit) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -81,44 +82,44 @@ if ($is_edit) {
             background-color: #f5f5f5;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         .main-container {
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
         }
-        
+
         .page-header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 30px;
             border-radius: 10px;
             margin-bottom: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
-        
+
         .page-title {
             font-size: 2.5rem;
             font-weight: bold;
             margin: 0;
             text-align: center;
         }
-        
+
         .page-subtitle {
             font-size: 1.2rem;
             margin: 10px 0 0 0;
             text-align: center;
             opacity: 0.9;
         }
-        
+
         .form-container {
             background: white;
             border-radius: 10px;
             padding: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             margin-bottom: 30px;
         }
-        
+
         .form-header {
             color: #8b5cf6;
             font-weight: bold;
@@ -126,25 +127,27 @@ if ($is_edit) {
             font-size: 1.5rem;
             text-align: center;
         }
-        
+
         .form-label {
             color: #4b5563;
             font-weight: 600;
             margin-bottom: 8px;
         }
-        
-        .form-control, .form-select {
+
+        .form-control,
+        .form-select {
             border: 2px solid #e5e7eb;
             border-radius: 8px;
             padding: 12px;
             transition: border-color 0.3s ease;
         }
-        
-        .form-control:focus, .form-select:focus {
+
+        .form-control:focus,
+        .form-select:focus {
             border-color: #8b5cf6;
             box-shadow: 0 0 0 0.2rem rgba(139, 92, 246, 0.25);
         }
-        
+
         .btn-primary {
             background: #8b5cf6;
             border-color: #8b5cf6;
@@ -153,14 +156,14 @@ if ($is_edit) {
             border-radius: 8px;
             transition: all 0.3s ease;
         }
-        
+
         .btn-primary:hover {
             background: #7c3aed;
             border-color: #7c3aed;
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
         }
-        
+
         .btn-secondary {
             background: #6b7280;
             border-color: #6b7280;
@@ -169,13 +172,13 @@ if ($is_edit) {
             border-radius: 8px;
             transition: all 0.3s ease;
         }
-        
+
         .btn-secondary:hover {
             background: #4b5563;
             border-color: #4b5563;
             transform: translateY(-2px);
         }
-        
+
         .alert-success {
             background-color: #dcfce7;
             border-color: #22c55e;
@@ -184,7 +187,7 @@ if ($is_edit) {
             padding: 15px;
             margin-bottom: 20px;
         }
-        
+
         .alert-danger {
             background-color: #fef2f2;
             border-color: #ef4444;
@@ -193,82 +196,84 @@ if ($is_edit) {
             padding: 15px;
             margin-bottom: 20px;
         }
-        
+
         .input-group-text {
             background-color: #f8fafc;
             border-color: #e5e7eb;
             color: #6b7280;
         }
-        
+
         .existing-data {
             background-color: #f8fafc;
             border-radius: 8px;
             padding: 20px;
             margin-top: 30px;
         }
-        
+
         .existing-data h5 {
             color: #8b5cf6;
             font-weight: bold;
             margin-bottom: 15px;
         }
-        
+
         .data-table {
             width: 100%;
             border-collapse: separate;
             border-spacing: 0;
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-        
+
         .data-table thead {
             background-color: #8b5cf6;
             color: white;
         }
-        
+
         .data-table th {
             padding: 12px;
             text-align: center;
             font-weight: bold;
             border: none;
         }
-        
+
         .data-table tbody tr {
             background-color: white;
             border-bottom: 1px solid #e5e7eb;
         }
-        
+
         .data-table tbody tr:hover {
             background-color: #f8fafc;
         }
-        
+
         .data-table td {
             padding: 12px;
             text-align: center;
             border: none;
         }
-        
+
         @media (max-width: 768px) {
             .main-container {
                 padding: 10px;
             }
-            
+
             .page-title {
                 font-size: 1.8rem;
             }
-            
+
             .form-container {
                 padding: 20px;
             }
-            
-            .btn-primary, .btn-secondary {
+
+            .btn-primary,
+            .btn-secondary {
                 width: 100%;
                 margin-bottom: 10px;
             }
         }
     </style>
 </head>
+
 <body>
     <div class="main-container">
         <div class="page-header">
@@ -277,27 +282,27 @@ if ($is_edit) {
             </h1>
             <p class="page-subtitle"><?php echo $is_edit ? 'Update' : 'Enter'; ?> demographic information for age brackets</p>
         </div>
-        
+
         <div class="form-container">
             <h4 class="form-header">
                 <i class="fas fa-users me-2"></i>
                 Age Bracket Demographics
             </h4>
-            
+
             <?php if (isset($success_message)): ?>
                 <div class="alert alert-success">
                     <i class="fas fa-check-circle me-2"></i>
                     <?php echo $success_message; ?>
                 </div>
             <?php endif; ?>
-            
+
             <?php if (isset($error_message)): ?>
                 <div class="alert alert-danger">
                     <i class="fas fa-exclamation-circle me-2"></i>
                     <?php echo $error_message; ?>
                 </div>
             <?php endif; ?>
-            
+
             <form method="POST" action="">
                 <div class="row">
                     <div class="col-md-6 mb-3">
@@ -326,7 +331,7 @@ if ($is_edit) {
                             <input type="hidden" name="age_bracket" value="<?php echo htmlspecialchars($edit_age_bracket); ?>">
                         <?php endif; ?>
                     </div>
-                    
+
                     <div class="col-md-6 mb-3">
                         <label for="female" class="form-label">
                             <i class="fas fa-venus me-2"></i>Female Population
@@ -337,7 +342,7 @@ if ($is_edit) {
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="male" class="form-label">
@@ -348,7 +353,7 @@ if ($is_edit) {
                             <span class="input-group-text">persons</span>
                         </div>
                     </div>
-                    
+
                     <div class="col-md-6 mb-3">
                         <label for="total_display" class="form-label">
                             <i class="fas fa-calculator me-2"></i>Total Population
@@ -359,7 +364,7 @@ if ($is_edit) {
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="row">
                     <div class="col-12">
                         <div class="d-flex justify-content-between gap-2">
@@ -374,7 +379,7 @@ if ($is_edit) {
                 </div>
             </form>
         </div>
-        
+
         <div class="existing-data">
             <h5><i class="fas fa-database me-2"></i>Existing Age Bracket Data</h5>
             <div class="table-responsive">
@@ -391,34 +396,34 @@ if ($is_edit) {
                         <?php
                         $existing_sql = "SELECT age_bracket, female, male, total FROM age_population WHERE age_bracket != 'TOTAL' ORDER BY id";
                         $existing_result = $conn->query($existing_sql);
-                        
+
                         if ($existing_result->num_rows > 0) {
                             // Track unique age brackets to avoid duplicates
                             $displayed_brackets = array();
-                            while($row = $existing_result->fetch_assoc()) {
+                            while ($row = $existing_result->fetch_assoc()) {
                                 $bracket = $row["age_bracket"];
-                                
+
                                 // Skip if this bracket was already displayed
                                 if (in_array($bracket, $displayed_brackets)) {
                                     continue;
                                 }
-                                
+
                                 echo "<tr>";
                                 echo "<td>" . htmlspecialchars($bracket) . "</td>";
                                 echo "<td>" . number_format($row["female"]) . "</td>";
                                 echo "<td>" . number_format($row["male"]) . "</td>";
                                 echo "<td>" . number_format($row["total"]) . "</td>";
                                 echo "</tr>";
-                                
+
                                 // Mark this bracket as displayed
                                 $displayed_brackets[] = $bracket;
                             }
-                            
+
                             // Calculate and display totals
                             $total_sql = "SELECT SUM(female) as total_female, SUM(male) as total_male, SUM(total) as total_population FROM age_population WHERE age_bracket != 'TOTAL'";
                             $total_result = $conn->query($total_sql);
                             $totals = $total_result->fetch_assoc();
-                            
+
                             echo "<tr style='background-color: #f8fafc; font-weight: bold;'>";
                             echo "<td>TOTAL</td>";
                             echo "<td>" . number_format($totals["total_female"]) . "</td>";
@@ -434,8 +439,9 @@ if ($is_edit) {
             </div>
         </div>
     </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+    <?php include('includes/scripts.php'); ?>
     <script>
         // Auto-calculate total
         function calculateTotal() {
@@ -444,36 +450,36 @@ if ($is_edit) {
             const total = female + male;
             document.getElementById('total_display').value = total;
         }
-        
+
         // Add event listeners for auto-calculation
         document.getElementById('female').addEventListener('input', calculateTotal);
         document.getElementById('male').addEventListener('input', calculateTotal);
-        
+
         // Initialize total on page load if editing
         <?php if ($is_edit): ?>
             document.addEventListener('DOMContentLoaded', function() {
                 calculateTotal();
             });
         <?php endif; ?>
-        
+
         // Form validation
         document.querySelector('form').addEventListener('submit', function(e) {
             const ageBracket = document.getElementById('age_bracket').value;
             const female = parseInt(document.getElementById('female').value) || 0;
             const male = parseInt(document.getElementById('male').value) || 0;
-            
+
             if (!ageBracket) {
                 e.preventDefault();
                 alert('Please select an age bracket.');
                 return;
             }
-            
+
             if (female < 0 || male < 0) {
                 e.preventDefault();
                 alert('Population numbers cannot be negative.');
                 return;
             }
-            
+
             if (female === 0 && male === 0) {
                 e.preventDefault();
                 alert('Please enter at least one person in the population.');
@@ -482,4 +488,5 @@ if ($is_edit) {
         });
     </script>
 </body>
+
 </html>

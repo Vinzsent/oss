@@ -247,7 +247,9 @@ include('includes/auth_check.php');
                             </h4>
                         </div>
 
-                        <button class="mb-4 btn btn-primary" onclick="exportTable()">Export to Excel</button>
+                        <?php if ($is_admin): ?>
+                            <button class="mb-4 btn btn-primary" onclick="exportTable()">Export to Excel</button>
+                        <?php endif; ?>
 
                         <?php
                         // Fetch data from age_population table, excluding any existing TOTAL rows
@@ -467,6 +469,10 @@ include('includes/auth_check.php');
         <!-- Content hidden when not logged in - auth_check.php handles the modal -->
         <div class="main-content-protected" style="display: none;"></div>
     <?php endif; ?>
+
+
+    <?php include('includes/scripts.php'); ?>
+</body>
 </body>
 
 </html>

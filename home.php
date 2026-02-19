@@ -4,16 +4,38 @@
 
 	<!DOCTYPE html>
 	<html lang="en">
+
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Micro OSS App</title>
+		<title>Micro Online Synthesis System</title>
+		<!-- Bootstrap 5 -->
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+		<!-- FontAwesome 6.4.0 -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+		<!-- Tailwind CSS (Keep for utility classes used in home.php) -->
 		<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+		<style>
+			.sticky-header {
+				position: sticky;
+				top: 0;
+				z-index: 1000;
+			}
+
+			.bg-blue-500 {
+				background-color: #3b82f6;
+			}
+
+			.text-blue-500 {
+				color: #3b82f6;
+			}
+		</style>
 	</head>
+
 	<body class="bg-gray-100">
 
 		<!-- Navigation Menu -->
-		  <div class="sticky-header">
+		<div class="sticky-header">
 			<?php include('includes/nav.php'); ?>
 		</div>
 
@@ -108,9 +130,9 @@
 				</div>
 			</div>
 		</section>
-		
+
 		<?php include('includes/footer.php'); ?>
-		
+
 		<!-- Admin Authentication Modal -->
 		<div class="modal fade" id="adminModal" tabindex="-1" aria-labelledby="adminModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered">
@@ -139,87 +161,87 @@
 			</div>
 		</div>
 
-		<!-- jQuery for Admin Modal -->
-		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-		<script src="https://kit.fontawesome.com/a076d05399.js"></script>
-		
+
 		<script>
-		$(document).ready(function() {
-			let attemptCount = 0;
-			const maxAttempts = 3;
-			
-			// Handle admin login
-			$('#adminLoginBtn').click(function() {
-				const password = $('#adminPassword').val();
-				const errorDiv = $('#errorMessage');
-				
-				if (!password) {
-					showError('Please enter a password');
-					return;
-				}
-				
-				// Client-side validation with obfuscation
-				if (validatePassword(password)) {
-					// Clear form and close modal
-					$('#adminPassword').val('');
-					const modal = bootstrap.Modal.getInstance(document.getElementById('adminModal'));
-					if (modal) modal.hide();
-					errorDiv.hide();
-					attemptCount = 0;
-					
-					// Redirect to admin page
-					window.location.href = 'admin.php';
-				} else {
-					attemptCount++;
-					
-					if (attemptCount >= maxAttempts) {
-						showError('Too many failed attempts. Access denied.');
-						$('#adminLoginBtn').prop('disabled', true);
-						setTimeout(function() {
-							const modal = bootstrap.Modal.getInstance(document.getElementById('adminModal'));
-					if (modal) modal.hide();
-							$('#adminLoginBtn').prop('disabled', false);
-							attemptCount = 0;
-						}, 3000);
-					} else {
-						showError(`Invalid password. ${maxAttempts - attemptCount} attempts remaining.`);
+			$(document).ready(function() {
+				let attemptCount = 0;
+				const maxAttempts = 3;
+
+				// Handle admin login
+				$('#adminLoginBtn').click(function() {
+					const password = $('#adminPassword').val();
+					const errorDiv = $('#errorMessage');
+
+					if (!password) {
+						showError('Please enter a password');
+						return;
 					}
-					
-					$('#adminPassword').val('').focus();
+
+					// Client-side validation with obfuscation
+					if (validatePassword(password)) {
+						// Clear form and close modal
+						$('#adminPassword').val('');
+						const modal = bootstrap.Modal.getInstance(document.getElementById('adminModal'));
+						if (modal) modal.hide();
+						errorDiv.hide();
+						attemptCount = 0;
+
+						// Redirect to admin page
+						window.location.href = 'admin.php';
+					} else {
+						attemptCount++;
+
+						if (attemptCount >= maxAttempts) {
+							showError('Too many failed attempts. Access denied.');
+							$('#adminLoginBtn').prop('disabled', true);
+							setTimeout(function() {
+								const modal = bootstrap.Modal.getInstance(document.getElementById('adminModal'));
+								if (modal) modal.hide();
+								$('#adminLoginBtn').prop('disabled', false);
+								attemptCount = 0;
+							}, 3000);
+						} else {
+							showError(`Invalid password. ${maxAttempts - attemptCount} attempts remaining.`);
+						}
+
+						$('#adminPassword').val('').focus();
+					}
+				});
+
+				// Handle Enter key press
+				$('#adminPassword').keypress(function(e) {
+					if (e.which == 5) {
+						$('#adminLoginBtn').click();
+					}
+				});
+
+				// Reset form when modal is closed
+				$('#adminModal').on('hidden.bs.modal', function() {
+					$('#adminPassword').val('');
+					$('#errorMessage').hide();
+					attemptCount = 0;
+					$('#adminLoginBtn').prop('disabled', false);
+				});
+
+				// Focus password field when modal opens
+				$('#adminModal').on('shown.bs.modal', function() {
+					$('#adminPassword').focus();
+				});
+
+				function showError(message) {
+					$('#errorMessage').text(message).show();
+				}
+
+				// Obfuscated password validation
+				function validatePassword(input) {
+					const encoded = btoa(input);
+					const target = 'YWRtaW4='; // Base64 encoded "admin"
+					return encoded === target;
 				}
 			});
-			
-			// Handle Enter key press
-			$('#adminPassword').keypress(function(e) {
-				if (e.which == 5) {
-					$('#adminLoginBtn').click();
-				}
-			});
-			
-			// Reset form when modal is closed
-			$('#adminModal').on('hidden.bs.modal', function() {
-				$('#adminPassword').val('');
-				$('#errorMessage').hide();
-				attemptCount = 0;
-				$('#adminLoginBtn').prop('disabled', false);
-			});
-			
-			// Focus password field when modal opens
-			$('#adminModal').on('shown.bs.modal', function() {
-				$('#adminPassword').focus();
-			});
-			
-			function showError(message) {
-				$('#errorMessage').text(message).show();
-			}
-			
-			// Obfuscated password validation
-			function validatePassword(input) {
-				const encoded = btoa(input);
-				const target = 'YWRtaW4='; // Base64 encoded "admin"
-				return encoded === target;
-			}
-		});
 		</script>
+
+		<?php include('includes/scripts.php'); ?>
 	</body>
+
 	</html>

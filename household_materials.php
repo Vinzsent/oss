@@ -2,6 +2,9 @@
 session_start();
 include('config.php');
 include('includes/nav.php');
+
+
+$is_admin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
 ?>
 
 <!DOCTYPE html>
@@ -228,9 +231,11 @@ include('includes/nav.php');
                             <i class="fas fa-building me-2 text-purple"></i>
                             Number of Households according to the type of Materials used in Construction
                         </h4>
-                        <button class="export-btn" onclick="exportTable('materialsTable')">
-                            <i class="fas fa-download me-1"></i>Export
-                        </button>
+                        <?php if ($is_admin): ?>
+                            <button class="export-btn" onclick="exportTable('materialsTable')">
+                                <i class="fas fa-download me-1"></i>Export
+                            </button>
+                        <?php endif; ?>
                     </div>
 
                     <?php
@@ -250,7 +255,9 @@ include('includes/nav.php');
                                 <th>Type of Materials Used in Construction</th>
                                 <th>Number of Households</th>
                                 <th>Percentage</th>
-                                <th>Action</th>
+                                <?php if ($is_admin): ?>
+                                    <th>Action</th>
+                                <?php endif; ?>
                             </tr>
                         </thead>
                         <tbody>
@@ -265,9 +272,11 @@ include('includes/nav.php');
                                     echo "<td>" . number_format((float)$row["households"]) . "</td>";
                                     echo "<td>" . $percentage . "%</td>";
                                     echo "<td>";
-                                    echo "<a href='edit_material.php?id=" . $row['id'] . "' class='btn btn-sm btn-primary' style='background: #8b5cf6; border-color: #8b5cf6;'>";
-                                    echo "<i class='fas fa-edit me-1'></i>Edit";
-                                    echo "</a>";
+                                    if ($is_admin) {
+                                        echo "<a href='edit_material.php?id=" . $row['id'] . "' class='btn btn-sm btn-primary' style='background: #8b5cf6; border-color: #8b5cf6;'>";
+                                        echo "<i class='fas fa-edit me-1'></i>Edit";
+                                        echo "</a>";
+                                    }
                                     echo "</td>";
                                     echo "</tr>";
                                 }
@@ -294,9 +303,11 @@ include('includes/nav.php');
                             <i class="fas fa-key me-2 text-purple"></i>
                             Total Households by Type of Ownership
                         </h4>
-                        <button class="export-btn" onclick="exportTable('ownershipTable')">
-                            <i class="fas fa-download me-1"></i>Export
-                        </button>
+                        <?php if ($is_admin): ?>
+                            <button class="export-btn" onclick="exportTable('ownershipTable')">
+                                <i class="fas fa-download me-1"></i>Export
+                            </button>
+                        <?php endif; ?>
                     </div>
 
                     <?php
@@ -316,7 +327,9 @@ include('includes/nav.php');
                                 <th>Type of Ownership</th>
                                 <th>Number of Households</th>
                                 <th>Percentage</th>
-                                <th>Action</th>
+                                <?php if ($is_admin): ?>
+                                    <th>Action</th>
+                                <?php endif; ?>
                             </tr>
                         </thead>
                         <tbody>
@@ -331,9 +344,11 @@ include('includes/nav.php');
                                     echo "<td>" . number_format((float)$row["households"]) . "</td>";
                                     echo "<td>" . $percentage . "%</td>";
                                     echo "<td>";
-                                    echo "<a href='edit_ownership.php?id=" . $row['id'] . "' class='btn btn-sm btn-primary' style='background: #8b5cf6; border-color: #8b5cf6;'>";
-                                    echo "<i class='fas fa-edit me-1'></i>Edit";
-                                    echo "</a>";
+                                    if ($is_admin) {
+                                        echo "<a href='edit_ownership.php?id=" . $row['id'] . "' class='btn btn-sm btn-primary' style='background: #8b5cf6; border-color: #8b5cf6;'>";
+                                        echo "<i class='fas fa-edit me-1'></i>Edit";
+                                        echo "</a>";
+                                    }
                                     echo "</td>";
                                     echo "</tr>";
                                 }
@@ -488,6 +503,11 @@ include('includes/nav.php');
             });
         });
     </script>
+    <!-- Bootstrap JS -->
+
+    <?php include('includes/scripts.php'); ?>
+</body>
+<?php include('includes/footer.php'); ?>
 </body>
 
 </html>

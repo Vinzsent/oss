@@ -52,6 +52,8 @@ if (!$uploads_result) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Publications - Micro Online Synthesis System</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Use FontAwesome 6.4.0 like hazard_vul.php -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -447,226 +449,228 @@ if (!$uploads_result) {
     </footer>
 
     <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <script>
-        function updateResource() {
-            let resourceSelect = document.getElementById("resourceSelect");
-            let selectedFile = resourceSelect.value;
-            const embed = document.getElementById("resource-file");
-            const placeholder = document.getElementById("placeholder-message");
-            const zoomControls = document.querySelector(".zoom-controls");
+    <?php include('includes/scripts.php'); ?>
+</body>
 
-            if (selectedFile) {
-                embed.src = selectedFile;
-                embed.style.display = 'block';
-                placeholder.style.display = 'none';
+<script>
+    function updateResource() {
+        let resourceSelect = document.getElementById("resourceSelect");
+        let selectedFile = resourceSelect.value;
+        const embed = document.getElementById("resource-file");
+        const placeholder = document.getElementById("placeholder-message");
+        const zoomControls = document.querySelector(".zoom-controls");
 
-                // Show zoom controls only for PDF files
-                if (selectedFile.toLowerCase().includes('.pdf')) {
-                    zoomControls.style.display = 'flex';
-                } else {
-                    zoomControls.style.display = 'none';
-                }
+        if (selectedFile) {
+            embed.src = selectedFile;
+            embed.style.display = 'block';
+            placeholder.style.display = 'none';
+
+            // Show zoom controls only for PDF files
+            if (selectedFile.toLowerCase().includes('.pdf')) {
+                zoomControls.style.display = 'flex';
             } else {
-                embed.style.display = 'none';
-                placeholder.style.display = 'block';
                 zoomControls.style.display = 'none';
             }
+        } else {
+            embed.style.display = 'none';
+            placeholder.style.display = 'block';
+            zoomControls.style.display = 'none';
         }
+    }
 
-        function selectFile(filePath) {
-            let resourceSelect = document.getElementById("resourceSelect");
-            resourceSelect.value = filePath;
-            // If the value exists in the dropdown (it should), update; if not, we can force update or add it
-            updateResource();
-        }
+    function selectFile(filePath) {
+        let resourceSelect = document.getElementById("resourceSelect");
+        resourceSelect.value = filePath;
+        // If the value exists in the dropdown (it should), update; if not, we can force update or add it
+        updateResource();
+    }
 
-        // Zoom functionality for PDF viewing
-        let currentZoom = 1;
-        const minZoom = 0.5;
-        const maxZoom = 3;
+    // Zoom functionality for PDF viewing
+    let currentZoom = 1;
+    const minZoom = 0.5;
+    const maxZoom = 3;
 
-        function zoomIn() {
-            if (currentZoom < maxZoom) {
-                currentZoom += 0.25;
-                applyZoom();
-            }
-        }
-
-        function zoomOut() {
-            if (currentZoom > minZoom) {
-                currentZoom -= 0.25;
-                applyZoom();
-            }
-        }
-
-        function resetZoom() {
-            currentZoom = 1;
+    function zoomIn() {
+        if (currentZoom < maxZoom) {
+            currentZoom += 0.25;
             applyZoom();
         }
+    }
 
-        function applyZoom() {
-            const embed = document.getElementById("resource-file");
-            if (embed && embed.style.display !== 'none') {
-                embed.style.transform = `scale(${currentZoom})`;
-                embed.style.transformOrigin = 'top center';
-            }
+    function zoomOut() {
+        if (currentZoom > minZoom) {
+            currentZoom -= 0.25;
+            applyZoom();
         }
+    }
 
-        const BASE_URL = "https://psgc.gitlab.io/api";
-        const provinceSelect = document.getElementById("province");
-        const municipalitySelect = document.getElementById("municipality");
-        const barangaySelect = document.getElementById("barangay");
+    function resetZoom() {
+        currentZoom = 1;
+        applyZoom();
+    }
 
-        function fetchProvinces() {
-            fetch(`${BASE_URL}/provinces/`)
-                .then(res => res.json())
-                .then(data => {
-                    // Sort appropriately
-                    data.sort((a, b) => a.name.localeCompare(b.name));
-                    data.forEach(province => {
-                        provinceSelect.appendChild(new Option(province.name, province.code));
-                    });
-                })
-                .catch(err => console.error("Error fetching provinces:", err));
+    function applyZoom() {
+        const embed = document.getElementById("resource-file");
+        if (embed && embed.style.display !== 'none') {
+            embed.style.transform = `scale(${currentZoom})`;
+            embed.style.transformOrigin = 'top center';
         }
+    }
 
-        function fetchMunicipalities(provinceCode) {
-            municipalitySelect.innerHTML = '<option value="">-- Select Municipality/City --</option>';
-            barangaySelect.innerHTML = '<option value="">-- Select Barangay --</option>';
-            municipalitySelect.disabled = true;
-            barangaySelect.disabled = true;
+    const BASE_URL = "https://psgc.gitlab.io/api";
+    const provinceSelect = document.getElementById("province");
+    const municipalitySelect = document.getElementById("municipality");
+    const barangaySelect = document.getElementById("barangay");
 
-            if (!provinceCode) return;
-
-            fetch(`${BASE_URL}/provinces/${provinceCode}/cities-municipalities/`)
-                .then(res => res.json())
-                .then(data => {
-                    data.sort((a, b) => a.name.localeCompare(b.name));
-                    data.forEach(municipality => {
-                        municipalitySelect.appendChild(new Option(municipality.name, municipality.code));
-                    });
-                    municipalitySelect.disabled = false;
+    function fetchProvinces() {
+        fetch(`${BASE_URL}/provinces/`)
+            .then(res => res.json())
+            .then(data => {
+                // Sort appropriately
+                data.sort((a, b) => a.name.localeCompare(b.name));
+                data.forEach(province => {
+                    provinceSelect.appendChild(new Option(province.name, province.code));
                 });
-        }
+            })
+            .catch(err => console.error("Error fetching provinces:", err));
+    }
 
-        function fetchBarangays(municipalityCode) {
-            barangaySelect.innerHTML = '<option value="">-- Select Barangay --</option>';
-            barangaySelect.disabled = true;
+    function fetchMunicipalities(provinceCode) {
+        municipalitySelect.innerHTML = '<option value="">-- Select Municipality/City --</option>';
+        barangaySelect.innerHTML = '<option value="">-- Select Barangay --</option>';
+        municipalitySelect.disabled = true;
+        barangaySelect.disabled = true;
 
-            if (!municipalityCode) return;
+        if (!provinceCode) return;
 
-            fetch(`${BASE_URL}/cities-municipalities/${municipalityCode}/barangays/`)
-                .then(res => res.json())
-                .then(data => {
-                    data.sort((a, b) => a.name.localeCompare(b.name));
-                    data.forEach(barangay => {
-                        barangaySelect.appendChild(new Option(barangay.name, barangay.code));
-                    });
-                    barangaySelect.disabled = false;
+        fetch(`${BASE_URL}/provinces/${provinceCode}/cities-municipalities/`)
+            .then(res => res.json())
+            .then(data => {
+                data.sort((a, b) => a.name.localeCompare(b.name));
+                data.forEach(municipality => {
+                    municipalitySelect.appendChild(new Option(municipality.name, municipality.code));
                 });
+                municipalitySelect.disabled = false;
+            });
+    }
+
+    function fetchBarangays(municipalityCode) {
+        barangaySelect.innerHTML = '<option value="">-- Select Barangay --</option>';
+        barangaySelect.disabled = true;
+
+        if (!municipalityCode) return;
+
+        fetch(`${BASE_URL}/cities-municipalities/${municipalityCode}/barangays/`)
+            .then(res => res.json())
+            .then(data => {
+                data.sort((a, b) => a.name.localeCompare(b.name));
+                data.forEach(barangay => {
+                    barangaySelect.appendChild(new Option(barangay.name, barangay.code));
+                });
+                barangaySelect.disabled = false;
+            });
+    }
+
+    provinceSelect.addEventListener("change", () => fetchMunicipalities(provinceSelect.value));
+    municipalitySelect.addEventListener("change", () => fetchBarangays(municipalitySelect.value));
+
+    fetchProvinces();
+
+    // File upload functionality
+    function uploadFile() {
+        const fileInput = document.getElementById('fileInput');
+        const categorySelect = document.getElementById('categorySelect');
+        const descriptionInput = document.getElementById('descriptionInput');
+        const uploadProgress = document.querySelector('.upload-progress');
+        const progressBar = document.querySelector('.progress-bar');
+
+        // Validate form
+        if (!fileInput.files[0]) {
+            alert('Please select a file to upload.');
+            return;
         }
 
-        provinceSelect.addEventListener("change", () => fetchMunicipalities(provinceSelect.value));
-        municipalitySelect.addEventListener("change", () => fetchBarangays(municipalitySelect.value));
+        if (!categorySelect.value) {
+            alert('Please select a category.');
+            return;
+        }
 
-        fetchProvinces();
+        const fileSize = fileInput.files[0].size;
+        const maxSize = 10 * 1024 * 1024; // 10MB
+        if (fileSize > maxSize) {
+            alert('File size exceeds 10MB limit.');
+            return;
+        }
 
-        // File upload functionality
-        function uploadFile() {
-            const fileInput = document.getElementById('fileInput');
-            const categorySelect = document.getElementById('categorySelect');
-            const descriptionInput = document.getElementById('descriptionInput');
-            const uploadProgress = document.querySelector('.upload-progress');
-            const progressBar = document.querySelector('.progress-bar');
+        const formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+        formData.append('category', categorySelect.value);
+        formData.append('description', descriptionInput.value);
 
-            // Validate form
-            if (!fileInput.files[0]) {
-                alert('Please select a file to upload.');
-                return;
-            }
+        uploadProgress.style.display = 'block';
+        progressBar.style.width = '0%';
 
-            if (!categorySelect.value) {
-                alert('Please select a category.');
-                return;
-            }
+        // Simulate progress for UX
+        let progress = 0;
+        const progressInterval = setInterval(() => {
+            progress += Math.random() * 20;
+            if (progress > 85) progress = 85;
+            progressBar.style.width = progress + '%';
+        }, 300);
 
-            const fileSize = fileInput.files[0].size;
-            const maxSize = 10 * 1024 * 1024; // 10MB
-            if (fileSize > maxSize) {
-                alert('File size exceeds 10MB limit.');
-                return;
-            }
+        fetch('upload_handler.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Server responded with status: ' + response.status);
+                return response.text();
+            })
+            .then(text => {
+                clearInterval(progressInterval);
+                progressBar.style.width = '100%';
 
-            const formData = new FormData();
-            formData.append('file', fileInput.files[0]);
-            formData.append('category', categorySelect.value);
-            formData.append('description', descriptionInput.value);
-
-            uploadProgress.style.display = 'block';
-            progressBar.style.width = '0%';
-
-            // Simulate progress for UX
-            let progress = 0;
-            const progressInterval = setInterval(() => {
-                progress += Math.random() * 20;
-                if (progress > 85) progress = 85;
-                progressBar.style.width = progress + '%';
-            }, 300);
-
-            fetch('upload_handler.php', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => {
-                    if (!response.ok) throw new Error('Server responded with status: ' + response.status);
-                    return response.text();
-                })
-                .then(text => {
-                    clearInterval(progressInterval);
-                    progressBar.style.width = '100%';
-
-                    try {
-                        return JSON.parse(text);
-                    } catch (e) {
-                        console.error('Invalid JSON response:', text);
-                        throw new Error('Invalid server response');
-                    }
-                })
-                .then(data => {
-                    if (data.success) {
-                        alert('File uploaded successfully!');
-                        document.getElementById('uploadForm').reset();
-                        uploadProgress.style.display = 'none';
-
-                        // Use Bootstrap 5 modal instance to hide if possible, or fallback methods
-                        const modalEl = document.getElementById('uploadModal');
-                        const modal = bootstrap.Modal.getInstance(modalEl);
-                        if (modal) modal.hide();
-                        else {
-                            // Fallback for rough hiding if instance retrieval fails (rare in BS5 simple usage)
-                            modalEl.classList.remove('show');
-                            modalEl.style.display = 'none';
-                            document.body.classList.remove('modal-open');
-                            const backdrop = document.querySelector('.modal-backdrop');
-                            if (backdrop) backdrop.remove();
-                        }
-
-                        location.reload();
-                    } else {
-                        alert('Upload failed: ' + (data.message || 'Unknown error'));
-                        uploadProgress.style.display = 'none';
-                    }
-                })
-                .catch(error => {
-                    clearInterval(progressInterval);
-                    console.error('Upload error:', error);
-                    alert('Upload failed: ' + error.message);
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    console.error('Invalid JSON response:', text);
+                    throw new Error('Invalid server response');
+                }
+            })
+            .then(data => {
+                if (data.success) {
+                    alert('File uploaded successfully!');
+                    document.getElementById('uploadForm').reset();
                     uploadProgress.style.display = 'none';
-                });
-        }
-    </script>
+
+                    // Use Bootstrap 5 modal instance to hide if possible, or fallback methods
+                    const modalEl = document.getElementById('uploadModal');
+                    const modal = bootstrap.Modal.getInstance(modalEl);
+                    if (modal) modal.hide();
+                    else {
+                        // Fallback for rough hiding if instance retrieval fails (rare in BS5 simple usage)
+                        modalEl.classList.remove('show');
+                        modalEl.style.display = 'none';
+                        document.body.classList.remove('modal-open');
+                        const backdrop = document.querySelector('.modal-backdrop');
+                        if (backdrop) backdrop.remove();
+                    }
+
+                    location.reload();
+                } else {
+                    alert('Upload failed: ' + (data.message || 'Unknown error'));
+                    uploadProgress.style.display = 'none';
+                }
+            })
+            .catch(error => {
+                clearInterval(progressInterval);
+                console.error('Upload error:', error);
+                alert('Upload failed: ' + error.message);
+                uploadProgress.style.display = 'none';
+            });
+    }
+</script>
 </body>
 
 </html>

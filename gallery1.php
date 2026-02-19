@@ -11,6 +11,7 @@ $selectedSitio = isset($_POST['sitio']) ? htmlspecialchars($_POST['sitio']) : ''
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,12 +23,15 @@ $selectedSitio = isset($_POST['sitio']) ? htmlspecialchars($_POST['sitio']) : ''
             margin-bottom: 1rem;
             color: #212529;
         }
+
         thead th {
             background-color: #f8f9fa;
         }
+
         .card {
             margin-bottom: 20px;
         }
+
         #map {
             width: 100%;
             height: 400px;
@@ -36,6 +40,7 @@ $selectedSitio = isset($_POST['sitio']) ? htmlspecialchars($_POST['sitio']) : ''
     </style>
     <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY"></script>
 </head>
+
 <body>
     <!-- Navigation Bar -->
     <?php include('includes/nav.php'); ?>
@@ -145,10 +150,19 @@ $selectedSitio = isset($_POST['sitio']) ? htmlspecialchars($_POST['sitio']) : ''
             if (barangay && sitio && sitiosData[barangay][sitio]) {
                 const [lat, lng] = sitiosData[barangay][sitio];
                 const map = new google.maps.Map(document.getElementById('map'), {
-                    center: { lat, lng },
+                    center: {
+                        lat,
+                        lng
+                    },
                     zoom: 15
                 });
-                new google.maps.Marker({ position: { lat, lng }, map });
+                new google.maps.Marker({
+                    position: {
+                        lat,
+                        lng
+                    },
+                    map
+                });
             }
         }
 
@@ -158,5 +172,8 @@ $selectedSitio = isset($_POST['sitio']) ? htmlspecialchars($_POST['sitio']) : ''
             document.getElementById('sitio').addEventListener('change', initializeMap);
         });
     </script>
+
+    <?php include('includes/scripts.php'); ?>
 </body>
+
 </html>
