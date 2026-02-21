@@ -12,42 +12,183 @@ include('config.php');
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Evacuation Map - Micro OSS App</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome 6.4.0 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
     <style>
+        body {
+            background-color: #f5f5f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 0;
+            text-align: center;
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            margin: 10px 0 0 0;
+            text-align: center;
+            opacity: 0.9;
+        }
+
+        .content-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            height: 100%;
+        }
+
         .map-container {
-            height: 100vh;
-            /* Full viewport height */
+            height: 600px;
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #e9d5f7;
         }
 
-        .navigation-bar {
-            display: flex;
-            justify-content: center;
-            background-color: #f8f9fa;
-            padding: 10px 0;
-            border-bottom: 1px solid #ddd;
+        .section-title {
+            color: #6b21a8;
+            font-weight: bold;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #f3f4f6;
+            padding-bottom: 10px;
         }
 
-        .nav-link {
-            display: flex;
-            align-items: center;
-            margin: 0 15px;
-            text-decoration: none;
-            color: #007bff;
+        .form-label {
             font-weight: 600;
-            font-size: 16px;
-            transition: color 0.3s, transform 0.3s;
+            color: #4b5563;
         }
 
-        .nav-link:hover {
-            color: #0056b3;
-            transform: scale(1.05);
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
         }
 
-        .nav-link i {
-            margin-right: 8px;
+        .btn-primary:hover {
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .alert-info-custom {
+            background-color: #e0f2fe;
+            border-left: 4px solid #0ea5e9;
+            color: #0c4a6e;
+            padding: 15px;
+            border-radius: 6px;
+        }
+
+        /* Mobile adjustments */
+        @media (max-width: 768px) {
+            .map-container {
+                height: 400px;
+            }
+
+            .main-container {
+                padding: 10px;
+            }
+
+            .page-title {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* Hide standard navbar on mobile and show modern tab bar instead */
+        @media (max-width: 991px) {
+            .navbar {
+                display: none !important;
+            }
+
+            body {
+                padding-bottom: 90px !important;
+            }
+
+            .mobile-bottom-nav {
+                display: flex !important;
+                position: fixed;
+                bottom: 20px;
+                left: 20px;
+                right: 20px;
+                background: white;
+                height: 65px;
+                border-radius: 20px;
+                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+                z-index: 9999;
+                justify-content: space-around;
+                align-items: center;
+                padding: 0 10px;
+            }
+
+            .nav-item-mobile {
+                text-decoration: none;
+                color: #64748b;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                transition: all 0.3s ease;
+                flex: 1;
+            }
+
+            .nav-item-mobile i {
+                font-size: 1.4rem;
+                margin-bottom: 2px;
+            }
+
+            .nav-item-mobile.active {
+                color: #4f46e5;
+            }
+
+            .nav-profile-img {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                border: 2px solid #e2e8f0;
+                object-fit: cover;
+            }
+
+            .nav-item-mobile.active .nav-profile-img {
+                border-color: #4f46e5;
+            }
+        }
+
+        /* Hide mobile nav on desktop */
+        @media (min-width: 992px) {
+            .mobile-bottom-nav {
+                display: none !important;
+            }
+        }
+
+        footer {
+            background-color: #1f2937 !important;
+            color: white;
+            padding: 20px 0;
+            margin-top: 40px;
+            text-align: center;
         }
     </style>
 
@@ -58,50 +199,100 @@ include('config.php');
 
 <body>
     <?php include('includes/nav.php'); ?>
-    <div class="container mt-5">
+
+    <!-- Modern Mobile Icon Bottom Nav -->
+    <div class="mobile-bottom-nav">
+        <a href="home.php" class="nav-item-mobile">
+            <i class="fas fa-house"></i>
+        </a>
+        <a href="maps.php" class="nav-item-mobile">
+            <i class="fas fa-calendar-alt"></i>
+        </a>
+        <a href="population.php" class="nav-item-mobile">
+            <i class="fas fa-users"></i>
+        </a>
+        <a href="alert.php" class="nav-item-mobile">
+            <i class="fas fa-bell"></i>
+        </a>
+        <?php if (isset($_SESSION['id'])): ?>
+            <a href="#" class="nav-item-mobile active" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                <?php
+                $profile_pics = isset($_SESSION['profile_picture']) && !empty($_SESSION['profile_picture']) ? $_SESSION['profile_picture'] : 'default-profile.jpg';
+                ?>
+                <img src="uploads/<?php echo htmlspecialchars($profile_pics); ?>" alt="Profile" class="nav-profile-img">
+            </a>
+        <?php else: ?>
+            <a href="#" class="nav-item-mobile" data-bs-toggle="modal" data-bs-target="#loginModal">
+                <i class="fas fa-user-circle"></i>
+            </a>
+        <?php endif; ?>
+    </div>
+
+    <div class="main-container">
+        <div class="page-header">
+            <h1 class="page-title">
+                <i class="fas fa-map-marked-alt me-3"></i>Evacuation Map (Manual)
+            </h1>
+            <p class="page-subtitle">Manually find safe zones and evacuation routes in your area</p>
+        </div>
+
         <div class="row">
-            <div class="col-md-8">
-                <h2>Evacuation Map</h2>
-                <div id="map" class="map-container bg-light">
-                    <!-- Map placeholder -->
-                    <div id="hazard-map" style="width: 100%; height: 100%;"></div>
+            <!-- Map Section -->
+            <div class="col-lg-8 mb-4">
+                <div class="content-card">
+                    <h4 class="section-title">
+                        <i class="fas fa-globe-asia me-2"></i>Map View
+                    </h4>
+                    <div id="map" class="map-container">
+                        <div id="hazard-map" style="width: 100%; height: 100%;"></div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <h2>Barangay Maps</h2>
-                <div class="alert alert-info">
-                    <strong>Search for Barangay:</strong>
-                </div>
-                <div class="alert-settings">
-                    <form>
-                        <div class="form-group">
-                            <label for="notificationType">Select Barangay</label>
-                            <select class="form-control" id="notificationType" onchange="focusBarangay()">
-                                <option value="">Select Barangay</option>
-                                <option value="daliao">Daliao</option>
-                                <option value="lizada">Lizada</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="frequency"><strong>Purok/Sitio</strong></label>
-                            <select class="form-control" id="frequency" onchange="focusSitioAndRoute()">
-                                <option>--Select--</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Clear</button>
-                    </form>
+
+            <!-- Sidebar Controls -->
+            <div class="col-lg-4 mb-4">
+                <div class="content-card">
+                    <h4 class="section-title">
+                        <i class="fas fa-columns me-2"></i>Barangay Maps
+                    </h4>
+
+                    <div class="alert-info-custom mb-4">
+                        <strong><i class="fas fa-info-circle me-1"></i> Search for Barangay:</strong>
+                        <p class="mb-0 mt-1 small">Select a barangay to view specific locations and routes.</p>
+                    </div>
+
+                    <div class="alert-settings">
+                        <form onsubmit="return false;">
+                            <div class="mb-3">
+                                <label for="notificationType" class="form-label">Select Barangay</label>
+                                <select class="form-select" id="notificationType" onchange="focusBarangay(); updateSitios();">
+                                    <option value="">Select Barangay</option>
+                                    <option value="daliao">Daliao</option>
+                                    <option value="lizada">Lizada</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="frequency" class="form-label">Purok/Sitio</label>
+                                <select class="form-select" id="frequency" onchange="focusSitioAndRoute()">
+                                    <option>--Select--</option>
+                                </select>
+                            </div>
+                            <button type="button" class="btn btn-primary w-100" onclick="location.reload()">Clear Map</button>
+                        </form>
+                    </div>
+                    <a href="evacuation-map.php" class="btn btn-primary w-100 mt-2">Evacuation Map (Automatic)</a>
                 </div>
             </div>
         </div>
     </div>
 
-    <footer class="bg-dark text-white mt-5 p-4 text-center">
-        &copy; 2024 Flood Resilience App. All Rights Reserved.
+    <footer>
+        <div class="container">
+            &copy; 2024 Flood Resilience App. All Rights Reserved.
+        </div>
     </footer>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <?php include('includes/scripts.php'); ?>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.min.js"></script>
     <script>
@@ -804,17 +995,19 @@ include('config.php');
                     currentRoutes.push(routeLine);
                 });
 
-                // Add and highlight safe zones with arrowheads
-                barangay.safeZones.forEach(zone => {
-                    var safeZoneMarker = L.marker(zone.coordinates, {
-                        icon: L.divIcon({
-                            className: 'safe-zone-icon',
-                            html: '<i class="fa fa-map-marker-alt" style="color: #87CEEB; font-size: 24px;"></i>' // Sky blue pin icon
-                        })
-                    }).addTo(map);
+                // Add and highlight safe zones with arrowheads (Skip for Lizada as per user request to remove location icon)
+                if (selectedBarangay !== 'lizada') {
+                    barangay.safeZones.forEach(zone => {
+                        var safeZoneMarker = L.marker(zone.coordinates, {
+                            icon: L.divIcon({
+                                className: 'safe-zone-icon',
+                                html: '<i class="fa fa-map-marker-alt" style="color: #87CEEB; font-size: 24px;"></i>' // Sky blue pin icon
+                            })
+                        }).addTo(map);
 
-                    currentMarkers.push(safeZoneMarker);
-                });
+                        currentMarkers.push(safeZoneMarker);
+                    });
+                }
             } else {
                 map.setView([7.028012, 125.447948], 12);
             }
@@ -918,12 +1111,9 @@ include('config.php');
             allRoutingControls.push(routingControl); // add routing control to array
         }
 
+        // Initial setup
         document.addEventListener('DOMContentLoaded', function() {
-            var barangaySelect = document.getElementById('notificationType');
-            barangaySelect.addEventListener('change', focusBarangay);
-
-            var sitioSelect = document.getElementById('frequency');
-            sitioSelect.addEventListener('change', focusSitioAndRoute);
+            // Placeholder for future init logic if needed
         });
     </script>
 </body>
