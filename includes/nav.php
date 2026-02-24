@@ -23,7 +23,7 @@
 </style>
 
 <!-- Mobile Responsive CSS -->
-<link href="assets/css/mobile-responsive.css" rel="stylesheet">
+<link href="../assets/css/mobile-responsive.css" rel="stylesheet">
 
 <!-- Mobile Navigation Auto-Close Script -->
 <script>
@@ -69,7 +69,7 @@
 
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <a class="navbar-brand" href="index.php">Micro Online Synthesis System</a>
+    <a class="navbar-brand" href="../index.php">Micro Online Synthesis System</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -128,7 +128,7 @@
                 // Check if profile picture is set in the session
                 $profile_picture = isset($_SESSION['profile_picture']) && !empty($_SESSION['profile_picture']) ? $_SESSION['profile_picture'] : 'default-profile.jpg';
                 echo '<li class="nav-item">';
-                echo '<img src="uploads/' . htmlspecialchars($profile_picture) . '" alt="Profile Picture" class="rounded-circle" style="width: 40px; height: 40px;">'; // Profile picture
+                echo '<img src="../uploads/' . htmlspecialchars($profile_picture) . '" alt="Profile Picture" class="rounded-circle" style="width: 40px; height: 40px;">'; // Profile picture
                 echo '</li>';
                 echo '<li class="nav-item">';
                 echo '<a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal"><i class="fas fa-sign-out-alt mr-2"></i>Log Out</a>';

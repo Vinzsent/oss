@@ -143,7 +143,7 @@
             </div>
             <div class="modal-footer justify-content-center">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                <a href="logout.php" class="btn btn-primary">Yes</a>
+                <a href="../actions/logout.php" class="btn btn-primary">Yes</a>
             </div>
         </div>
     </div>

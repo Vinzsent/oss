@@ -2,47 +2,121 @@
 
 /* Extra small devices (phones, 575px and down) */
 @media only screen and (max-width: 575px) {
-    .edit-container {
-        margin: 20px 10px;
-        padding: 20px;
-    }
-    
-    .page-header h2 {
-        font-size: 1.5rem;
-    }
-    
-    .btn {
-        width: 100%;
-        margin-bottom: 10px;
-    }
-    
-    .d-md-flex {
-        flex-direction: column !important;
-    }
-    
-    .me-md-2 {
-        margin-right: 0 !important;
-    }
+  .edit-container {
+    margin: 20px 10px;
+    padding: 20px;
+  }
+
+  .page-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .btn {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .d-md-flex {
+    flex-direction: column !important;
+  }
+
+  .me-md-2 {
+    margin-right: 0 !important;
+  }
 }
 
 /* Small devices (landscape phones, 576px to 767px) */
 @media only screen and (min-width: 576px) and (max-width: 767px) {
-    .edit-container {
-        margin: 30px 15px;
-        padding: 25px;
-    }
+  .edit-container {
+    margin: 30px 15px;
+    padding: 25px;
+  }
 }
 
 /* Medium devices (tablets, 768px to 991px) */
 @media only screen and (min-width: 768px) and (max-width: 991px) {
-    .edit-container {
-        max-width: 90%;
-    }
+  .edit-container {
+    max-width: 90%;
+  }
 }
 
 /* Large devices (desktops, 992px to 1199px) */
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
-    .edit-container {
-        max-width: 80%;
-    }
+  .edit-container {
+    max-width: 80%;
+  }
+}
+
+/* Mobile Bottom Navigation */
+@media (max-width: 991px) {
+  .navbar {
+    display: none !important;
+  }
+
+  body {
+    padding-bottom: 90px !important;
+  }
+
+  .mobile-bottom-nav {
+    display: flex !important;
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    background: white;
+    height: 65px;
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    z-index: 9999;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 10px;
+  }
+
+  .nav-item-mobile {
+    text-decoration: none;
+    color: #64748b;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.3s ease;
+    flex: 1;
+  }
+
+  .nav-item-mobile i {
+    font-size: 1.4rem;
+    margin-bottom: 2px;
+  }
+
+  .nav-item-mobile.active {
+    color: #4f46e5;
+  }
+
+  .nav-profile-img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid #e2e8f0;
+    object-fit: cover;
+  }
+
+  .nav-item-mobile.active .nav-profile-img {
+    border-color: #4f46e5;
+  }
+
+  footer,
+  .app-footer {
+    margin-bottom: 100px !important;
+  }
+
+  .map-container {
+    height: 400px !important;
+  }
+}
+
+/* Hide mobile nav on desktop */
+@media (min-width: 992px) {
+  .mobile-bottom-nav {
+    display: none !important;
+  }
 }
