@@ -67,8 +67,21 @@
     });
 </script>
 
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+<!-- Mobile-Only Top Header -->
+<div class="mobile-top-header d-lg-none bg-primary text-white px-3 py-2 d-flex align-items-center justify-content-between shadow-sm">
+    <div class="col-2">
+        <button class="btn text-white p-2 border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-controls="mobileSidebar">
+            <i class="fas fa-bars-staggered fa-lg"></i>
+        </button>
+    </div>
+    <div class="mobile-brand fw-bold text-center flex-grow-1 px-2" style="font-size: 1.2rem; white-space: nowrap; letter-spacing: 0.5px;">
+        Micro OSS
+    </div>
+    <div style="width: 40px;"></div> <!-- Balancer to keep text centered -->
+</div>
+
+<!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary d-none d-lg-flex">
     <a class="navbar-brand" href="../index.php">Micro Online Synthesis System</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -146,3 +159,6 @@
         </ul>
     </div>
 </nav>
+
+<!-- Include Mobile Sidebar -->
+<?php include(__DIR__ . '/mobile_sidebar.php'); ?>

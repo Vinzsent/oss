@@ -53,6 +53,19 @@
     display: none !important;
   }
 
+  .mobile-top-header {
+    position: sticky;
+    top: 0;
+    z-index: 1040;
+    height: 60px;
+    background: #0d6efd !important; /* Match Bootstrap primary */
+  }
+
+  .mobile-brand {
+    font-family: 'Inter', sans-serif;
+    text-transform: uppercase;
+  }
+
   body {
     padding-bottom: 90px !important;
   }
@@ -106,7 +119,7 @@
 
   footer,
   .app-footer {
-    margin-bottom: 100px !important;
+    display: none !important;
   }
 
   .map-container {
@@ -119,4 +132,15 @@
   .mobile-bottom-nav {
     display: none !important;
   }
+}
+
+.mobile-bottom-nav.hide-nav {
+    transform: translateY(100%);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+
+.hidden-mobile {
+    display: none !important;
 }

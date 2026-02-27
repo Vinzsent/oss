@@ -1,5 +1,5 @@
 <!-- Modern Mobile Icon Bottom Nav -->
-<div class="mobile-bottom-nav">
+<div class="mobile-bottom-nav" id="mobileBottomNav">
     <?php
     $current_page = basename($_SERVER['PHP_SELF']);
     ?>
@@ -27,4 +27,45 @@
             <i class="fas fa-user-circle"></i>
         </a>
     <?php endif; ?>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const bottomNav = document.getElementById('mobileBottomNav');
+            const sidebar = document.getElementById('mobileSidebar');
+            let lastScrollTop = 0;
+            let isSidebarOpen = false;
+
+            if (bottomNav && sidebar) {
+                // Hiding/Showing when Sidebar is toggled
+                sidebar.addEventListener('show.bs.offcanvas', function() {
+                    isSidebarOpen = true;
+                    bottomNav.classList.add('hide-nav');
+                });
+
+                sidebar.addEventListener('hidden.bs.offcanvas', function() {
+                    isSidebarOpen = false;
+                    bottomNav.classList.remove('hide-nav');
+                });
+
+                // Hiding/Showing based on Scroll
+                window.addEventListener('scroll', function() {
+                    if (isSidebarOpen) return;
+
+                    let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+                    if (scrollTop > lastScrollTop && scrollTop > 50) {
+                        // Scrolling down - hide
+                        bottomNav.classList.add('hide-nav');
+                    } else if (scrollTop < lastScrollTop) {
+                        // Scrolling up - show
+                        bottomNav.classList.remove('hide-nav');
+                    }
+
+                    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+                }, {
+                    passive: true
+                });
+            }
+        });
+    </script>
 </div>

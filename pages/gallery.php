@@ -226,7 +226,7 @@ $selectedSitio = isset($_POST['sitio']) ? htmlspecialchars($_POST['sitio']) : ''
                                 $sitioPurok = htmlspecialchars($row['sitio_purok'], ENT_QUOTES, 'UTF-8');
                                 $description = htmlspecialchars($row['description'], ENT_QUOTES, 'UTF-8');
                         ?>
-                                <div class="col-md-6 mb-4">
+                                <div class="col-6 col-md-6 mb-4">
                                     <div class="card gallery-card h-100">
                                         <img src="data:image/jpeg;base64,<?= $photo ?>" class="card-img-top" alt="<?= $barangay ?> - <?= $sitioPurok ?>">
                                         <div class="card-body">

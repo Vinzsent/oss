@@ -406,37 +406,37 @@ $users_result = mysqli_query($conn, $users_query);
 
         <!-- Statistics Cards -->
         <div class="row mb-4">
-            <div class="col-md-3 mb-3">
+            <div class="col-6 col-md-3 mb-3">
                 <div class="stats-card">
                     <?php
                     $active_users = mysqli_query($conn, "SELECT COUNT(*) as count FROM users WHERE role != 'admin' AND status = 'active'");
                     $active_count = ($active_users) ? mysqli_fetch_assoc($active_users)['count'] : 0;
                     ?>
                     <div class="stats-number"><?php echo $active_count; ?></div>
-                    <div class="stats-label">Active Users</div>
+                    <div class="stats-label text-truncate">Active Users</div>
                 </div>
             </div>
-            <div class="col-md-3 mb-3">
+            <div class="col-6 col-md-3 mb-3">
                 <div class="stats-card">
                     <?php
                     $admin_users = mysqli_query($conn, "SELECT COUNT(*) as count FROM users WHERE role = 'admin'");
                     $admin_count = ($admin_users) ? mysqli_fetch_assoc($admin_users)['count'] : 0;
                     ?>
                     <div class="stats-number"><?php echo $admin_count; ?></div>
-                    <div class="stats-label">Administrators</div>
+                    <div class="stats-label text-truncate">Administrators</div>
                 </div>
             </div>
-            <div class="col-md-3 mb-3">
+            <div class="col-6 col-md-3 mb-3">
                 <div class="stats-card">
                     <?php
                     $today_users = mysqli_query($conn, "SELECT COUNT(*) as count FROM users WHERE id > 0");
                     $today_count = ($today_users) ? mysqli_fetch_assoc($today_users)['count'] : 0;
                     ?>
                     <div class="stats-number"><?php echo $today_count; ?></div>
-                    <div class="stats-label">Total Records</div>
+                    <div class="stats-label text-truncate">Total Records</div>
                 </div>
             </div>
-            <div class="col-md-3 mb-3">
+            <div class="col-6 col-md-3 mb-3">
                 <div class="stats-card">
                     <div class="stats-number"><?php echo $total_users['count']; ?></div>
                     <div class="stats-label">Total Users</div>

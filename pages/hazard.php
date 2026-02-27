@@ -169,12 +169,25 @@ include('../config.php'); // Include database configuration
 </head>
 
 <body>
+    <!-- Mobile-Only Top Header Pattern -->
+    <div class="mobile-top-header d-lg-none bg-primary text-white px-3 py-2 d-flex align-items-center justify-content-between shadow-sm">
+        <div class="col-2">
+            <button class="btn text-white p-2 border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-controls="mobileSidebar">
+                <i class="fas fa-bars-staggered fa-lg"></i>
+            </button>
+        </div>
+        <div class="mobile-brand fw-bold text-center flex-grow-1 px-2" style="font-size: 1.2rem; white-space: nowrap; letter-spacing: 0.5px;">
+            Micro OSS
+        </div>
+        <div style="width: 40px;"></div> <!-- Balancer to keep text centered -->
+    </div>
 
     <?php include('../includes/nav.php'); ?>
+    <?php include('../includes/mobile_sidebar.php'); ?>
     <?php include('../includes/mobile_bottom_nav.php'); ?>
 
     <div class="main-container">
-        <div class="page-header">
+        <div class="page-header hidden-mobile text-center">
             <h1 class="page-title">
                 <i class="fas fa-exclamation-triangle me-3"></i>Hazard Map
             </h1>

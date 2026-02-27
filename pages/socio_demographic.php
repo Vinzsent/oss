@@ -14,6 +14,7 @@ include('../includes/mobile_bottom_nav.php');
     <title>Socio Demographic Data - Micro Online Synthesis System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="../assets/css/mobile-responsive.css" rel="stylesheet">
     <style>
         body {
             background-color: #f5f5f5;
@@ -309,8 +310,21 @@ include('../includes/mobile_bottom_nav.php');
 </head>
 
 <body>
+    <!-- Mobile-Only Top Header Pattern -->
+    <div class="mobile-top-header d-lg-none bg-primary text-white px-3 py-2 d-flex align-items-center justify-content-between shadow-sm">
+        <div class="col-2">
+            <button class="btn text-white p-2 border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-controls="mobileSidebar">
+                <i class="fas fa-bars-staggered fa-lg"></i>
+            </button>
+        </div>
+        <div class="mobile-brand fw-bold text-center flex-grow-1 px-2" style="font-size: 1.2rem; white-space: nowrap; letter-spacing: 0.5px;">
+            Micro OSS
+        </div>
+        <div style="width: 40px;"></div> <!-- Balancer to keep text centered -->
+    </div>
+
     <div class="main-container">
-        <div class="page-header">
+        <div class="page-header hidden-mobile text-center">
             <h1 class="page-title">
                 <i class="fas fa-users me-3"></i>Socio Demographic Data
             </h1>

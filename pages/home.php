@@ -43,89 +43,89 @@ session_start();
 
     <!-- Home Link Section -->
     <section id="about" class="py-16 bg-white">
-        <div class="container mx-auto text-center">
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+        <div class="container mx-auto px-4 text-center">
+            <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6 md:gap-8">
                 <!-- Community Map -->
-                <div class="bg-gray-100 p-6 rounded-lg shadow-md hover:shadow-lg transition-all transform hover:scale-105" id="alert-signals">
+                <div class="bg-gray-100 p-4 sm:p-6 rounded-lg shadow-sm hover:shadow-md transition-all transform hover:scale-105" id="alert-signals">
                     <a href="maps.php" class="block" style="text-decoration: none;">
-                        <img src="../assets/icons/map.png" alt="Alert Signals Icon" class="w-32 mx-auto mb-4">
-                        <h3 class="text-xl font-semibold text-blue-500">Community Map</h3>
+                        <img src="../assets/icons/map.png" alt="Alert Signals Icon" class="w-20 sm:w-32 mx-auto mb-2 sm:mb-4">
+                        <h3 class="text-sm sm:text-xl font-semibold text-blue-500">Community Map</h3>
                     </a>
                 </div>
                 <!-- Alert Signal -->
-                <div class="bg-gray-100 p-6 rounded-lg shadow-md hover:shadow-lg transition-all transform hover:scale-105" id="alert-signals">
+                <div class="bg-gray-100 p-4 sm:p-6 rounded-lg shadow-sm hover:shadow-md transition-all transform hover:scale-105" id="alert-signals">
                     <a href="alert.php" class="block" style="text-decoration: none;">
-                        <img src="../assets/icons/alert.png" alt="Alert Signals Icon" class="w-32 mx-auto mb-4">
-                        <h3 class="text-xl font-semibold text-blue-500">Alert Signals</h3>
+                        <img src="../assets/icons/alert.png" alt="Alert Signals Icon" class="w-20 sm:w-32 mx-auto mb-2 sm:mb-4">
+                        <h3 class="text-sm sm:text-xl font-semibold text-blue-500">Alert Signals</h3>
                     </a>
                 </div>
                 <!-- Hazard Map -->
-                <div class="bg-gray-100 p-6 rounded-lg shadow-md hover:shadow-lg transition-all transform hover:scale-105" id="hazard-map">
+                <div class="bg-gray-100 p-4 sm:p-6 rounded-lg shadow-sm hover:shadow-md transition-all transform hover:scale-105" id="hazard-map">
                     <a href="hazard.php" class="block" style="text-decoration: none;">
-                        <img src="../assets/icons/hazardmap.png" alt="Hazard Map Icon" class="w-32 mx-auto mb-4">
-                        <h3 class="text-xl font-semibold text-blue-500">Hazard Map</h3>
+                        <img src="../assets/icons/hazardmap.png" alt="Hazard Map Icon" class="w-20 sm:w-32 mx-auto mb-2 sm:mb-4">
+                        <h3 class="text-sm sm:text-xl font-semibold text-blue-500">Hazard Map</h3>
                     </a>
                 </div>
                 <!-- Early Warning System -->
-                <div class="bg-gray-100 p-6 rounded-lg shadow-md hover:shadow-lg transition-all transform hover:scale-105" id="ews">
+                <div class="bg-gray-100 p-4 sm:p-6 rounded-lg shadow-sm hover:shadow-md transition-all transform hover:scale-105" id="ews">
                     <a href="flood_warning.php" class="block" style="text-decoration: none;">
-                        <img src="../assets/icons/ews.png" alt="Early Warning System Icon" class="w-32 mx-auto mb-4">
-                        <h3 class="text-xl font-semibold text-blue-500">Flood Monitoring</h3>
+                        <img src="../assets/icons/ews.png" alt="Early Warning System Icon" class="w-20 sm:w-32 mx-auto mb-2 sm:mb-4">
+                        <h3 class="text-sm sm:text-xl font-semibold text-blue-500">Flood Monitoring</h3>
                     </a>
                 </div>
                 <!-- Evacuation Map -->
-                <div class="bg-gray-100 p-6 rounded-lg shadow-md hover:shadow-lg transition-all transform hover:scale-105" id="evacuation">
+                <div class="bg-gray-100 p-4 sm:p-6 rounded-lg shadow-sm hover:shadow-md transition-all transform hover:scale-105" id="evacuation">
                     <a href="evacuation.php" class="block" style="text-decoration: none;">
-                        <img src="../assets/icons/evacuation-map.png" alt="Evacuation Map Icon" class="w-32 mx-auto mb-4">
-                        <h3 class="text-xl font-semibold text-blue-500">Evacuation Map</h3>
+                        <img src="../assets/icons/evacuation-map.png" alt="Evacuation Map Icon" class="w-20 sm:w-32 mx-auto mb-2 sm:mb-4">
+                        <h3 class="text-sm sm:text-xl font-semibold text-blue-500">Evacuation Map</h3>
                     </a>
                 </div>
                 <!-- Socio-Demographic Data -->
-                <div class="bg-gray-100 p-6 rounded-lg shadow-md hover:shadow-lg transition-all transform hover:scale-105" id="socio-data">
+                <div class="bg-gray-100 p-4 sm:p-6 rounded-lg shadow-sm hover:shadow-md transition-all transform hover:scale-105" id="socio-data">
                     <a href="socio.php" class="block" style="text-decoration: none;">
-                        <img src="../assets/icons/socio-data.png" alt="Socio-Demographic Data Icon" class="w-32 mx-auto mb-4">
-                        <h3 class="text-xl font-semibold text-blue-500">Socio-Demographic Data</h3>
+                        <img src="../assets/icons/socio-data.png" alt="Socio-Demographic Data Icon" class="w-20 sm:w-32 mx-auto mb-2 sm:mb-4">
+                        <h3 class="text-sm sm:text-xl font-semibold text-blue-500">Socio-Demographic Data</h3>
                     </a>
                 </div>
                 <!-- Media Gallery -->
-                <div class="bg-gray-100 p-6 rounded-lg shadow-md hover:shadow-lg transition-all transform hover:scale-105" id="media-gallery">
+                <div class="bg-gray-100 p-4 sm:p-6 rounded-lg shadow-sm hover:shadow-md transition-all transform hover:scale-105" id="media-gallery">
                     <a href="gallery.php" class="block" style="text-decoration: none;">
-                        <img src="../assets/icons/media-gallery.png" alt="Media Gallery Icon" class="w-32 mx-auto mb-4">
-                        <h3 class="text-xl font-semibold text-blue-500">Media Gallery</h3>
+                        <img src="../assets/icons/media-gallery.png" alt="Media Gallery Icon" class="w-20 sm:w-32 mx-auto mb-2 sm:mb-4">
+                        <h3 class="text-sm sm:text-xl font-semibold text-blue-500">Media Gallery</h3>
                     </a>
                 </div>
                 <!-- Indigenous Knowledge System -->
-                <div class="bg-gray-100 p-6 rounded-lg shadow-md hover:shadow-lg transition-all transform hover:scale-105" id="iks">
+                <div class="bg-gray-100 p-4 sm:p-6 rounded-lg shadow-sm hover:shadow-md transition-all transform hover:scale-105" id="iks">
                     <a href="iks.php" class="block" style="text-decoration: none;">
-                        <img src="../assets/icons/iks.png" alt="Indigenous Knowledge System Icon" class="w-32 mx-auto mb-4">
-                        <h3 class="text-xl font-semibold text-blue-500">Indigenous Knowledge System</h3>
+                        <img src="../assets/icons/iks.png" alt="Indigenous Knowledge System Icon" class="w-20 sm:w-32 mx-auto mb-2 sm:mb-4">
+                        <h3 class="text-sm sm:text-xl font-semibold text-blue-500">Indigenous Knowledge System</h3>
                     </a>
                 </div>
                 <!-- Policies & Publications -->
-                <div class="bg-gray-100 p-6 rounded-lg shadow-md hover:shadow-lg transition-all transform hover:scale-105" id="policies-publications">
+                <div class="bg-gray-100 p-4 sm:p-6 rounded-lg shadow-sm hover:shadow-md transition-all transform hover:scale-105" id="policies-publications">
                     <a href="publications.php" class="block" style="text-decoration: none;">
-                        <img src="../assets/icons/policy.png" alt="Policies & Publications Icon" class="w-32 mx-auto mb-4">
-                        <h3 class="text-xl font-semibold text-blue-500">Policies & Publications</h3>
+                        <img src="../assets/icons/policy.png" alt="Policies & Publications Icon" class="w-20 sm:w-32 mx-auto mb-2 sm:mb-4">
+                        <h3 class="text-sm sm:text-xl font-semibold text-blue-500">Policies & Publications</h3>
                     </a>
                 </div>
                 <!-- Downloadables -->
-                <div class="bg-gray-100 p-6 rounded-lg shadow-md hover:shadow-lg transition-all transform hover:scale-105" id="downloadables">
+                <div class="bg-gray-100 p-4 sm:p-6 rounded-lg shadow-sm hover:shadow-md transition-all transform hover:scale-105" id="downloadables">
                     <a href="download.php" class="block" style="text-decoration: none;">
-                        <img src="../assets/icons/downloadables.png" alt="Downloadables Icon" class="w-32 mx-auto mb-4">
-                        <h3 class="text-xl font-semibold text-blue-500">Downloadables</h3>
+                        <img src="../assets/icons/downloadables.png" alt="Downloadables Icon" class="w-20 sm:w-32 mx-auto mb-2 sm:mb-4">
+                        <h3 class="text-sm sm:text-xl font-semibold text-blue-500">Downloadables</h3>
                     </a>
                 </div>
                 <!-- Admin -->
-                <div class="bg-gray-100 p-6 rounded-lg shadow-md hover:shadow-lg transition-all transform hover:scale-105" id="admin">
+                <div class="bg-gray-100 p-4 sm:p-6 rounded-lg shadow-sm hover:shadow-md transition-all transform hover:scale-105" id="admin">
                     <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
                         <a href="admin.php" class="block" style="text-decoration: none;">
-                            <img src="../assets/icons/admin.png" alt="Admin Icon" class="w-32 mx-auto mb-4">
-                            <h3 class="text-xl font-semibold text-blue-500 text-center">Admin</h3>
+                            <img src="../assets/icons/admin.png" alt="Admin Icon" class="w-20 sm:w-32 mx-auto mb-2 sm:mb-4">
+                            <h3 class="text-sm sm:text-xl font-semibold text-blue-500 text-center">Admin</h3>
                         </a>
                     <?php else: ?>
                         <button type="button" class="block w-full text-left" style="text-decoration: none; background: none; border: none;" data-bs-toggle="modal" data-bs-target="#adminModal">
-                            <img src="../assets/icons/admin.png" alt="Admin Icon" class="w-32 mx-auto mb-4" />
-                            <h3 class="text-xl font-semibold text-blue-500 text-center">Admin</h3>
+                            <img src="../assets/icons/admin.png" alt="Admin Icon" class="w-20 sm:w-32 mx-auto mb-2 sm:mb-4" />
+                            <h3 class="text-sm sm:text-xl font-semibold text-blue-500 text-center">Admin</h3>
                         </button>
                     <?php endif; ?>
                 </div>

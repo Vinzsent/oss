@@ -320,19 +320,19 @@ $total_puroks_count = mysqli_fetch_assoc($total_puroks)['count'];
 
         <!-- Statistics Cards -->
         <div class="row mb-4">
-            <div class="col-md-4">
+            <div class="col-6 col-md-4 mb-3">
                 <div class="stats-card">
                     <div class="stats-number"><?php echo $total_barangays; ?></div>
-                    <div class="stats-label">Total Barangays</div>
+                    <div class="stats-label text-truncate">Total Barangays</div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-6 col-md-4 mb-3">
                 <div class="stats-card">
                     <div class="stats-number"><?php echo $total_puroks_count; ?></div>
-                    <div class="stats-label">Total Puroks/Sitios</div>
+                    <div class="stats-label text-truncate">Total Puroks/Sitios</div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-6 col-md-4 mb-3">
                 <div class="stats-card">
                     <?php
                     $sitio_count = mysqli_query($conn, "SELECT COUNT(*) as count FROM puroks_sitios WHERE type = 'sitio'");
