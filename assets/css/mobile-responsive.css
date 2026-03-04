@@ -144,3 +144,75 @@
 .hidden-mobile {
     display: none !important;
 }
+
+/* --- Responsive Table (Card Layout) --- */
+@media (max-width: 767px) {
+    .table-responsive-card table,
+    .table-responsive-card thead,
+    .table-responsive-card tbody,
+    .table-responsive-card th,
+    .table-responsive-card td,
+    .table-responsive-card tr {
+        display: block !important;
+        width: 100% !important;
+    }
+
+    /* Hide table headers (but keep for accessibility) */
+    .table-responsive-card thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    .table-responsive-card tr {
+        margin-bottom: 1.5rem;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 12px !important;
+        background: #fff !important;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+        overflow: hidden;
+    }
+
+    .table-responsive-card td {
+        /* Behave  like a "row" */
+        border: none !important;
+        border-bottom: 1px solid #f1f5f9 !important;
+        position: relative;
+        padding-left: 50% !important;
+        text-align: right !important;
+        padding-top: 12px !important;
+        padding-bottom: 12px !important;
+        min-height: 45px;
+    }
+
+    .table-responsive-card td:last-child {
+        border-bottom: 0 !important;
+    }
+
+    .table-responsive-card td:before {
+        /* Now like a table header */
+        position: absolute;
+        /* Top/left values mimic padding */
+        top: 12px;
+        left: 15px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: 700;
+        color: #64748b;
+        content: attr(data-label);
+    }
+
+    /* Special handling for columns that should take full width */
+    .table-responsive-card td.full-width-mobile {
+        padding-left: 15px !important;
+        text-align: left !important;
+    }
+    
+    .table-responsive-card td.full-width-mobile:before {
+        position: static;
+        display: block;
+        margin-bottom: 5px;
+    }
+}

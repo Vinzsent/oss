@@ -253,7 +253,7 @@ $user = $user_result->fetch_assoc();
                     <?php
                     // Check if there are records to display
                     if ($result->num_rows > 0) {
-                        echo '<div class="table-responsive">
+                        echo '<div class="table-responsive table-responsive-card">
                                 <table class="table table-hover mb-0">
                                     <thead>
                                         <tr>
@@ -269,32 +269,32 @@ $user = $user_result->fetch_assoc();
 
                         while ($row = $result->fetch_assoc()) {
                             echo '<tr>';
-                            echo '<td>' . date('M d, Y', strtotime($row['date_created'])) . '</td>';
-                            echo '<td>' . ucfirst($row['barangay']) . '</td>';
-                            echo '<td>' . ucfirst($row['sitio']) . '</td>';
+                            echo '<td data-label="Date">' . date('M d, Y', strtotime($row['date_created'])) . '</td>';
+                            echo '<td data-label="Barangay">' . ucfirst($row['barangay']) . '</td>';
+                            echo '<td data-label="Sitio">' . ucfirst($row['sitio']) . '</td>';
 
                             // Apply background color for warning level
                             switch ($row['warning_level']) {
                                 case 1:
-                                    echo '<td class="text-center"><span class="badge text-dark" style="background-color: yellow;"><i class="fas fa-exclamation-triangle me-1"></i> Yellow Alert</span></td>';
+                                    echo '<td data-label="Warning Level" class="text-center"><span class="badge text-dark" style="background-color: yellow;"><i class="fas fa-exclamation-triangle me-1"></i> Yellow Alert</span></td>';
                                     break;
                                 case 2:
-                                    echo '<td class="text-center"><span class="badge text-dark" style="background-color: orange;"><i class="fas fa-exclamation-circle me-1"></i> Orange Alert</span></td>';
+                                    echo '<td data-label="Warning Level" class="text-center"><span class="badge text-dark" style="background-color: orange;"><i class="fas fa-exclamation-circle me-1"></i> Orange Alert</span></td>';
                                     break;
                                 case 3:
-                                    echo '<td class="text-center"><span class="badge" style="background-color: red;"><i class="fas fa-skull-crossbones me-1"></i> Red Alert</span></td>';
+                                    echo '<td data-label="Warning Level" class="text-center"><span class="badge" style="background-color: red;"><i class="fas fa-skull-crossbones me-1"></i> Red Alert</span></td>';
                                     break;
                                 default:
-                                    echo '<td class="text-center"><span class="badge" style="background-color: gray;">Unknown</span></td>';
+                                    echo '<td data-label="Warning Level" class="text-center"><span class="badge" style="background-color: gray;">Unknown</span></td>';
                             }
 
-                            echo '<td>' . htmlspecialchars($row['status']) . '</td>';
-                            echo '<td>' . htmlspecialchars($row['recommended_action']) . '</td>';
+                            echo '<td data-label="Status">' . htmlspecialchars($row['status']) . '</td>';
+                            echo '<td data-label="Action">' . htmlspecialchars($row['recommended_action']) . '</td>';
                             echo '</tr>';
                         }
 
                         echo '</tbody></table>
-                              </div>';
+                                </div>';
                     } else {
                         echo '<div class="alert alert-info-custom text-center">
                                 <i class="fas fa-info-circle me-2"></i> No flood warning records found for the selected criteria.

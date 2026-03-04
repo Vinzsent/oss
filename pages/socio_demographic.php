@@ -337,7 +337,7 @@ include('../includes/mobile_bottom_nav.php');
         </div>
 
         <div class="content-wrapper">
-            <div class="table-section">
+            <div class="table-section table-responsive-card">
                 <h4 class="mb-4">
                     <i class="fas fa-table me-2 text-purple"></i>
                     Demographic Overview
@@ -354,100 +354,58 @@ include('../includes/mobile_bottom_nav.php');
                     </thead>
                     <tbody>
                         <tr>
-                            <td>Babisa</td>
-                            <td>45</td>
-                            <td>186</td>
-                            <td><span class="risk-low">Low</span></td>
+                            <td data-label="Sitio Purok">22</td>
+                            <td data-label="Families">76</td>
+                            <td data-label="Persons">341</td>
+                            <td data-label="Risk Level"><span class="risk-low">Low</span></td>
                         </tr>
                         <tr>
-                            <td>Camarin</td>
-                            <td>38</td>
-                            <td>142</td>
-                            <td><span class="risk-medium">Medium</span></td>
+                            <td data-label="Sitio Purok">Gutierez</td>
+                            <td data-label="Families">31</td>
+                            <td data-label="Persons">114</td>
+                            <td data-label="Risk Level"><span class="risk-medium">Medium</span></td>
                         </tr>
                         <tr>
-                            <td>Culosa</td>
-                            <td>52</td>
-                            <td>198</td>
-                            <td><span class="risk-high">High</span></td>
+                            <td data-label="Sitio Purok">JV Ferriols</td>
+                            <td data-label="Families">27</td>
+                            <td data-label="Persons">95</td>
+                            <td data-label="Risk Level"><span class="risk-low">Low</span></td>
                         </tr>
                         <tr>
-                            <td>Curvada</td>
-                            <td>29</td>
-                            <td>87</td>
-                            <td><span class="risk-low">Low</span></td>
+                            <td data-label="Sitio Purok">Kasama</td>
+                            <td data-label="Families">33</td>
+                            <td data-label="Persons">121</td>
+                            <td data-label="Risk Level"><span class="risk-medium">Medium</span></td>
                         </tr>
                         <tr>
-                            <td>Dacudao</td>
-                            <td>41</td>
-                            <td>156</td>
-                            <td><span class="risk-medium">Medium</span></td>
+                            <td data-label="Sitio Purok">Lawis</td>
+                            <td data-label="Families">44</td>
+                            <td data-label="Persons">167</td>
+                            <td data-label="Risk Level"><span class="risk-high">High</span></td>
                         </tr>
                         <tr>
-                            <td>Doña Rosa</td>
-                            <td>35</td>
-                            <td>128</td>
-                            <td><span class="risk-low">Low</span></td>
+                            <td data-label="Sitio Purok">Lizada Beach</td>
+                            <td data-label="Families">36</td>
+                            <td data-label="Persons">134</td>
+                            <td data-label="Risk Level"><span class="risk-medium">Medium</span></td>
                         </tr>
                         <tr>
-                            <td>Fisherman</td>
-                            <td>48</td>
-                            <td>203</td>
-                            <td><span class="risk-high">High</span></td>
+                            <td data-label="Sitio Purok">Lizada Proper</td>
+                            <td data-label="Families">58</td>
+                            <td data-label="Persons">245</td>
+                            <td data-label="Risk Level"><span class="risk-high">High</span></td>
                         </tr>
                         <tr>
-                            <td>Glabaca</td>
-                            <td>22</td>
-                            <td>76</td>
-                            <td><span class="risk-low">Low</span></td>
-                        </tr>
-                        <tr>
-                            <td>Gutierez</td>
-                            <td>31</td>
-                            <td>114</td>
-                            <td><span class="risk-medium">Medium</span></td>
-                        </tr>
-                        <tr>
-                            <td>JV Ferriols</td>
-                            <td>27</td>
-                            <td>95</td>
-                            <td><span class="risk-low">Low</span></td>
-                        </tr>
-                        <tr>
-                            <td>Kasama</td>
-                            <td>33</td>
-                            <td>121</td>
-                            <td><span class="risk-medium">Medium</span></td>
-                        </tr>
-                        <tr>
-                            <td>Lawis</td>
-                            <td>44</td>
-                            <td>167</td>
-                            <td><span class="risk-high">High</span></td>
-                        </tr>
-                        <tr>
-                            <td>Lizada Beach</td>
-                            <td>36</td>
-                            <td>134</td>
-                            <td><span class="risk-medium">Medium</span></td>
-                        </tr>
-                        <tr>
-                            <td>Lizada Proper</td>
-                            <td>58</td>
-                            <td>245</td>
-                            <td><span class="risk-high">High</span></td>
-                        </tr>
-                        <tr>
-                            <td>Maltabis</td>
-                            <td>25</td>
-                            <td>89</td>
-                            <td><span class="risk-low">Low</span></td>
+                            <td data-label="Sitio Purok">Maltabis</td>
+                            <td data-label="Families">25</td>
+                            <td data-label="Persons">89</td>
+                            <td data-label="Risk Level"><span class="risk-low">Low</span></td>
                         </tr>
                         <tr class="total-row">
-                            <td>TOTAL</td>
-                            <td>564</td>
-                            <td>2,141</td>
-                            <td>-</td>
+                            <td data-label="TOTAL">TOTAL</td>
+                            <td data-label="Families">564</td>
+                            <td data-label="Persons">2,141</td>
+                            <td data-label="Risk Level">-</td>
                         </tr>
                     </tbody>
                 </table>
